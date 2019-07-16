@@ -9,7 +9,7 @@ piped = ()=>funcc(funcb(funca()))
 
 */
 const _pipe = (a, b) => (arg) => b(a(arg));
-module.pipe = (...ops) => ops.reduce(_pipe);
+const pipe = (...ops) => ops.reduce(_pipe);
 
 
 /*
@@ -21,7 +21,7 @@ piped('name','lastname','age')
 
 */
 const _pipeA = (a, b) => (...args) => b(...a(...args));
-module.pipeA = (...ops) => ops.reduce(_pipeA);
+const pipeA = (...ops) => ops.reduce(_pipeA);
 
 /*compose
 
@@ -34,8 +34,9 @@ let composed = compose(
                 )
 
 is the same as funca(funcb(funcc(...args)))
+from redux
 */
-module.compose(...funcs) {
+const compose= (...funcs)=> {
   if (funcs.length === 0) {
     return arg => arg
   }
@@ -46,3 +47,6 @@ module.compose(...funcs) {
 
   return funcs.reduce((a, b) => (...args) => a(b(...args)))
 }
+
+
+module.exports = {compose,pipe,pipeA}
