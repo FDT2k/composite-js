@@ -1,1 +1,1 @@
-gka-composite
+Javascript composite functions kit
