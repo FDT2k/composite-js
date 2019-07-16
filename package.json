@@ -1,0 +1,17 @@
+{
+  "name": "@geekagency/composite-js",
+  "version": "0.0.1",
+  "description": "Kit of composite functions utilities",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npx jest --coverage"
+  },
+  "author": "Fabien Di Tore",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.8.0"
+  }
+}
