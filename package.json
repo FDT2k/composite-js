@@ -2,7 +2,7 @@
   "name": "@geekagency/composite-js",
   "version": "0.0.1",
   "description": "Kit of composite functions utilities",
-  "main": "index.js",
+  "main": "scr/index.js",
   "directories": {
     "test": "test"
   },
