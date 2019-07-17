@@ -1,5 +1,10 @@
 /*
-Classic pipe
+Classic
+*/
+
+
+/*
+pipe
 
 let piped = pipe(funca,funcb,funcc )
 
@@ -7,21 +12,24 @@ is the same as
 
 piped = ()=>funcc(funcb(funca()))
 
-*/
-const _pipe = (a, b) => (arg) => b(a(arg));
-const pipe = (...ops) => ops.reduce(_pipe);
-
-
-/*
-Same as pipe except that all arguments are passed through
+ all arguments are passed through
 
 let piped = pipeA(middleware1,middleware2,final_function)
 
 piped('name','lastname','age')
 
 */
-const _pipeA = (a, b) => (...args) => b(...a(...args));
-const pipeA = (...ops) => ops.reduce(_pipeA);
+const pipeA = (...ops) =>{
+  if(ops.length ===0){
+    return (...arg) => arg
+  }
+
+  if(ops.length ===1){
+    return ops[0]
+  }
+
+  return ops.reduce((a, b) => (...args) => b(...a(...args)))
+};
 
 /*compose
 
@@ -34,11 +42,12 @@ let composed = compose(
                 )
 
 is the same as funca(funcb(funcc(...args)))
-from redux
+initially from redux,
+The behavior has been altered for 0 parameter
 */
 const compose= (...funcs)=> {
   if (funcs.length === 0) {
-    return arg => arg
+    return (...arg) => arg
   }
 
   if (funcs.length === 1) {
@@ -49,4 +58,4 @@ const compose= (...funcs)=> {
 }
 
 
-module.exports = {compose,pipe,pipeA}
+module.exports = {compose,pipe:pipeA,pipeA}
