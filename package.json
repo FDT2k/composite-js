@@ -7,11 +7,19 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npx jest --coverage"
+    "test": "npx jest --coverage && npx jest-coverage-badges"
   },
   "author": "Fabien Di Tore",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "jest-coverage-badges": "^1.1.2"
+  },
+  "jest": {
+    "coverageReporters": [
+      "json-summary",
+      "text",
+      "lcov"
+    ]
   }
 }
