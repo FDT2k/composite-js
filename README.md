@@ -1,7 +1,6 @@
 # Javascript composite functions kit
 
 ![Alt text](./coverage/badge-lines.svg)
-<img src="./coverage/badge-lines.svg">
 ## Warning: this is NOT the classic compose & pipe function.
 
 in a classic compose function, only the rightmost function may have any arity, others must be unary
