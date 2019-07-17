@@ -65,6 +65,64 @@ test('Pipe A', () => {
 });
 
 
+test('Pipe order is ok', () => {
+  const funcA =(...args)=>{
+    expect(args[0]).toBe('hi');
+    args[0] = 'little';
+    return args
+  }
+
+  const funcB =(...args)=>{
+    expect(args[0]).toBe('little');
+    args[0] = 'world';
+    return args
+  }
+
+  const funcC =(...args)=>{
+    expect(args[0]).toBe('world');
+    return args
+  }
+
+  const result = pipeA(
+    funcA,
+    funcB,
+    funcC
+  )
+  expect(result('hi')[0]).toBe('world');
+});
+
+
+test('Named parameter with pipe (spread)', () => {
+  const funcA =(...args)=>{
+    let [ firstarg, secondArg ] = args
+    expect(firstarg).toBe('hi');
+    firstarg = 'little';
+    return [ firstarg, secondArg ]
+  }
+
+
+  const funcB =(...[arg1,...passThrough])=>{
+    expect(arg1).toBe('little');
+    expect(passThrough).toBeInstanceOf(Array)
+    arg1= 'world';
+    return [arg1,...passThrough]
+  }
+
+  const funcC =(...args)=>{
+    expect(args[0]).toBe('world');
+    expect(args[1]).toBe('planet');
+    return args
+  }
+
+  const result = pipeA(
+    funcA,
+    funcB,
+    funcC
+  )
+  expect(result('hi','planet')[0]).toBe('world');
+});
+
+
 
 test('compose', () => {
   let args = ['hello','world']

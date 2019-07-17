@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1563350733216" clover="3.2.0">
-  <project timestamp="1563350733217" name="All files">
+<coverage generated="1563356042901" clover="3.2.0">
+  <project timestamp="1563356042901" name="All files">
     <metrics statements="13" coveredstatements="13" conditionals="8" coveredconditionals="8" methods="8" coveredmethods="8" elements="29" coveredelements="29" complexity="0" loc="13" ncloc="13" packages="1" files="1" classes="1"/>
     <file name="index.js" path="/home/fabien/Documents/work/gka-composite/src/index.js">
       <metrics statements="13" coveredstatements="13" conditionals="8" coveredconditionals="8" methods="8" coveredmethods="8"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="23" count="4" type="cond" truecount="2" falsecount="0"/>
-      <line num="24" count="2" type="stmt"/>
-      <line num="27" count="3" type="cond" truecount="2" falsecount="0"/>
-      <line num="28" count="1" type="stmt"/>
-      <line num="31" count="2" type="stmt"/>
-      <line num="48" count="1" type="stmt"/>
-      <line num="49" count="3" type="cond" truecount="2" falsecount="0"/>
-      <line num="50" count="2" type="stmt"/>
-      <line num="53" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="54" count="1" type="stmt"/>
-      <line num="57" count="1" type="stmt"/>
-      <line num="61" count="1" type="stmt"/>
+      <line num="17" count="2" type="stmt"/>
+      <line num="18" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="19" count="2" type="stmt"/>
+      <line num="22" count="5" type="cond" truecount="2" falsecount="0"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="26" count="6" type="stmt"/>
+      <line num="43" count="2" type="stmt"/>
+      <line num="44" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="45" count="4" type="stmt"/>
+      <line num="48" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="49" count="2" type="stmt"/>
+      <line num="52" count="2" type="stmt"/>
+      <line num="56" count="2" type="stmt"/>
     </file>
   </project>
 </coverage>

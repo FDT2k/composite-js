@@ -1,9 +1,4 @@
 /*
-Classic
-*/
-
-
-/*
 pipe
 
 let piped = pipe(funca,funcb,funcc )
@@ -19,7 +14,7 @@ let piped = pipeA(middleware1,middleware2,final_function)
 piped('name','lastname','age')
 
 */
-const pipeA = (...ops) =>{
+const pipe = (...ops) =>{
   if(ops.length ===0){
     return (...arg) => arg
   }
@@ -43,7 +38,7 @@ let composed = compose(
 
 is the same as funca(funcb(funcc(...args)))
 initially from redux,
-The behavior has been altered for 0 parameter
+The behavior has been altered for 0 parameter and to call all parameters
 */
 const compose= (...funcs)=> {
   if (funcs.length === 0) {
@@ -54,8 +49,8 @@ const compose= (...funcs)=> {
     return funcs[0]
   }
 
-  return funcs.reduce((a, b) => (...args) => a(b(...args)))
+  return funcs.reduce((a, b) => (...args) => a(...b(...args)))
 }
 
 
-module.exports = {compose,pipe:pipeA,pipeA}
+module.exports = {compose,pipe,pipeA:pipe}
