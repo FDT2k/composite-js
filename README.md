@@ -50,7 +50,7 @@ Later we want to extends the features and normalize the payload for example
     }
     let capitalize = (what)=> (...args)=> {
 	    args[what].toUpperCase()
-	    return [args] //<-- ensure arity preservation
+	    return args 
 	}
 
     let enhanced_greeting = pipe(capitalize(0),capitalize(1),greeting)
