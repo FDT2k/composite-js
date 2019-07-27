@@ -3,25 +3,34 @@
 ![Alt text](./coverage/badge-lines.svg)
 ## Warning: this is NOT the classic compose & pipe function.
 
-in a classic compose function, only the rightmost function may have any arity, others must be unary
+in a classic compose function, only the rightmost function may have any arity, others must be unary.
+For the classic pipe the leftmost function may have any arity; the remaining functions must be unary.
 
-    function a (arg){
-	//.... whatever
+
+
+  function a (arg){
+	   //.... whatever
 	}
 	function b (arg2,arg3){
-	}
+
+  }
 	let enhanced = compose(a,b)
 	// enhanced would be the equivalent of  a(b(...args));
 	so a would receive only the result of b as an unique parameter
 
-this version preserves the arity along the chain
+
+
+This version preserves the arity along the chain, the last one of the chain can return any arity
  so
 
-    function a (arg2,arg3){
+  function a (arg2,arg3){
 	//.... whatever
+    return [arg2,arg3]
 	}
 
 	function b (arg2,arg3){
+    // some code
+    return [arg2,arg3]
 	}
 
 	let enhanced = compose(a,b)
@@ -42,6 +51,7 @@ Later we want to extends the features and normalize the payload for example
 		// whatever
 		return [payload,callback] //<- this is mandatory for the argument to spread
 	}
+
 	let enhanced_write = pipe(normalize,write)
 
 #### middleware & plugin of the poor
@@ -69,3 +79,5 @@ Later we want to extends the features and normalize the payload for example
 	    //whatever
 	    return [arg1,...passThrough]
     }
+
+#### Compose functions everywhere !!!!!!!

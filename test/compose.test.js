@@ -1,4 +1,4 @@
-const {compose} = require('../src/index')
+const {composeA:compose} = require('../src/index')
 
 
 test('calling compose without parameter should return args', () => {
@@ -20,7 +20,7 @@ test('compose', () => {
   const funcA =(...args)=>{
     console.log('funcA')
     console.log(args.length)
-    
+
     return args
   }
 
