@@ -53,7 +53,7 @@ const composeA= (...funcs)=> {
 }
 
 
-
+// compose :: ((a -> b), (b -> c),  ..., (y -> z)) -> a -> z
 const compose=(...funcs) =>{
   if (funcs.length === 0) {
     return arg => arg
@@ -65,7 +65,6 @@ const compose=(...funcs) =>{
 
   return funcs.reduce((a, b) => (...args) => a(b(...args)))
 }
-
 
 const pipe = (...funcs) =>{
   if(funcs.length ===0){
@@ -79,4 +78,41 @@ const pipe = (...funcs) =>{
   return funcs.reduce((a, b) => (...args) => b(a(...args)))
 };
 
-module.exports = {compose,composeA,pipe,pipeA}
+// curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
+const curry = (fn) => {
+  const arity = fn.length;
+
+  return function $curry(...args) {
+    if (args.length < arity) {
+      return $curry.bind(null, ...args);
+    }
+
+    return fn.call(null, ...args);
+  };
+}
+
+
+// merge :: Object-> Object
+const merge = a => b => ({...a,...b})
+const identity = x => x;
+
+
+const flat = a => [].concat.apply([], a);
+/*
+
+
+Kind of supercompose. Apply Fn to each item in ...fns
+
+
+configure :: Fn(x(a),x(b),x(c),...,x(z)) -> a -> z  ==  Fn(x)(a,b,c,...,z) -> a -> z
+*/
+const distribute = x => fn =>(...funcs)=>{
+  return x(...funcs.map( x=> fn(x)  ))
+}
+
+
+// map :: Functor f => (a -> b) -> f a -> f b
+const map = curry((fn, f) => f.map(fn));
+
+
+module.exports = {compose, composeA, pipe, pipeA, curry,merge,identity,map,distribute}
