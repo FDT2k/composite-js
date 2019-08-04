@@ -1,4 +1,4 @@
-const {pipeA,composeA:compose} = require('../src/index')
+const {pipeA,composeA:compose} = require('../src/experimental')
 
 
 test('calling pipe without parameter should return args', () => {
