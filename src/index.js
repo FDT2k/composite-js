@@ -45,7 +45,7 @@ const merge = a => b => ({...a,...b})
 const identity = x => x;
 
 
-const flat = a => [].concat.apply([], a);
+const flatten = a => [].concat.apply([], a);
 /*
 
 
