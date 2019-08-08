@@ -44,6 +44,28 @@ const curry = (fn,trace=null) => {
   };
 }
 
+
+//create a curry with an arity from another func
+const curryN = (fn,callFn,trace) => {
+
+  //console.log(trace)
+  if (trace !== null)
+    trace('curried ',fn.length + ' args')
+  const arity = fn.length;
+  return function $curry(...args) {
+    if (args.length < arity) {
+      if (trace !== null)
+        trace('applied ',args)
+      return $curry.bind(null, ...args);
+    }
+    if (trace !== null)
+      trace('call ',args)
+    return callFn.call(null, ...args);
+  };
+}
+
+
+
 // trace:: String -> a -> a
 const trace = curry((tag,value) => {
   console.log(tag,value);
@@ -59,6 +81,7 @@ const callee = x => x();
 
 
 const flip = curry((fn, a, b) => fn(b, a));
+
 
 const flatten = a => [].concat.apply([], a);
 
@@ -80,4 +103,4 @@ const distribute = x => fn =>(...funcs)=>{
 const map = curry((fn, f) => f.map(fn));
 
 
-module.exports = {compose, pipe, curry,merge,identity,map,distribute,trace,callee,flatten,supertrace,flip,experimental:{pipeA,composeA}}
+module.exports = {compose, pipe, curry,curryN,merge,identity,map,distribute,trace,callee,flatten,supertrace,flip,experimental:{pipeA,composeA}}
