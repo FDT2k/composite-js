@@ -32,9 +32,9 @@ test('curryN', () => {
    const bindCreatorToState = curry ( (state,selectorCreator)=>{
     return curryN(selectorCreator,(...args)=>{
       return ()=>selectorCreator(...args)(state())
-    },supertrace('bindable'))
+    })
 
-  },supertrace('makeBindable'))
+  })
 
   let bound = bindCreatorToState(getState)(creator);
 

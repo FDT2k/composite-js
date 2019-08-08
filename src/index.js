@@ -26,20 +26,26 @@ const pipe = (...funcs) =>{
   return funcs.reduce((a, b) => (...args) => b(a(...args)))
 };
 
+// merge :: Object-> Object
+const merge = a => b => ({...a,...b})
+const identity = x => x;
+const callee = x => x();
+
+
 // curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
 const curry = (fn,trace=null) => {
   //console.log(trace)
-  if (trace !== null)
-    trace('curried ',fn.length + ' args')
+  if (typeof trace !=='function')
+    trace = identity
+
+  trace('curried ',fn.length + ' args')
   const arity = fn.length;
   return function $curry(...args) {
     if (args.length < arity) {
-      if (trace !== null)
-        trace('applied ',args)
+      trace('applied ',args)
       return $curry.bind(null, ...args);
     }
-    if (trace !== null)
-      trace('call ',args)
+    trace('call ',args)
     return fn.call(null, ...args);
   };
 }
@@ -47,19 +53,19 @@ const curry = (fn,trace=null) => {
 
 //create a curry with an arity from another func
 const curryN = (fn,callFn,trace) => {
+  if (typeof trace !=='function')
+    trace = identity
 
-  //console.log(trace)
-  if (trace !== null)
-    trace('curried ',fn.length + ' args')
+  trace('curried ',fn.length + ' args')
   const arity = fn.length;
   return function $curry(...args) {
     if (args.length < arity) {
-      if (trace !== null)
-        trace('applied ',args)
+
+      trace('applied ',args)
       return $curry.bind(null, ...args);
     }
-    if (trace !== null)
-      trace('call ',args)
+
+    trace('call ',args)
     return callFn.call(null, ...args);
   };
 }
@@ -74,10 +80,6 @@ const trace = curry((tag,value) => {
 const supertrace = curry((prefix ,tag,value) => trace(prefix+ ' '+tag,value))
 
 
-// merge :: Object-> Object
-const merge = a => b => ({...a,...b})
-const identity = x => x;
-const callee = x => x();
 
 
 const flip = curry((fn, a, b) => fn(b, a));
