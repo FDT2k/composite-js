@@ -1,8 +1,7 @@
-
-const {composeA,pipeA} = require('./experimental')
+export * from './experimental'
 
 // compose :: ((a -> b), (b -> c),  ..., (y -> z)) -> a -> z
-const compose=(...funcs) =>{
+export const compose=(...funcs) =>{
   if (funcs.length === 0) {
     return arg => arg
   }
@@ -14,7 +13,7 @@ const compose=(...funcs) =>{
   return funcs.reduce((a, b) => (...args) => a(b(...args)))
 }
 
-const pipe = (...funcs) =>{
+export const pipe = (...funcs) =>{
   if(funcs.length ===0){
     return arg => arg
   }
@@ -26,83 +25,88 @@ const pipe = (...funcs) =>{
   return funcs.reduce((a, b) => (...args) => b(a(...args)))
 };
 
-// merge :: Object-> Object
-const merge = a => b => ({...a,...b})
-const identity = x => x;
-const callee = x => x();
+export const merge = a => b => ({...a,...b})
+export const identity = x => x;
+export const callee = x => x();
 
+export function make_curry(arity){
+  return function $curry(...args){
+    if (args.length < arity) {
+      return $curry.bind(null, ...args);
+    }
+    return fn.call(null, ...args);
+  }
+}
 
 // curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
-const curry = (fn,trace=null) => {
-  //console.log(trace)
-  if (typeof trace !=='function')
-    trace = identity
-
-  trace('curried ',fn.length + ' args')
+export const curry = (fn) => {
   const arity = fn.length;
   return function $curry(...args) {
     if (args.length < arity) {
-      trace('applied ',args)
       return $curry.bind(null, ...args);
     }
-    trace('call ',args)
     return fn.call(null, ...args);
   };
 }
 
-
 //create a curry with an arity from another func
-const curryN = (fn,callFn,trace) => {
-  if (typeof trace !=='function')
-    trace = identity
-
-  trace('curried ',fn.length + ' args')
+export const curryN = (fn,callFn) => {
   const arity = fn.length;
   return function $curry(...args) {
     if (args.length < arity) {
-
-      trace('applied ',args)
       return $curry.bind(null, ...args);
     }
-
-    trace('call ',args)
     return callFn.call(null, ...args);
   };
 }
 
-
-
 // trace:: String -> a -> a
-const trace = curry((tag,value) => {
+export const trace = curry((tag,value) => {
   console.log(tag,value);
   return value;
 })
-const supertrace = curry((prefix ,tag,value) => trace(prefix+ ' '+tag,value))
 
+export const supertrace = curry((prefix ,tag,value) => trace(prefix+ ' '+tag,value))
 
+export const flip = curry((fn, a, b) => fn(b, a));
 
-
-const flip = curry((fn, a, b) => fn(b, a));
-
-
-const flatten = a => [].concat.apply([], a);
-
-
-
-/*
-
-
-Kind of supercompose. Apply Fn to each item in ...fns
-
-configure :: Fn(x(a),x(b),x(c),...,x(z)) -> a -> z  ==  Fn(x)(a,b,c,...,z) -> a -> z
-*/
-const distribute = x => fn =>(...funcs)=>{
-  return x(...funcs.map( x=> fn(x)  ))
-}
+export const flatten = a => [].concat.apply([], a);
 
 
 // map :: Functor f => (a -> b) -> f a -> f b
-const map = curry((fn, f) => f.map(fn));
+export const map = curry((fn, f) => f.map(fn));
+
+export const prop = prop => obj => obj[prop]
 
 
-module.exports = {compose, pipe, curry,curryN,merge,identity,map,distribute,trace,callee,flatten,supertrace,flip,experimental:{pipeA,composeA}}
+// maybe :: b -> (a -> b) -> Maybe a -> b
+export const maybe = curry((value, fn, functor) => {
+  if (functor.isNothing) {
+    return value;
+  }
+  return fn(functor.$value);
+});
+
+const inspect = console.log
+
+export class IO {
+  static of(x) {
+    return new IO(() => x);
+  }
+
+  constructor(fn) {
+    this.$value = fn;
+  }
+
+  map(fn) {
+    return new IO(compose(fn, this.$value));
+  }
+
+  inspect() {
+    return `IO(${inspect(this.$value)})`;
+  }
+}
+
+/*holds execution if inspector enabled*/
+
+export const debug_trace = (x)=>{let data = x.getAll();debugger;  return x}
