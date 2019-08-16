@@ -1,6 +1,6 @@
 {
   "name": "@geekagency/composite-js",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Kit of composite functions utilities",
   "main": "index.js",
   "directories": {
@@ -29,8 +29,9 @@
     "jest-coverage-badges": "^1.1.2"
   },
   "jest": {
-    "transform": {".*": "<rootDir>/node_modules/babel-jest"},
-    
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
     "moduleFileExtensions": [
       "js",
       "es6"
