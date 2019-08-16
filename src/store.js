@@ -9,6 +9,9 @@ export const store = (initialStore)=>{
     get: (x)=>data[x],
     set: (x,y)=>{
       data[x]=y;
+    },
+    push: (x,y)=>{
+      
     }
   }
 }

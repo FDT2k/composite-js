@@ -1,5 +1,4 @@
-const {Maybe} = require('../src/experimental')
-const {compose,map,prop,curry,maybe,trace,IO} = require('../src/index')
+const {compose,map,prop,curry,maybe,trace,IO,Maybe} = require('../src/index')
 const {store} = require('../src/store')
 test('Maybe', () => {
   // safeHead :: [a] -> Maybe(a)

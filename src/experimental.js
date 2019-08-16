@@ -1,3 +1,12 @@
+
+export function make_curry(arity){
+  return function $curry(...args){
+    if (args.length < arity) {
+      return $curry.bind(null, ...args);
+    }
+    return fn.call(null, ...args);
+  }
+}
 /*
 pipe
 
@@ -59,56 +68,4 @@ configure :: Fn(x(a),x(b),x(c),...,x(z)) -> a -> z  ==  Fn(x)(a,b,c,...,z) -> a 
 */
 export const distribute = x => fn =>(...funcs)=>{
   return x(...funcs.map( x=> fn(x)  ))
-}
-
-
-export class Maybe {
-  get isNothing() {
-    return this.$value === null || this.$value === undefined;
-  }
-
-  get isJust() {
-    return !this.isNothing;
-  }
-
-  constructor(x) {
-    this.$value = x;
-  }
-
-  /*[util.inspect.custom]() {
-    return this.isNothing ? 'Nothing' : `Just(${inspect(this.$value)})`;
-  }*/
-
-  // ----- Pointed Maybe
-  static of(x) {
-    return new Maybe(x);
-  }
-
-  // ----- Functor Maybe
-  map(fn) {
-    return this.isNothing ? this : Maybe.of(fn(this.$value));
-  }
-
-  // ----- Applicative Maybe
-  ap(f) {
-    return this.isNothing ? this : f.map(this.$value);
-  }
-
-  // ----- Monad Maybe
-  chain(fn) {
-    return this.map(fn).join();
-  }
-
-  join() {
-    return this.isNothing ? this : this.$value;
-  }
-
-  // ----- Traversable Maybe
-  sequence(of) {
-    return this.traverse(of, identity);
-  }
-
-  traverse(of, fn) {
-    return this.isNothing ? of(this) : fn(this.$value).map(Maybe.of);
-  }
 }
