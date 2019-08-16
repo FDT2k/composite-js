@@ -25,7 +25,7 @@ export const pipe = (...funcs) =>{
   return funcs.reduce((a, b) => (...args) => b(a(...args)))
 };
 
-export const merge = a => b => ({...a,...b})
+
 export const identity = x => x;
 export const callee = x => x();
 
@@ -59,6 +59,7 @@ export const curryN = (fn,callFn) => {
     return callFn.call(null, ...args);
   };
 }
+export const merge = curry( (a,b) => ({...a,...b}))
 
 // trace:: String -> a -> a
 export const trace = curry((tag,value) => {
@@ -73,11 +74,17 @@ export const flip = curry((fn, a, b) => fn(b, a));
 export const flatten = a => [].concat.apply([], a);
 
 
-// map :: Functor f => (a -> b) -> f a -> f b
+// map :: fn f => (a -> b) -> f a -> f b
 export const map = curry((fn, f) => f.map(fn));
 
 export const prop = prop => obj => obj[prop]
 
+export const concat = curry((a, b) => a.concat(b));
+
+export const append = flip(concat);
+
+
+export const replace = curry((re, rpl, str) => str.replace(re, rpl));
 
 // maybe :: b -> (a -> b) -> Maybe a -> b
 export const maybe = curry((value, fn, functor) => {
@@ -110,3 +117,17 @@ export class IO {
 /*holds execution if inspector enabled*/
 
 export const debug_trace = (x)=>{let data = x.getAll();debugger;  return x}
+
+
+// STRING => BOOL
+export const empty = string=> string.length==0;
+// BOOL => BOOL
+export const not = x => !x
+
+export const notEmpty = compose(not,empty)
+
+// very small either, no way to know if there was an error
+export const _either = curry( (cond,left,right,val )=>{
+  let _right = right(val);
+  return cond(_right) ? _right : left(val);
+})
