@@ -19,37 +19,57 @@ export const pipe = (...funcs) =>{
   return funcs.reduce((a, b) => (...args) => b(a(...args)))
 };
 
+export const callCurry = namedCurry =>  arity => fn => (...args) => {
+  if (args.length < arity) {
+    return namedCurry.bind(null, ...args);
+  }
+  return fn.call(null, ...args);
+}
+
 // curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
 export const curry = (fn) => {
   const arity = fn.length;
   return function $curry(...args) {
-    if (args.length < arity) {
+    /*if (args.length < arity) {
       return $curry.bind(null, ...args);
     }
-    return fn.call(null, ...args);
+    return fn.call(null, ...args);*/
+    return callCurry($curry)(arity)(fn)(...args)
+
   };
 }
 
-//create a curry with an arity from another func
+
+/*
+  Generating a N arity curry from another defined FN to be help compose variadics
+
+  CurryCeption
+*/
+// curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
 export const curryN = (fn,callFn) => {
   const arity = fn.length;
-  return function $curry(...args) {
-    if (args.length < arity) {
-      return $curry.bind(null, ...args);
+  return function $curryN(...args) {
+    /*if (args.length < arity) {
+      return $curryN.bind(null, ...args);
     }
-    return callFn.call(null, ...args);
+    return callFn.call(null, ...args);*/
+    return callCurry($curryN)(arity)(callFn)(...args)
   };
 }
 
+/*
+  Generating a X arity curry to be help compose variadics
 
-//create a curry with an arity
+  CurryCeption
+*/
 export const curryX = (_arity,fn) => {
   const arity = _arity;
   return function $curryX(...args) {
-    if (args.length < arity) {
+  /*  if (args.length < arity) {
       return $curryX.bind(null, ...args);
     }
-    return fn.call(null, ...args);
+    return fn.call(null, ...args);*/
+    return callCurry($curryX)(arity)(fn)(...args)
   };
 }
 
@@ -84,25 +104,33 @@ diverge
               Object=>    fn1
           /            /      \
   Object=> ____ diverge  _ fn2  _ Array  ___ whatever
-
 */
+// diverge :: ((a->b),(a->c),...,(a->z)) => [b,c,...z]
 export const diverge = (...args)=> x => args.map(arg=> arg(x))
-
-
+// divergeRightThen  :: ([a]->b) -> ((a->b),(a->c),...,(a->z)) -> [a,c,...,z] -> b
 export const divergeRightThen = z =>(...args) => compose (z,diverge(...args))
+
+// divergeLeftThen  :: ([a]->b) -> ((a->b),(a->c),...,(a->z)) -> [a,c,...,z] -> b
 export const divergeLeftThen = z => (...args) => pipe (diverge(...args),z)
 
+// identity :: a -> a
 export const identity = x => x;
 
+// callee :: a -> b -> a(b)
 export const callee = x => x();
 
+// flip :: ((a,b)->c)  -> a -> b -> (b,a) -> c
+// flip :: (a -> b -> c) -> b -> a -> c
 export const flip = curry((fn, a, b) => fn(b, a));
 
-export const safeCall = x => z => x(z)
+// safeCall :: Functor f => (a -> c) -> b -> a b -> c
+export const safeCall = a => b => a(b)
 
+// safePropCall :: {x} -> Scalar -> (a,...,z) -> c
 export const safePropCall = x => z => (...a)=>{return x[z](...a)}
 
 // map :: fn f => (a -> b) -> f a -> f b
+// map :: Functor f => (a -> b) -> f a -> f b
 export const map = curry((fn, f) => f.map(fn));
 
 

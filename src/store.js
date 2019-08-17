@@ -1,4 +1,5 @@
 import {curry}  from './index'
+
 export const store = (initialStore)=>{
   if(initialStore ){
     return initialStore
@@ -11,7 +12,7 @@ export const store = (initialStore)=>{
       data[x]=y;
     },
     push: (x,y)=>{
-      
+
     }
   }
 }

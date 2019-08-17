@@ -1,4 +1,4 @@
-const {curry,curryN,supertrace,compose} = require('../src/index')
+const {curry,curryN,curryX,supertrace,compose} = require('../src/index')
 
 
 test('curry', () => {
@@ -13,7 +13,31 @@ test('curry', () => {
 });
 
 
+test('curryX',()=>{
+  /*
+    Generating a X arity curry to be help compose variadics
+  */
+  const expectingXArgs = arity => (...args)=>{
+    console.log('expecting',arity, 'received',args.length)
+    return arity == args.length
+  }
 
+  let makeExpecting = (arity) =>{
+    let fn = expectingXArgs(arity)
+    return curryX(arity,(...args)=>{
+      return fn(...args)
+    });
+  }
+
+  const expecting5 = makeExpecting(5);
+  const expecting6 = makeExpecting(6);
+
+  expect(expecting5(1,2,3,4,5)).toBe(true)
+  expect(expecting6(1,2,3,4,5,6)).toBe(true)
+
+  console.log(expecting5(1,2).name)
+
+})
 
 test('curryN', () => {
 

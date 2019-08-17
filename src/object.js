@@ -1,8 +1,25 @@
-import {curry,flip} from './core'
+import {curry,flip,curryX} from './core'
 import {defaultTo} from './bool'
+import {reduce} from './array'
 
 
-export const merge = curry( (a,b) => ({...a,...b}))
+
+export const assign2 = curry((x,y)=> Object.assign({},x,y))
+
+export const _merge = curry( (a,b) => (assign2(a,b)))
+export const merge = _merge
+
+//makeMerge :: Number -> (Number, ([a]-> b)) -> ([a] -> b)
+export const makeMerge = (arity) =>{
+  return curryX(arity,(...args)=>{
+    return reduce({},(a,b)=> merge(a,b),args)
+  });
+}
+
+export const mergeAll = list => reduce({},assign2,list)
+
+
+
 
 
 export const prop = curry((prop,obj) => obj[prop])
