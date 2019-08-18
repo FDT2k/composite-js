@@ -66,6 +66,6 @@ Kind of supercompose. Apply Fn to each item in ...fns
 
 configure :: Fn(x(a),x(b),x(c),...,x(z)) -> a -> z  ==  Fn(x)(a,b,c,...,z) -> a -> z
 */
-export const distribute = x => fn =>(...funcs)=>{
-  return x(...funcs.map( x=> fn(x)  ))
+export const distribute = z => fn =>(...funcs)=>{
+  return z(...funcs.map( x=> fn(x)  ))
 }
