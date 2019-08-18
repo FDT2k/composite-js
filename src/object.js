@@ -50,6 +50,8 @@ export const as_object_prop = curry( (key ,value ,object) =>{
 
 
 /*
-  a -> b -> Object
+  returns a function that generates an object
 */
-export const as_prop = key => flip(as_object_prop(key),defaultTo({}))
+//  a -> b -> Object
+
+export const as_prop = curry((key,value)=> flip(as_object_prop(key),defaultTo({}),value))
