@@ -40,12 +40,16 @@ export const omit_key = curry( (_omit,obj) => {
 
 
 /*
-  String => String => Object => Object
+  String -> String -> Object -> Object
 */
-export const as_prop = curry( (key ,value ,object) =>{
+export const as_object_prop = curry( (key ,value ,object) =>{
   let o = {...object}
   o[key]= value;
   return o;
 })
 
-export const as_pure_prop = key => flip(as_prop(key),defaultTo([]))
+
+/*
+  a -> b -> Object
+*/
+export const as_prop = key => flip(as_object_prop(key),defaultTo({}))

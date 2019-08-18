@@ -1,5 +1,5 @@
 import {compose,pipe,curry,identity,diverge,flip,divergeRightThen} from '../src/index'
-import {prop,as_pure_prop,merge} from '../src/object'
+import {prop,as_prop,merge} from '../src/object'
 import {spread} from '../src/array'
 const upperCase = x=>x.toUpperCase()
 const lowerCase = x=>x.toLowerCase()
@@ -109,7 +109,7 @@ test ('[diverge]',()=>{
     pipe(up_and_low)('hello')
   ).toEqual(['HELLO','hello'])
 
-  let upperkey = key => compose(as_pure_prop(key),upperCase,prop(key))
+  let upperkey = key => compose(as_prop(key),upperCase,prop(key))
 
   let object = {
     a:'a',
@@ -136,7 +136,7 @@ test ('[diverge]',()=>{
 
 test ('[diverge] shortcuts',()=>{
 
-  let upperkey = key => compose(as_pure_prop(key),upperCase,prop(key))
+  let upperkey = key => compose(as_prop(key),upperCase,prop(key))
 
   let object = {
     a:'a',
