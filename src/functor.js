@@ -12,9 +12,9 @@ export class IO {
     return new IO(compose(fn, this.$value));
   }
 
-  inspect() {
+  /*inspect() {
     return `IO(${inspect(this.$value)})`;
-  }
+  }*/
 }
 
 

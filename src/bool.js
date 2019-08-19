@@ -13,8 +13,7 @@ export const notEmpty = compose(not,empty)
   if(cond is met, return right else return left)
 */
 export const _either = curry( (cond,left,right,val )=>{
-  let _right = right(val);
-  return cond(_right) ? _right : left(val);
+  return cond(val) ? right(val) : left(val);
 })
 
 export const is_type_object = o => typeof o ==='object'

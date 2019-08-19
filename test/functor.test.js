@@ -1,5 +1,7 @@
 const {compose,map,prop,curry,maybe,trace,IO,Maybe} = require('../src/index')
 const {store} = require('../src/store')
+
+const os = require('os')
 test('Maybe', () => {
   // safeHead :: [a] -> Maybe(a)
   const safeHead = xs => Maybe.of(xs[0]);
@@ -72,5 +74,9 @@ test ('IO',()=>{
   console.log(ioStore.$value());
   console.log(ioStore.map(store=>store.get('bla')).$value());
 
+
+  let safeOs = new IO (()=>os)
+  let home_dir = safeOs.map(prop('homedir'))
+  console.log(home_dir.$value()())
 
 });
