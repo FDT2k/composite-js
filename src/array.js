@@ -10,11 +10,12 @@ export const reduce = curry((initial_value,fn,array )=> {
 // reduce an array of subObjects to a merged object of all subObjects
 export const reduceToObject= reduce ({},merge)
 
-
 export const divergeRightThenReduce = divergeRightThen(reduceToObject)
 
+/*Recursively call a Curried FN  with each array item of args
+NOT FOR VARIADIC */
 
-/*Recursively call a Curried FN  with each array item of args*/
+//spread :: fn -> [a,b,c...] -> fn(a,b,c,...)
 export const spread = curry((fn,args)=>{
   return reduce(fn,(_fn,arg)=>_fn(arg),args)
 })
