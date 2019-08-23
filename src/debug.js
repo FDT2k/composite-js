@@ -1,9 +1,14 @@
 
-import {curry} from './core'
+import {curry,map} from './core'
 
 // trace:: String -> a -> a
 export const trace = curry((tag,value) => {
   console.log(tag,value);
+  return value;
+})
+
+export const trace_keys = curry((tag,value)=>{
+  console.log(tag,Object.keys(value))
   return value;
 })
 
