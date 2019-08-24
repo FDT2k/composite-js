@@ -48,15 +48,19 @@ export const reduceListByKey = key => reduce({},groupListByKey(key))
 
 //shuffle [a] -> [a]
 export const shuffle = (arr) => {
-    let ctr = arr.length;
-    let idx = -1;
-    let res = [];
-    while (ctr > 0) {
-        idx = Math.floor(Math.random() * ctr);
-        ctr--;
-        res.push(arr[idx])
-    }
-    return res;
+  let res = [...arr]
+
+  let ctr = res.length;
+  let temp;
+  let index;
+  while (ctr > 0) {
+      index = Math.floor(Math.random() * ctr);
+      ctr--;
+      temp = res[ctr];
+      res[ctr] = res[index];
+      res[index] = temp;
+  }
+  return res;
 }
 
 // reduceListByKey :: [a] -> [{a,b,c}] -> {a:{a,b}}
