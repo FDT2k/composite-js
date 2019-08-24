@@ -1,7 +1,10 @@
-import {curry,compose,identity,maybe,divergeRightThen} from './core'
-import {merge,as_prop} from './object'
+import {curry,compose,identity,maybe,divergeRightThen,map} from './core'
+import {merge,as_prop,keys,mergeAll} from './object'
 import {Maybe} from './functor'
 import {defaultTo} from './bool'
+import {trace} from './debug'
+
+// flatten :: [a,[a]...] -> [a,a...]
 export const flatten = a => [].concat.apply([], a);
 
 export const reduce = curry((initial_value,fn,array )=> {
@@ -43,19 +46,33 @@ export const safeHead = defaultTo(null)(head)
 
 export const reduceListByKey = key => reduce({},groupListByKey(key))
 
+//shuffle [a] -> [a]
+export const shuffle = (arr) => {
+    let ctr = arr.length;
+    let idx = -1;
+    let res = [];
+    while (ctr > 0) {
+        idx = Math.floor(Math.random() * ctr);
+        ctr--;
+        res.push(arr[idx])
+    }
+    return res;
+}
 
-export const reduceListByKeys = curry( (keys,list) =>{
-  if(keys.length==0)
+// reduceListByKey :: [a] -> [{a,b,c}] -> {a:{a,b}}
+export const reduceListByKeys = curry( (_keys,list) =>{
+  if(_keys.length==0)
     return list;
 
-  let h = head(keys)
-  let rest = safeTail(keys)
+  let h = head(_keys)
+  let rest = safeTail(_keys)
   let res = reduceListByKey(h)(list);
 
   for(let key in res){
     res[key]=reduceListByKeys(rest)(res[key])
-    //res = reduceListToObject(groupListByKey())
   }
+
+
   return res;
 })
 
