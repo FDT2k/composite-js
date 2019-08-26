@@ -224,3 +224,36 @@ test('[AC] Combine asScalarProp ',()=>{
   console.log(mycombination)
 
 })
+
+
+
+
+test('[AC] Combine asFunctionPropFromProp ',()=>{
+  //to be combined an arg should accept an enhancer arg
+  let func = arg=>arg
+  let funcb = arg=>arg*2
+
+  let combined = CC.combineObject(
+    CC.asFunctionPropFromProp({func}),
+    CC.asFunctionPropFromProp({funcb}),
+  )
+  // combined is now a function that accepts an enhancer, identity by default
+  let mycombination = combined()
+  //now we have an object with function as keys
+
+  expect(mycombination.func).toBeInstanceOf(Function)
+  expect(mycombination.funcb).toBeInstanceOf(Function)
+
+  expect(mycombination.func(12)).toBe(12)
+  expect(mycombination.funcb(12)).toBe(24)
+
+  /*
+  applying an enhancer to double the results. Enhancer receive the function or value as argument,
+  if the x is a function we can return another function because it'll be applied as the property value
+  */
+
+  let enhancedCombination = combined(x=>arg=> x(arg)*2)
+  expect(enhancedCombination.func(12)).toBe(24)
+  expect(enhancedCombination.funcb(12)).toBe(48)
+
+})

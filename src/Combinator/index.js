@@ -47,6 +47,12 @@ export const enhancedPropWithDefaultEnhancer= key => c.compose(asEnhancedProp(ke
 // enhance is not currified because we want to be able to call with no arg()
 export const asFunctionProp = c.curry((key,func) => enhance=> enhancedPropWithDefaultEnhancer(key)(enhance)(func))
 
+export const asFunctionPropFromProp = (obj) => {
+	let key = c.head(c.keys(obj))
+	let func = obj[key];
+	return asFunctionProp(key,func)
+}
+
 export const asScalarProp = c.curry((key,value) => enhance => enhancedPropWithDefaultEnhancer(key)(enhance)(value))
 
 // if no value, the default is the value of the key
