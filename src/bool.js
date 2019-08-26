@@ -20,6 +20,17 @@ export const is_type_object = o => typeof o ==='object'
 export const is_type_string = o => typeof o ==='string'
 export const is_type_function = o => typeof o ==='function'
 export const is_type_number = o => typeof o ==='number'
+export const is_undefined = o => typeof o ==='undefined'
+export const is_array = o => Array.isArray(o);
+
+export const _eitherUndefined = _either(is_undefined)
+
+
+export const _throw = x=> val=> {throw new Error(x)}
+
+//interrupt everything
+export const _eitherThrow = (cond,error)=> _either(cond,_throw(error),identity);
+
 
 // default a value to something if null || undefined -> cf. Maybe
 export const defaultTo = val => compose(maybe(val,identity),Maybe.of)

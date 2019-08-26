@@ -34,11 +34,6 @@ import * as c from '../index'
 
 */
 
-export const _throw = x=> val=> {console.log(val);throw new Error(x)}
-
-//interrupt everything
-export const _eitherThrow = (cond,error)=> c._either(cond,_throw(error),c.identity);
-
 
 // Scalar x -> a-> Object as {x:a}
 export const asProp =  c.as_prop;
