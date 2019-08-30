@@ -44,7 +44,7 @@ export const asEnhancedProp = c.curry((key,enhance)=>c.compose(asProp(key),enhan
 
 export const enhancedPropWithDefaultEnhancer= key => c.compose(asEnhancedProp(key),c.defaultTo(c.identity))
 
-// enhance is not currified because we want to be able to call with no arg()
+// enhance is not currified because we want to be able to call with no arg which currying doesn't allow ()
 export const asFunctionProp = c.curry((key,func) => enhance=> enhancedPropWithDefaultEnhancer(key)(enhance)(func))
 
 export const asFunctionPropFromProp = (obj) => {

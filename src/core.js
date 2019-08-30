@@ -26,17 +26,48 @@ export const callCurry = namedCurry =>  arity => fn => (...args) => {
   return fn.call(null, ...args);
 }
 
+
+
 // curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
 export const curry = (fn) => {
   const arity = fn.length;
   return function $curry(...args) {
-    /*if (args.length < arity) {
-      return $curry.bind(null, ...args);
-    }
-    return fn.call(null, ...args);*/
     return callCurry($curry)(arity)(fn)(...args)
-
   };
+}
+
+// curry that allow empty args
+export const curryNull = (fn)=>{
+  const arity = fn.length;
+  return (...args)=>{
+    let idx = 0;
+    let prevArgs = null
+    let curr =  function $curryNull() {
+
+      console.log(prevArgs,args,idx,arity)
+
+      if(prevArgs == null ){ // never called
+        if(args.length == 0)
+          args = [null]
+        idx += args.length
+      }
+
+
+      if(prevArgs != null){
+        if(args.length < arity){
+          args.push(null)
+        }
+      }
+
+
+      return callCurry($curryNull)(arity)(fn)(...args)
+
+    }
+    let res = curr()
+    prevArgs = args
+
+    return res;
+  }
 }
 
 
