@@ -14,3 +14,5 @@ export const append = flip(concat);
 
 // length :: String -> Number
 export const length = str=> str.length
+
+export const split = curry((sep,str)=> str.split(sep))

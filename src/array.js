@@ -11,6 +11,14 @@ export const reduce = curry((initial_value,fn,array )=> {
   return array.reduce(fn,initial_value);
 })
 
+
+export const findValueIndex = val =>array =>{
+
+  return array.findIndex(item=> val==item)
+
+}
+
+
 // reduce an array of subObjects to a merged object of all subObjects
 export const reduceToObject= reduce ({},merge)
 
