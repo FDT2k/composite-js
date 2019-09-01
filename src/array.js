@@ -95,4 +95,4 @@ export const groupByKey = (key)=> curry((result,item)=>{
 })
 
 
-const join = c.curry((sep,array)=> array.join(sep))
+const join = curry((sep,array)=> array.join(sep))
