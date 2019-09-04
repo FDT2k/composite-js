@@ -1,22 +1,25 @@
 import {curry,compose,identity,maybe,divergeRightThen,map} from './core'
 import {merge,as_prop,keys,mergeAll} from './object'
 import {Maybe} from './functor'
-import {defaultTo} from './bool'
+import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
 import {trace} from './debug'
 
 // flatten :: [a,[a]...] -> [a,a...]
 export const flatten = a => [].concat.apply([], a);
 
-export const reduce = curry((initial_value,fn,array )=> {
-  return array.reduce(fn,initial_value);
-})
+export const join = curry((sep,array)=> array.join(sep))
 
+export const filter = curry((fn,array) => array.filter(fn))
 
-export const findValueIndex = val =>array =>{
+export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
 
-  return array.findIndex(item=> val==item)
+export const findIndex = curry((fn,array) =>  array.findIndex(fn))
 
-}
+export const findIndexEqual = compose(findIndex,isStrictlyEqual)
+export const findIndexNotEqual = compose(findIndex,isStrictlyNotEqual)
+
+export const filterNotEqual = compose(filter,isStrictlyNotEqual)
+export const filterEqual = compose(filter,isStrictlyEqual)
 
 
 // reduce an array of subObjects to a merged object of all subObjects
@@ -24,8 +27,7 @@ export const reduceToObject= reduce ({},merge)
 
 export const divergeRightThenReduce = divergeRightThen(reduceToObject)
 
-/*Recursively call a Curried FN  with each array item of args
-NOT FOR VARIADIC */
+/*Recursively call a Curried FN  with each array item of args */
 
 //spread :: fn -> [a,b,c...] -> fn(a,b,c,...)
 export const spread = curry((fn,args)=>{
@@ -93,6 +95,3 @@ export const groupByKey = (key)=> curry((result,item)=>{
   result[item[key]]=item;
   return result;
 })
-
-
-const join = curry((sep,array)=> array.join(sep))

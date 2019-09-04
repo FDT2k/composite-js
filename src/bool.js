@@ -16,12 +16,18 @@ export const _either = curry( (cond,left,right,val )=>{
   return cond(val) ? right(val) : left(val);
 })
 
+export const isStrictlyEqual = curry((value,item)=> value===item)
+export const isStrictlyNotEqual = value => compose(not,isStrictlyEqual(value))
+
+export const isType = val => compose(isStrictlyEqual,typeof(val));
+
 export const is_type_object = o => typeof o ==='object'
 export const is_type_string = o => typeof o ==='string'
 export const is_type_function = o => typeof o ==='function'
 export const is_type_number = o => typeof o ==='number'
 export const is_undefined = o => typeof o ==='undefined'
 export const is_array = o => Array.isArray(o);
+
 
 export const _eitherUndefined = _either(is_undefined)
 
