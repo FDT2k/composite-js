@@ -26,17 +26,48 @@ export const callCurry = namedCurry =>  arity => fn => (...args) => {
   return fn.call(null, ...args);
 }
 
+
+
 // curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
 export const curry = (fn) => {
   const arity = fn.length;
   return function $curry(...args) {
-    /*if (args.length < arity) {
-      return $curry.bind(null, ...args);
-    }
-    return fn.call(null, ...args);*/
     return callCurry($curry)(arity)(fn)(...args)
-
   };
+}
+
+// curry that allow empty args
+export const curryNull = (fn)=>{
+  const arity = fn.length;
+  return (...args)=>{
+    let idx = 0;
+    let prevArgs = null
+    let curr =  function $curryNull() {
+
+      console.log(prevArgs,args,idx,arity)
+
+      if(prevArgs == null ){ // never called
+        if(args.length == 0)
+          args = [null]
+        idx += args.length
+      }
+
+
+      if(prevArgs != null){
+        if(args.length < arity){
+          args.push(null)
+        }
+      }
+
+
+      return callCurry($curryNull)(arity)(fn)(...args)
+
+    }
+    let res = curr()
+    prevArgs = args
+
+    return res;
+  }
 }
 
 
@@ -133,6 +164,10 @@ export const safePropCall = x => z => (...a)=>{return x[z](...a)}
 // map :: Functor f => (a -> b) -> f a -> f b
 export const map = curry((fn, f) => f.map(fn));
 
+// join :: Monad m => m (m a) -> m a
+export const join = m => m.join();
+// chain :: Monad m => (a -> m b) -> m a -> m b
+export const chain = f => compose(join, map(f));
 
 // maybe :: b -> (a -> b) -> Maybe a -> b
 export const maybe = curry((value, fn, functor) => {

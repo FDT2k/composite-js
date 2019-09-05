@@ -1,23 +1,37 @@
 import {compose} from './core';
 export class IO {
+  constructor(fn) {
+    this.unsafePerformIO = fn;
+  }
+/*
+  [util.inspect.custom]() {
+    return 'IO(?)';
+  }*/
+
+  // ----- Pointed IO
   static of(x) {
     return new IO(() => x);
   }
 
-  constructor(fn) {
-    this.$value = fn;
-  }
-
+  // ----- Functor IO
   map(fn) {
-    return new IO(compose(fn, this.$value));
+    return new IO(compose(fn, this.unsafePerformIO));
   }
 
-  /*inspect() {
-    return `IO(${inspect(this.$value)})`;
-  }*/
+  // ----- Applicative IO
+  ap(f) {
+    return this.chain(fn => f.map(fn));
+  }
+
+  // ----- Monad IO
+  chain(fn) {
+    return this.map(fn).join();
+  }
+
+  join() {
+    return new IO(() => this.unsafePerformIO().unsafePerformIO());
+  }
 }
-
-
 
 export class Maybe {
   get isNothing() {
