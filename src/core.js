@@ -164,6 +164,10 @@ export const safePropCall = x => z => (...a)=>{return x[z](...a)}
 // map :: Functor f => (a -> b) -> f a -> f b
 export const map = curry((fn, f) => f.map(fn));
 
+// join :: Monad m => m (m a) -> m a
+export const join = m => m.join();
+// chain :: Monad m => (a -> m b) -> m a -> m b
+export const chain = f => compose(join, map(f));
 
 // maybe :: b -> (a -> b) -> Maybe a -> b
 export const maybe = curry((value, fn, functor) => {

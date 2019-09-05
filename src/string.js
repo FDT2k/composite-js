@@ -16,3 +16,8 @@ export const append = flip(concat);
 export const length = str=> str.length
 
 export const split = curry((sep,str)=> str.split(sep))
+
+export const lcase = string => string.toLowerCase();
+export const ucase = string => string.toUpperCase();
+
+export const repeat = times=> string => string.repeat(times);

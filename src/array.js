@@ -1,13 +1,13 @@
 import {curry,compose,identity,maybe,divergeRightThen,map} from './core'
-import {merge,as_prop,keys,mergeAll} from './object'
+import {merge,as_prop,keys,mergeAll,prop} from './object'
 import {Maybe} from './functor'
 import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
 import {trace} from './debug'
-
+import {lcase} from './string'
 // flatten :: [a,[a]...] -> [a,a...]
 export const flatten = a => [].concat.apply([], a);
 
-export const join = curry((sep,array)=> array.join(sep))
+export const joinList = curry((sep,array)=> array.join(sep))
 
 export const filter = curry((fn,array) => array.filter(fn))
 
@@ -47,6 +47,9 @@ export const groupListByKey = (key)=> curry((result,item)=>{
 
 export const tail = arr=> arr.slice(1);
 export const head = arr=> arr[0];
+export const slice = curry((x,a)=> a.slice(x));
+export const reverse = a => slice(0,a).reverse()
+
 
 export const safeTail = defaultTo([])(tail)
 export const safeHead = defaultTo(null)(head)
@@ -86,7 +89,6 @@ export const reduceListByKeys = curry( (_keys,list) =>{
     res[key]=reduceListByKeys(rest)(res[key])
   }
 
-
   return res;
 })
 
@@ -95,3 +97,27 @@ export const groupByKey = (key)=> curry((result,item)=>{
   result[item[key]]=item;
   return result;
 })
+
+
+export const sort = curry((fn,array) => array.sort(fn))
+
+
+
+export const _sortAsc = curry((fn,a,b)=> {
+  let aa = fn(a); let bb = fn(b);
+  return ((aa < bb) ? -1 : ((aa > bb) ? 1 : 0));
+});
+
+export const _sortDesc = curry((fn,a,b)=> _sortAsc(fn,b,a))
+
+
+export const _sortBy= curry((_sort,fn,array) => slice(0,array).sort(_sort(fn)))
+export const sortByA= _sortBy(_sortAsc)
+export const sortByD= _sortBy(_sortDesc)
+
+export const sortBy = sortByA
+
+
+
+export const sortAsCaseInsensitive = lcase
+export const sortAsKeyCaseInsensitive = key=> compose (lcase,prop(key))
