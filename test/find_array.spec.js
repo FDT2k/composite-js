@@ -8,6 +8,9 @@ test ("findIndex",()=>{
   expect (
     c.findIndexEqual('bla')(['bla','foo','bar'])
   ).toBe(0)
+  expect (
+    c.findIndexEqual('bla')(['bla','foo','bar'])
+  ).toBe(0)
 
   expect (
     c.findIndexEqual('foo')(['bla','foo','bar'])
