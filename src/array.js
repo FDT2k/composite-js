@@ -4,6 +4,8 @@ import {Maybe} from './functor'
 import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
 import {trace} from './debug'
 import {lcase} from './string'
+
+import {decrement} from './maths'
 // flatten :: [a,[a]...] -> [a,a...]
 export const flatten = a => [].concat.apply([], a);
 
@@ -44,10 +46,19 @@ export const groupListByKey = (key)=> curry((result,item)=>{
   return result
 })
 
+export const listLength = arr=> arr.length
+
+
 
 export const tail = arr=> arr.slice(1);
 export const head = arr=> arr[0];
+export const listIndex = arr  => index => arr[index]
+export const last = arr=> compose(listIndex(arr),decrement,listLength)
+
 export const slice = curry((x,a)=> a.slice(x));
+
+export const range = curry((start,length,a)=> a.slice(start,length))
+
 export const reverse = a => slice(0,a).reverse()
 
 

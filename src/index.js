@@ -13,4 +13,4 @@ export * from './functor';
 export * from './string';
 
 export * from './array';
-export * from './deprecated';
+//export * from './deprecated';

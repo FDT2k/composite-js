@@ -39,3 +39,4 @@ export const divergeRightThen = z =>(...args) => compose (z,diverge(...args))
 export const divergeLeftThen = z => (...args) => pipe (diverge(...args),z)
 // callee :: a -> b -> a(b)
 export const callee = x => x();
+export const match = curry((re, str) => re.test(str));
