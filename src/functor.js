@@ -85,7 +85,7 @@ export class Maybe {
 }
 
 
-class Task {
+export class Task {
   constructor(fork) {
     this.fork = fork;
   }
