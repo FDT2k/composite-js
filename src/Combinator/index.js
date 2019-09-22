@@ -71,7 +71,7 @@ export const defaultArgsCombinator = c.compose(defaultCombineArgs,flattenArgsCom
 
 //ArgumentCombinator ::  [a] -> [b]
 //makeCombine :: ArgumentCombinator -> (a...z) => Object
-export const makeObjectCombinator = argsCombinator=> (...args )=> c.divergeLeftThen(c.mergeAll)(...argsCombinator(args))
+export const makeObjectCombinator = argsCombinator=> (...args )=> c.divergeThen(c.mergeAll)(...argsCombinator(args))
 
 export const makeCombineGroup = combinator =>  group => (...args) => c.compose(asProp(group),combinator(...args))
 

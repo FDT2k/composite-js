@@ -1,4 +1,4 @@
-import {curry,compose,identity,maybe,divergeRightThen,map} from './core'
+import {curry,compose,identity,maybe,divergeThen,map} from './core'
 import {merge,as_prop,keys,mergeAll,prop} from './object'
 import {Maybe} from './functor'
 import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
@@ -11,30 +11,40 @@ export const flatten = a => [].concat.apply([], a);
 
 export const joinList = curry((sep,array)=> array.join(sep))
 
+
+//Function -> List -> List
 export const filter = curry((fn,array) => array.filter(fn))
 
 export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
 
+// Function -> List -> Number
 export const findIndex = curry((fn,array) =>  array.findIndex(fn))
 
-export const findIndexEqual = compose(findIndex,isStrictlyEqual)
-export const findIndexNotEqual = compose(findIndex,isStrictlyNotEqual)
 
+// value => List => Number
+export const findIndexEqual = compose(findIndex,isStrictlyEqual)
+// value => List => Number
+export const findIndexNotEqual = compose(findIndex,isStrictlyNotEqual)
+// value => List => List
 export const filterNotEqual = compose(filter,isStrictlyNotEqual)
+// value => List => List
 export const filterEqual = compose(filter,isStrictlyEqual)
 
 
 // reduce an array of subObjects to a merged object of all subObjects
+
 export const reduceToObject= reduce ({},merge)
 
-export const divergeRightThenReduce = divergeRightThen(reduceToObject)
+export const divergeThenReduce = divergeThen(reduceToObject)
 
 /*Recursively call a Curried FN  with each array item of args */
+
 
 //spread :: fn -> [a,b,c...] -> fn(a,b,c,...)
 export const spread = curry((fn,args)=>{
   return reduce(fn,(_fn,arg)=>_fn(arg),args)
 })
+
 
 // apply result of fn on the group
 // ObjectReducer
@@ -47,8 +57,6 @@ export const groupListByKey = (key)=> curry((result,item)=>{
 })
 
 export const listLength = arr=> arr.length
-
-
 
 export const tail = arr=> arr.slice(1);
 export const head = arr=> arr[0];
