@@ -15,6 +15,7 @@ export const joinList = curry((sep,array)=> array.join(sep))
 //Function -> List -> List
 export const filter = curry((fn,array) => array.filter(fn))
 
+// a -> Function -> List -> a
 export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
 
 // Function -> List -> Number
@@ -120,8 +121,6 @@ export const groupByKey = (key)=> curry((result,item)=>{
 
 export const sort = curry((fn,array) => array.sort(fn))
 
-
-
 export const _sortAsc = curry((fn,a,b)=> {
   let aa = fn(a); let bb = fn(b);
   return ((aa < bb) ? -1 : ((aa > bb) ? 1 : 0));
@@ -129,14 +128,11 @@ export const _sortAsc = curry((fn,a,b)=> {
 
 export const _sortDesc = curry((fn,a,b)=> _sortAsc(fn,b,a))
 
-
 export const _sortBy= curry((_sort,fn,array) => slice(0,array).sort(_sort(fn)))
 export const sortByA= _sortBy(_sortAsc)
 export const sortByD= _sortBy(_sortDesc)
 
 export const sortBy = sortByA
-
-
 
 export const sortAsCaseInsensitive = lcase
 export const sortAsKeyCaseInsensitive = key=> compose (lcase,prop(key))
