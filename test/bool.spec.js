@@ -89,3 +89,69 @@ test ("_either",()=>{
 
 
 })
+test ("is boolean",()=>{
+
+
+  expect(
+    c.is_type_bool(true)
+  ).toBe(true)
+
+    expect(
+      c.is_type_bool('fabie')
+    ).toBe(false)
+    expect(
+      c.is_type_bool(234)
+    ).toBe(false)
+
+
+})
+
+
+test ("is scalar",()=>{
+
+
+  expect(
+  c.is_type_scalar(true)
+  ).toBe(true)
+
+  expect(
+    c.is_type_scalar('fabie')
+  ).toBe(true)
+  expect(
+    c.is_type_scalar(234)
+  ).toBe(true)
+
+  expect(
+    c.is_type_scalar(x=>x)
+  ).toBe(false)
+  expect(
+    c.is_type_scalar([])
+  ).toBe(false)
+  expect(
+    c.is_type_scalar({})
+  ).toBe(false)
+  expect(
+    c.is_type_scalar(new Array)
+  ).toBe(false)
+
+})
+
+
+test ("prop equalities",()=>{
+  let o = {id:23}
+  expect(
+    c.is_prop_strictly_equal('id',23,o)
+  ).toBe(true)
+
+  let byname = c.is_prop_strictly_equal('name');
+
+  expect(
+    byname('fabien',{name:'fabien'})
+  ).toBe(true)
+
+  expect(
+    byname('george',{name:'fabien'})
+  ).toBe(false)
+
+
+})

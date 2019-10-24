@@ -5,7 +5,6 @@ import {reduce} from './array'
 
 
 export const assign2 = curry((x,y)=> Object.assign({},x,y))
-
 export const _merge = curry( (a,b) => (assign2(a,b)))
 export const merge = _merge
 
@@ -34,6 +33,8 @@ export const omit_key = curry( (_omit,obj) => {
     }
   })
   return o;
+
+  
 })
 
 
