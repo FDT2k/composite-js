@@ -23,12 +23,12 @@ export const _typeof =value => typeof(value)
 
 export const is_type = val => compose(isStrictlyEqual(val),_typeof);
 
-export const is_type_object = is_type('object')
-export const is_type_string = is_type('string')
+export const is_type_object   = is_type('object')
+export const is_type_string   = is_type('string')
 export const is_type_function = is_type('function')
-export const is_type_number = is_type('number')
-export const is_undefined = is_type('undefined')
-export const is_array = o => Array.isArray(o);
+export const is_type_number   = is_type('number')
+export const is_undefined     = is_type('undefined')
+export const is_array         = o => Array.isArray(o);
 // a -> Bool
 export const is_type_bool = is_type('boolean')
 
@@ -42,7 +42,7 @@ export const _eitherUndefined = _either(is_undefined)
 export const _throw = x=> val=> {throw new Error(x)}
 
 //interrupt everything
-export const _eitherThrow = (cond,error)=> _either(cond,_throw(error),identity);
+export const _eitherThrow = curry((cond,error)=> _either(cond,_throw(error),identity))
 
 //  String -> a -> Object -> Bool
 export const is_prop_strictly_equal = curry((prop,value,item)=>item[prop]==value);
@@ -51,3 +51,11 @@ export const is_prop_not_strictly_equal = curry((prop,value,item)=> compose(not,
 
 // default a value to something if null || undefined -> cf. Maybe
 export const defaultTo = val => compose(maybe(val,identity),Maybe.of)
+
+export const tryCatcher = curry( (catcher,tryer,arg)=> {
+  try{
+    return tryer(arg)
+  }catch(err){
+    return catcher(arg,err);
+  }
+})
