@@ -1,9 +1,11 @@
 {
   "name": "@geekagency/composite-js",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Kit of composite functions utilities",
   "main": "index.js",
   "directories": {
+    "doc": "docs",
+    "lib": "lib",
     "test": "test"
   },
   "scripts": {
@@ -43,5 +45,13 @@
       "lcov"
     ]
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FDT2k/composite-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FDT2k/composite-js/issues"
+  },
+  "homepage": "https://github.com/FDT2k/composite-js#readme"
 }
