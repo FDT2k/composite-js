@@ -39,7 +39,7 @@ test ("Type",()=>{
 
   for(let _value = 0;_value < test_values.length; _value++){
     for(let _test = 0; _test < tests.length; _test++){
-      console.log(test_values[_value],tests[_test](test_values[_value]), expected[_test][_value],_test,_value,typeof(test_values[_value]))
+  //    console.log(test_values[_value],tests[_test](test_values[_value]), expected[_test][_value],_test,_value,typeof(test_values[_value]))
       expect(tests[_test](test_values[_value])).toBe(expected[_test][_value])
     }
   }
@@ -133,6 +133,42 @@ test ("is scalar",()=>{
   expect(
     c.is_type_scalar(new Array)
   ).toBe(false)
+
+})
+
+
+test ("Numbers",()=>{
+  let i = 4512
+
+  expect(
+    c.is_type_number(i)
+  ).toBe(true)
+  expect(
+    c.is_type_number('4152')
+  ).toBe(false)
+
+  expect(
+    c.is_type_number(parseInt('4152'))
+  ).toBe(true)
+
+  expect(
+    c.is_numeric(parseInt('wrong'))
+  ).toBe(false)
+
+  expect(
+    c.is_type_number(parseInt('wrong'))
+  ).toBe(true)
+
+  expect(
+    c.is_type_number(x=>x)
+  ).toBe(false)
+
+  expect(
+    c.is_numeric(x=>x)
+  ).toBe(false)
+
+
+
 
 })
 

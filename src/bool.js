@@ -33,7 +33,12 @@ export const is_array         = o => Array.isArray(o);
 export const is_type_bool = is_type('boolean')
 
 
-export const is_type_scalar = o => is_type_string(o) || is_type_number(o) || is_type_bool(o)
+export const is_nan = Number.isNaN
+
+export const is_numeric =  v => not(is_nan(v)) && is_type_number(v)
+
+
+export const is_type_scalar = o => is_type_string(o) || is_type_number(o)  || is_type_bool(o)
 
 
 export const _eitherUndefined = _either(is_undefined)
