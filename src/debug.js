@@ -14,10 +14,10 @@ export const trace_keys = curry((tag,value)=>{
 
 export const supertrace = curry((prefix ,tag,value) => trace(prefix+ ' '+tag,value))
 
-export const trace_prop = curry(tag,prop,value)=>{
+export const trace_prop = curry((tag,prop,value)=>{
     console.log(tag,value[prop]);
     return value;
-}
+})
 
 /*holds execution if inspector enabled*/
 export const debug_trace = (x)=>{debugger;  return x}
