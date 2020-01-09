@@ -33,8 +33,8 @@ export const is_array         = o => Array.isArray(o);
 export const is_type_bool = is_type('boolean')
 
 
+//fucky number test in js can suck on this
 export const is_nan = Number.isNaN
-
 export const is_numeric =  v => not(is_nan(v)) && is_type_number(v)
 
 
