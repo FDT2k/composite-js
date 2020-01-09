@@ -136,3 +136,7 @@ export const sortBy = sortByA
 
 export const sortAsCaseInsensitive = lcase
 export const sortAsKeyCaseInsensitive = key=> compose (lcase,prop(key))
+
+
+export const safe_push = curry((array,item)=>[...array,item])
+export const safe_stack = curry((array,item)=>[item,...array])
