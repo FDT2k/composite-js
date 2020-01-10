@@ -22,8 +22,5 @@ export const collect_chain_reducer = curry((collector,acc,item)=>{
   return acc;
 })
 
-// a -> Function -> List -> a
-//export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
-
-
+// Fn -> [Fn] -> Task
 export const collect_chain = (collector)=>(...args)=>pipe(...reduce([],collect_chain_reducer(collector),args))
