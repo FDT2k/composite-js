@@ -191,3 +191,34 @@ test ("prop equalities",()=>{
 
 
 })
+
+
+
+test ('trycatcher', (done)=>{
+
+  const on_error = (err)=>{
+    console.error(err)
+  }
+
+  const working_fn = ()=>{
+
+    done()
+
+  }
+  c.tryCatcher(on_error,working_fn,null);
+
+});
+
+test ('trycatcher is catching', (done)=>{
+
+  const failing_fn = ()=>{
+    coucouasdnoiadfsjiadfoij
+  }
+
+  const catch_err = (err)=>{
+    done();
+  }
+  c.tryCatcher(catch_err,failing_fn,null)
+
+
+})

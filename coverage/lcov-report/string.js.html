@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55.56% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/9</span>
+        <span class='fraction'>10/20</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>0/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>10/10</span>
       </div>
     </div>
     <p class="quiet">
@@ -62,29 +62,55 @@
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
-<a name='L17'></a><a href='#L17'>17</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {curry,flip} from './core'
 &nbsp;
 // replace :: Regex -&gt; String -&gt; String -&gt; String
 export const replace = curry(<span class="fstat-no" title="function not covered" >(r</span>e, rpl, str) =&gt; <span class="cstat-no" title="statement not covered" >str.replace(re, rpl))</span>;
 &nbsp;
-// match :: RegEx -&gt; String -&gt; Boolean
-export const match = curry(<span class="fstat-no" title="function not covered" >(r</span>e, str) =&gt; <span class="cstat-no" title="statement not covered" >re.test(str))</span>;
+// test :: RegEx -&gt; String -&gt; Boolean
+export const test = curry(<span class="fstat-no" title="function not covered" >(r</span>e, str) =&gt; <span class="cstat-no" title="statement not covered" >re.test(str))</span>;
+&nbsp;
+// match :: Regex -&gt; String -&gt; List
+export const match = curry(<span class="fstat-no" title="function not covered" >(r</span>e, str) =&gt; <span class="cstat-no" title="statement not covered" >str.match(re))</span>;
+&nbsp;
 &nbsp;
 // concat :: String -&gt; String
 export const concat = curry(<span class="fstat-no" title="function not covered" >(a</span>, b) =&gt; <span class="cstat-no" title="statement not covered" >a.concat(b))</span>;
@@ -94,13 +120,20 @@ export const append = flip(concat);
 &nbsp;
 // length :: String -&gt; Number
 export const length = <span class="fstat-no" title="function not covered" >st</span>r=&gt; <span class="cstat-no" title="statement not covered" >str.length</span>
+&nbsp;
+export const split = curry(<span class="fstat-no" title="function not covered" >(s</span>ep,str)=&gt; <span class="cstat-no" title="statement not covered" >str.split(sep))</span>
+&nbsp;
+export const lcase = <span class="fstat-no" title="function not covered" >st</span>ring =&gt; <span class="cstat-no" title="statement not covered" >string.toLowerCase();</span>
+export const ucase = <span class="fstat-no" title="function not covered" >st</span>ring =&gt; <span class="cstat-no" title="statement not covered" >string.toUpperCase();</span>
+&nbsp;
+export const repeat = <span class="fstat-no" title="function not covered" >ti</span>mes=&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >st</span>ring =&gt; <span class="cstat-no" title="statement not covered" >string.repeat(times);</span></span>
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Aug 18 2019 15:54:40 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 14 2020 14:19:32 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="prettify.js"></script>

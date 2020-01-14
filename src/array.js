@@ -11,7 +11,6 @@ export const flatten = a => [].concat.apply([], a);
 
 export const joinList = curry((sep,array)=> array.join(sep))
 
-
 //Function -> List -> List
 export const filter = curry((fn,array) => array.filter(fn))
 
@@ -122,7 +121,8 @@ export const groupByKey = (key)=> curry((result,item)=>{
 export const sort = curry((fn,array) => array.sort(fn))
 
 export const _sortAsc = curry((fn,a,b)=> {
-  let aa = fn(a); let bb = fn(b);
+  const aa = fn(a);
+  const bb = fn(b);
   return ((aa < bb) ? -1 : ((aa > bb) ? 1 : 0));
 });
 

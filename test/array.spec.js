@@ -29,3 +29,20 @@ test ("groupListByKey",()=>{
   let res = groupBy(list)
 //  console.log(util.inspect(res,{ showHidden: true ,depth:5}))
 })
+
+
+test("joinList", ()=>{
+
+  expect(
+    joinList(',',[1,2,3]).toBe('1,2,3')
+  )
+
+  expect(
+    joinList('-',[1,2,3]).toBe('1-2-3')
+  )
+
+})
+
+test("",()=>{
+  
+})

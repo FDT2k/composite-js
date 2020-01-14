@@ -59,8 +59,12 @@ export const defaultTo = val => compose(maybe(val,identity),Maybe.of)
 
 export const tryCatcher = curry( (catcher,tryer,arg)=> {
   try{
+
     return tryer(arg)
+
   }catch(err){
+
     return catcher(arg,err);
+
   }
 })

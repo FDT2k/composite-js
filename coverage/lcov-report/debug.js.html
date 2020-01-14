@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">44.44% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>4/9</span>
+        <span class='fraction'>6/15</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/3</span>
+        <span class='fraction'>0/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">66.67% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>4/6</span>
+        <span class='fraction'>6/12</span>
       </div>
     </div>
     <p class="quiet">
@@ -64,26 +64,40 @@
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-import {curry} from './core'
+import {curry,map} from './core'
 &nbsp;
 // trace:: String -&gt; a -&gt; a
 export const trace = curry(<span class="fstat-no" title="function not covered" >(t</span>ag,value) =&gt; {
@@ -91,12 +105,19 @@ export const trace = curry(<span class="fstat-no" title="function not covered" >
 <span class="cstat-no" title="statement not covered" >  return value;</span>
 })
 &nbsp;
+export const trace_keys = curry(<span class="fstat-no" title="function not covered" >(t</span>ag,value)=&gt;{
+<span class="cstat-no" title="statement not covered" >  console.log(tag,Object.keys(value))</span>
+<span class="cstat-no" title="statement not covered" >  return value;</span>
+})
+&nbsp;
 export const supertrace = curry(<span class="fstat-no" title="function not covered" >(p</span>refix ,tag,value) =&gt; <span class="cstat-no" title="statement not covered" >trace(prefix+ ' '+tag,value))</span>
 &nbsp;
-&nbsp;
+export const trace_prop = curry(<span class="fstat-no" title="function not covered" >(t</span>ag,prop,value)=&gt;{
+<span class="cstat-no" title="statement not covered" >    console.log(tag,value[prop]);</span>
+<span class="cstat-no" title="statement not covered" >    return value;</span>
+})
 &nbsp;
 /*holds execution if inspector enabled*/
-&nbsp;
 export const debug_trace = <span class="fstat-no" title="function not covered" >(x</span>)=&gt;{<span class="cstat-no" title="statement not covered" >debugger; </span> <span class="cstat-no" title="statement not covered" >return x}</span>
 &nbsp;
 export const inspect = console.log
@@ -106,7 +127,7 @@ export const inspect = console.log
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Aug 18 2019 15:54:40 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 14 2020 14:19:32 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="prettify.js"></script>
