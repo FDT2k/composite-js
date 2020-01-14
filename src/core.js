@@ -1,5 +1,5 @@
 /**
- * Compose several unary function into one function that is executed from right to left
+ * Compose several unary function into one function. Execution is done from right to left
  *
  * @func
  * @category Function
@@ -7,6 +7,7 @@
  * @param {...Function} ...functions The functions to compose
  * @return {Function}
  */
+
 export const compose=(...funcs) =>{
   if (funcs.length === 0) {
     return arg => arg
@@ -18,7 +19,7 @@ export const compose=(...funcs) =>{
 }
 
 /**
- * Compose several unary function into one function that is executed from left to right
+ * Compose several unary function into one function. Execution is done left to right
  *
  * @func
  * @category Function
@@ -74,50 +75,14 @@ export const curry = (fn) => {
   };
 }
 
-// curry that allow empty args
-export const curryNull = (fn)=>{
-  const arity = fn.length;
-  return (...args)=>{
-    let idx = 0;
-    let prevArgs = null
-    let curr =  function $curryNull() {
-
-      console.log(prevArgs,args,idx,arity)
-
-      if(prevArgs == null ){ // never called
-        if(args.length == 0)
-          args = [null]
-        idx += args.length
-      }
 
 
-      if(prevArgs != null){
-        if(args.length < arity){
-          args.push(null)
-        }
-      }
-
-
-      return callCurry($curryNull)(arity)(fn)(...args)
-
-    }
-    let res = curr()
-    prevArgs = args
-
-    return res;
-  }
-}
-
-
-/*
-  Generating a N arity curry from another defined FN to be help compose variadics
-
-  CurryCeption
-*/
 // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
-
 /**
- * Curryify a function, from another defined function
+ *   Generating a N-arity curry from another non-variadic defined Function.
+ *
+ *   Idea to help composing variadics
+ *
  *
  * @func
  * @category Function
@@ -127,55 +92,42 @@ export const curryNull = (fn)=>{
  * @return {Function}
  * @see curry
  */
+
 export const curryN = (fn,callFn) => {
   const arity = fn.length;
   return function $curryN(...args) {
-    /*if (args.length < arity) {
-      return $curryN.bind(null, ...args);
-    }
-    return callFn.call(null, ...args);*/
     return callCurry($curryN)(arity)(callFn)(...args)
   };
 }
 
-/*
-  Generating a X arity curry to be help compose variadics
-
-  CurryCeption
-*/
-
 /**
- * Curryify a function, with a arbitrary arity
+ * Generating a curry with a static arity while calling another function
  *
  * @func
  * @category Function
  * @sig ((a, b, ...) -> c) -> a -> b -> ... -> c
- * @param {Integer} arity the function to take args from
+ * @param {Integer} arity The arity
  * @param {Function} variadicFunc the variadic function to currify
  * @return {Function}
  * @see curry
  */
+
 export const curryX = (_arity,fn) => {
   const arity = _arity;
   return function $curryX(...args) {
-  /*  if (args.length < arity) {
-      return $curryX.bind(null, ...args);
-    }
-    return fn.call(null, ...args);*/
     return callCurry($curryX)(arity)(fn)(...args)
   };
 }
 
 
-// diverge :: ((a->b),(a->c),...,(a->z)) => [b,c,...z]
 /**
- * Returns a function that accept an argument which will be applied to every function in parameter and given back as an array
- * AKA. Parallelized compose.
+ * Returns a function that accept one argument. The argument  will be passed to every function in parameter and given back as an array
+ * AKA. Parallelized composition
  *
  * @func
  * @category Function
  * @sig ((a->b),(a->c),...,(a->z)) => x => [b(x),c(x),...,z(x)]
- * @param {...Functions} functions the function to diverge
+ * @param {...Functions} functions the functions to diverge
  * @return {Function}
  * @see compose
  * @example
@@ -186,7 +138,7 @@ export const curryX = (_arity,fn) => {
  * fn3 ( {'key':'foo', 'another_key':'bar'})
  * //  ['rab','FOO']
  *
- * diverge (fnA,fnB)(x) == [fnA(x),fnB(x)]
+ * diverge (fnA,fnB)(x) == [ fnA(x) , fnB(x) ]
  *
  */
 export const diverge = (...args)=> x => args.map(arg=> arg(x))
@@ -238,7 +190,7 @@ export const identity = x => x;
  *
  * @func
  * @category Function
- * @sig
+ * @sig ( FN -> b -> c)  -> 
  * @param {Function}
  * @return {Curry}
  * @see compose

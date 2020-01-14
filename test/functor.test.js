@@ -69,14 +69,10 @@ test ('IO',()=>{
   const myStore = store();
   myStore.set ('bla','hello world')
   const ioStore = new IO(() => myStore);
-//  let bla = ioStore.map(store =>store.get('bla'));
-  //let test = compose(trace('coucou'),ioStore)
-  console.log(ioStore.$value());
-  console.log(ioStore.map(store=>store.get('bla')).$value());
 
 
   let safeOs = new IO (()=>os)
   let home_dir = safeOs.map(prop('homedir'))
-  console.log(home_dir.$value()())
+  console.log(home_dir)
 
 });

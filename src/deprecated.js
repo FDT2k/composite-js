@@ -1,3 +1,4 @@
+import {curry,compose,core,diverge,identity} from './core'
 
 
 // safeCall :: Functor f => (a -> c) -> b -> a b -> c

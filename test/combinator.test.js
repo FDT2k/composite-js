@@ -1,5 +1,6 @@
 import * as CC from '../src/Combinator'
 import * as c from '../src/index'
+import {safePropCall} from '../src/deprecated'
 import chalk from 'chalk'
 test('[AC] ',()=>{
   let combine = CC.combineObject;
@@ -32,8 +33,8 @@ test('[AC] ',()=>{
 
 
 test('[ColorLogger]',()=>{
-  const safeLog = c.safePropCall(console)('log')
-  const safeChalk = c.safePropCall(chalk)
+  const safeLog = safePropCall(console)('log')
+  const safeChalk = safePropCall(chalk)
 
   const colorize = color => safeChalk(color)
   //const colorLog = color =>  c.compose(safeLog,safeChalk(color));
