@@ -1,11 +1,16 @@
-import {curry,compose,identity,maybe,divergeThen,map} from './core'
-import {merge,as_prop,keys,mergeAll,prop} from './object'
-import {Maybe} from './functor'
-import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
-import {trace} from './debug'
-import {lcase} from './string'
+import {curry,compose,identity,maybe,divergeThen,map} from '../core'
+import {merge,as_prop,keys,mergeAll,prop} from '../object'
+import {Maybe} from '../functor'
+import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from '../bool'
+import {trace} from '../debug'
+import {lcase} from '../string'
+import {decrement} from '../maths'
 
-import {decrement} from './maths'
+
+// List -> List
+export const ensureCopy = list => slice(0,list)
+
+
 // flatten :: [a,[a]...] -> [a,a...]
 export const flatten = a => [].concat.apply([], a);
 
@@ -17,22 +22,8 @@ export const filter = curry((fn,array) => array.filter(fn))
 // a -> Function -> List -> a
 export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
 
-// Function -> List -> Number
-export const findIndex = curry((fn,array) =>  array.findIndex(fn))
-
-
-// value => List => Number
-export const findIndexEqual = compose(findIndex,isStrictlyEqual)
-// value => List => Number
-export const findIndexNotEqual = compose(findIndex,isStrictlyNotEqual)
-// value => List => List
-export const filterNotEqual = compose(filter,isStrictlyNotEqual)
-// value => List => List
-export const filterEqual = compose(filter,isStrictlyEqual)
-
 
 // reduce an array of subObjects to a merged object of all subObjects
-
 export const reduceToObject= reduce ({},merge)
 
 export const divergeThenReduce = divergeThen(reduceToObject)
@@ -63,8 +54,11 @@ export const head = arr=> arr[0];
 export const listIndex = arr  => index => arr[index]
 export const last = arr=> compose(listIndex(arr),decrement,listLength)
 
+
+// Number -> List -> List
 export const slice = curry((x,a)=> a.slice(x));
 
+// Number - >Number -> List -> List
 export const range = curry((start,length,a)=> a.slice(start,length))
 
 export const reverse = a => slice(0,a).reverse()
@@ -117,25 +111,6 @@ export const groupByKey = (key)=> curry((result,item)=>{
   return result;
 })
 
-
-export const sort = curry((fn,array) => array.sort(fn))
-
-export const _sortAsc = curry((fn,a,b)=> {
-  const aa = fn(a);
-  const bb = fn(b);
-  return ((aa < bb) ? -1 : ((aa > bb) ? 1 : 0));
-});
-
-export const _sortDesc = curry((fn,a,b)=> _sortAsc(fn,b,a))
-
-export const _sortBy= curry((_sort,fn,array) => slice(0,array).sort(_sort(fn)))
-export const sortByA= _sortBy(_sortAsc)
-export const sortByD= _sortBy(_sortDesc)
-
-export const sortBy = sortByA
-
-export const sortAsCaseInsensitive = lcase
-export const sortAsKeyCaseInsensitive = key=> compose (lcase,prop(key))
 
 
 export const safe_push = curry((array,item)=>[...array,item])

@@ -1,6 +1,6 @@
 import {curry,flip,curryX} from './core'
 import {defaultTo} from './bool'
-import {reduce} from './array'
+import {reduce} from './List'
 
 
 
@@ -34,7 +34,7 @@ export const omit_key = curry( (_omit,obj) => {
   })
   return o;
 
-  
+
 })
 
 
