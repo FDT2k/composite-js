@@ -11,3 +11,5 @@ export const filter = curry((fn,array) => array.filter(fn))
 export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
 // FN -> List -> List
 export const sort = curry((fn,list) => list.sort(fn))
+
+export const findIndex = curry((fn,array) =>  array.findIndex(fn))

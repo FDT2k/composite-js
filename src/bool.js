@@ -68,3 +68,9 @@ export const tryCatcher = curry( (catcher,tryer,arg)=> {
 
   }
 })
+
+export const unless = (condition, fun) => _either(
+  compose(not,condition),
+  fun,
+  identity
+)

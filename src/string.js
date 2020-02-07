@@ -25,3 +25,6 @@ export const lcase = string => string.toLowerCase();
 export const ucase = string => string.toUpperCase();
 
 export const repeat = times=> string => string.repeat(times);
+
+
+export const begins = x => str => str.indexOf(x)>-1

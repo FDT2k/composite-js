@@ -8,6 +8,8 @@
  * @return {Function}
  */
 
+export const _undef_ = undefined;
+
 export const compose=(...funcs) =>{
   if (funcs.length === 0) {
     return arg => arg
@@ -190,7 +192,7 @@ export const identity = x => x;
  *
  * @func
  * @category Function
- * @sig ( FN -> b -> c)  -> 
+ * @sig ( FN -> b -> c)  ->
  * @param {Function}
  * @return {Curry}
  * @see compose

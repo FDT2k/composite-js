@@ -7,8 +7,6 @@ import {lcase} from '../string'
 import {decrement} from '../maths'
 
 
-// List -> List
-export const ensureCopy = list => slice(0,list)
 
 
 // flatten :: [a,[a]...] -> [a,a...]
@@ -55,8 +53,6 @@ export const listIndex = arr  => index => arr[index]
 export const last = arr=> compose(listIndex(arr),decrement,listLength)
 
 
-// Number -> List -> List
-export const slice = curry((x,a)=> a.slice(x));
 
 // Number - >Number -> List -> List
 export const range = curry((start,length,a)=> a.slice(start,length))
