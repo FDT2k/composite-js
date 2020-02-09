@@ -34,15 +34,15 @@ test ("groupListByKey",()=>{
 test("joinList", ()=>{
 
   expect(
-    joinList(',',[1,2,3]).toBe('1,2,3')
-  )
+    c.joinList(',',[1,2,3])
+  ).toBe('1,2,3')
 
   expect(
-    joinList('-',[1,2,3]).toBe('1-2-3')
-  )
+    c.joinList('-',[1,2,3])
+  ).toBe('1-2-3')
 
 })
 
 test("",()=>{
-  
+
 })
