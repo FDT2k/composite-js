@@ -18,8 +18,9 @@ export const makeMerge = (arity) =>{
 // mergeAll :: [{a},{b},{c}]-> {a,b,c,d}
 export const mergeAll = list => reduce({},assign2,list)
 
-
+// a -> Object(a:x) -> x
 export const prop = curry((prop,obj) => obj[prop])
+
 
 export const keys = o => Object.keys(o)
 
@@ -33,8 +34,6 @@ export const omit_key = curry( (_omit,obj) => {
     }
   })
   return o;
-
-
 })
 
 
@@ -47,6 +46,10 @@ export const as_object_prop = curry( (key ,value ,object) =>{
   return o;
 })
 
-//  a -> b -> Object
+//  a -> b -> Object(a:b)
 
-export const as_prop = curry((key,value)=> flip(as_object_prop(key),defaultTo({}),value))
+//export const as_prop = curry((key,value)=> flip(as_object_prop(key),defaultTo({}),value))
+export const objOf = curry((k,v)=>({[k]:v}))
+export const callProp = curry((prop,obj,arg)=> obj[prop](arg))
+
+export const spec =  curry( (o, x)=> map() )

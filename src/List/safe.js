@@ -4,6 +4,7 @@ import * as __UNSAFE__ from './unsafe'
 
 
 // Number -> List -> List
+// 
 export const slice = curry((x,a)=> a.slice(x));
 
 // List -> List
