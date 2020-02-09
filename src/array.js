@@ -15,7 +15,7 @@ export const joinList = curry((sep,array)=> array.join(sep))
 export const filter = curry((fn,array) => array.filter(fn))
 
 // a -> Function -> List -> a
-export const reduce = curry((initial_value,fn,array )=> array.reduce(fn,initial_value))
+export const reduce = curry((initial_value,reducer,array )=> array.reduce(reducer,initial_value))
 
 // Function -> List -> Number
 export const findIndex = curry((fn,array) =>  array.findIndex(fn))

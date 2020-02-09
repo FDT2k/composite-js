@@ -1,6 +1,7 @@
-import {curry,flip,curryX} from './core'
+import {pipe,map,curry,flip,curryX} from './core'
 import {defaultTo} from './bool'
 import {reduce} from './array'
+
 
 
 
@@ -34,7 +35,7 @@ export const omit_key = curry( (_omit,obj) => {
   })
   return o;
 
-  
+
 })
 
 
@@ -50,3 +51,27 @@ export const as_object_prop = curry( (key ,value ,object) =>{
 //  a -> b -> Object
 
 export const as_prop = curry((key,value)=> flip(as_object_prop(key),defaultTo({}),value))
+
+
+/*
+ Spec
+  for a given object for which values are function  returns a new object with
+
+  {
+    x: fn(a,b),
+    y: fn(a,b,c),
+  }
+
+  spec(obj,a)
+  => {
+    x: fn(a,b)(a)
+    y: fn(a,b,c)(a)
+  }
+
+*/
+
+export const spec = curry((obj,arg)=> pipe(
+  keys,
+  map(x=>as_prop(x,obj[x](arg))),
+  mergeAll
+)(obj))

@@ -1,5 +1,7 @@
-import {merge,makeMerge,mergeAll} from '../src/object'
+import {merge,makeMerge,mergeAll,spec} from '../src/object'
 import {spread} from '../src/array'
+
+import {curry} from '../src/core'
 
 
 test("makemerge",()=>{
@@ -28,4 +30,26 @@ test("makemerge",()=>{
   expect(res).toBeInstanceOf(Object)
   expect(res).toEqual(expected)
 
+})
+
+test("spec",()=>{
+
+
+  const tospec = {
+      add: curry((x,y)=> x+y),
+      times: curry((x,y)=> x*y),
+  }
+
+  const test = spec(tospec);
+  const result = test(12);
+
+  expect(
+    result.add(1)
+  ).toBe(13);
+
+  expect(
+    result.times(12)
+  ).toBe(144)
+
+  
 })
