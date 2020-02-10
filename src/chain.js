@@ -1,11 +1,18 @@
-import {pipe,curry,chain,map}   from './core'
-import {reduce,safe_push}       from './array';
-import {trace}                  from './debug';
-import {Task}                   from './functor'
-
+import {compose,pipe,curry,chain,map}   from './core'
+import {reduce,safe_push}               from './array';
+import {trace}                          from './debug';
+import {Task}                           from './functor'
 
 /*
-  return a <Function> which create a <Task> that accumulate its argument when forked in a <List> and resolve the new <List>
+  The purpose of this is to collect output of chained tasks
+
+  TaskCreator =  Function -> Task
+
+*/
+
+/*
+  makeCollector :: Nothing -> Function -> Task
+  return a <TaskCreator> that accumulate its argument in a <List> and resolves it
 */
 export const make_task_collector = _=> {
   let collector = [];
@@ -57,11 +64,8 @@ export const collect_chain = (collector)=>(...args)=> pipe(makeIdentityTask,...r
   short hand to create a Task collector
   return a function that chain and accumulate results
 */
-export const useTaskCollector = ()=>{
-  let collector = make_task_collector();
-  return collect_chain(collector);
+export const useTaskCollector = compose(collect_chain,make_task_collector)
 
-}
 
 
 /*
@@ -69,7 +73,7 @@ export const useTaskCollector = ()=>{
 */
 export const useTaskChainCollection = (...initial_tasks)=>{
   if(initial_tasks.length ===0)
-    throw new Error('you have to provide at least 1 initial task')
+    throw new Error('you have to provide at least 1 initial TaskCreator')
 
   const make_chain = useTaskCollector();
 
