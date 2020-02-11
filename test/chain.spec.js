@@ -84,7 +84,6 @@ test ("manual chain task",(done)=>{
 
     console.error,
     _=>{
-      console.log(_)
       expect(_.length).toBe(5);
 
       expect(_).toEqual(['1','2','3','4','5'])
@@ -121,7 +120,6 @@ test ("compose a collected chain",(done)=>{
 
     console.error,
     _=>{
-      console.log(_)
       expect(_.length).toBe(5);
 
       expect(_).toEqual(['1','2','3','4','5'])
@@ -157,7 +155,6 @@ test ("compose a collected chain2 , several tasks append",(done)=>{
 
     console.error,
     _=>{
-      console.log(_)
       expect(_.length).toBe(6);
 
       expect(_).toEqual(['1','2','3','4','5','6'])
@@ -188,17 +185,58 @@ test ("shorthand",(done)=>{
       expect(_.length).toBe(2);
 
       expect(_).toEqual(['1','2'])
+      done();
 
-      extend(t3,t4)(console.error,_=>{
-        console.log(_)
-        expect(_.length).toBe(4)
-        done()
-      })
     }
   )
 
 });
 
+test ("shorthand extend",(done)=>{
+
+
+  let t1 = _=> makeTask('1');
+  let t2 = _=> makeTask('2');
+  let t3 = _=> makeTask('3');
+  let t4 = _=> makeTask('4');
+  let t5 = _=> makeTask('5');
+  let t6 = _=> makeFailTask('6');
+
+  const {extend,run} = C.useTaskChainCollection(t1,t2);
+
+  extend(t3,t4)(console.error,_=>{
+    console.log(_)
+    expect(_.length).toBe(4)
+    done()
+  })
+
+});
+
+test ("shorthand extend",(done)=>{
+
+
+  let t1 = _=> makeTask('1');
+  let t2 = _=> makeTask('2');
+  let t3 = _=> makeTask('3');
+  let t4 = _=> makeTask('4');
+  let t5 = _=> makeTask('5');
+  let t6 = _=> makeFailTask('6');
+
+  const {extend,run} = C.useTaskChainCollection(t1,t2);
+
+
+
+
+  extend(t3,t4)(
+    console.error,
+    _=>{
+      expect(_.length).toBe(4)
+      done()
+    }
+  )
+
+
+});
 
 test ("failing chain",(done)=>{
 
@@ -230,21 +268,13 @@ test ("COMPOSE TASK TEST",(done)=>{
   const {extend,run} = C.useTaskChainCollection(t1,t2);
 
 
-  run(
-    console.error,
-    _=>{
-      console.log(_)
-      expect(_.length).toBe(2);
 
-      expect(_).toEqual(['1','2'])
+    extend(compose(map(x=>`${x}_${x}`),t3),t4)(console.error,_=>{
+      expect(_.length).toBe(4)
+      expect(_[2]).toBe('3_3')
+      done()
+    })
 
-      extend(compose(map(x=>`${x}_${x}`),t3),t4)(console.error,_=>{
-        console.log(_)
-        expect(_.length).toBe(4)
-        expect(_[2]).toBe('3_3')
-        done()
-      })
-    }
-  )
+
 
 });

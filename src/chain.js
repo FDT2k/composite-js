@@ -79,7 +79,7 @@ export const useTaskChainCollection = (...initial_tasks)=>{
 
   const run =  make_chain(...initial_tasks)
   return {
-    extend: (...tasks) => (a,b) => pipe(run,chain,make_chain(...tasks))().fork(a,b),
+    extend: (...tasks) => (a,b) => pipe(run,chain(make_chain(...tasks)))().fork(a,b),
     run: (a,b)=>run().fork(a,b),
     tasks:initial_tasks
   }
