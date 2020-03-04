@@ -24,4 +24,6 @@ export const split = curry((sep,str)=> str.split(sep))
 export const lcase = string => string.toLowerCase();
 export const ucase = string => string.toUpperCase();
 
-export const repeat = times=> string => string.repeat(times);
+export const repeat = curry((times,string) => string.repeat(times));
+
+export const trim = string => string.trim();

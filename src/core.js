@@ -52,6 +52,7 @@ export const pipe = (...funcs) =>{
 
 */
 const callCurry = namedCurryFunction =>  arity => fn => (...args) => {
+
   if (args.length < arity) {
     return namedCurryFunction.bind(null, ...args);
   }
@@ -71,6 +72,7 @@ const callCurry = namedCurryFunction =>  arity => fn => (...args) => {
 export const curry = (fn) => {
   const arity = fn.length;
   return function $curry(...args) {
+
     return callCurry($curry)(arity)(fn)(...args)
   };
 }
@@ -122,7 +124,8 @@ export const curryX = (_arity,fn) => {
 
 /**
  * Returns a function that accept one argument. The argument  will be passed to every function in parameter and given back as an array
- * AKA. Parallelized composition
+ * AKA. Parallelized composition. I'm not even sure this is a thing.
+ * It's a mix between compose and spec
  *
  * @func
  * @category Function
@@ -190,7 +193,7 @@ export const identity = x => x;
  *
  * @func
  * @category Function
- * @sig ( FN -> b -> c)  -> 
+ * @sig ( FN -> b -> c)  ->
  * @param {Function}
  * @return {Curry}
  * @see compose

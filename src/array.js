@@ -37,7 +37,12 @@ export const reduceToObject= reduce ({},merge)
 
 export const divergeThenReduce = divergeThen(reduceToObject)
 
-/*Recursively call a Curried FN  with each array item of args */
+/*Recursively call a Curried FN  with each array item of args
+
+same as  spreading args fn (...args)
+
+spread(fn)(args) == fn(...args)
+*/
 
 
 //spread :: fn -> [a,b,c...] -> fn(a,b,c,...)
@@ -136,6 +141,7 @@ export const sortBy = sortByA
 
 export const sortAsCaseInsensitive = lcase
 export const sortAsKeyCaseInsensitive = key=> compose (lcase,prop(key))
+export const sortAsKeyNumberFloat = key=> compose (parseFloat,prop(key))
 
 
 export const safe_push = curry((array,item)=>[...array,item])
