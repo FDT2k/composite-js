@@ -1,6 +1,6 @@
 {
   "name": "@geekagency/composite-js",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Kit of composite functions utilities",
   "main": "index.js",
   "directories": {
