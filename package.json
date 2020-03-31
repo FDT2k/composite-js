@@ -13,7 +13,8 @@
     "build:raw": "rm -rf ./lib; cp -a ./src ./lib && node lib/index.js && cp package.json ./lib",
     "pub": "cd ./lib;npm publish; cd ..",
     "doc": "npx jsdoc src/core.js --destination ./docs",
-    "test": "npx jest --coverage && npx jest-coverage-badges"
+    "test": "npx jest --coverage && npx jest-coverage-badges",
+    "test:watch": "npx jest --watchAll --coverage "
   },
   "author": "Fabien Di Tore",
   "license": "MIT",

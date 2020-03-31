@@ -73,7 +73,7 @@ export const useTaskCollector = compose(collect_chain,make_task_collector)
 */
 export const useTaskChainCollection = (...initial_tasks)=>{
   if(initial_tasks.length ===0)
-    throw new Error('you have to provide at least 1 initial TaskCreator')
+    throw new Error('you have to provide at least 1 initial TaskCreator (Function that returns a Task)')
 
   const make_chain = useTaskCollector();
 
