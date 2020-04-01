@@ -1,4 +1,5 @@
 import * as c from '../index'
+import * as a from '../List'
 
 /*
   my idea of a combinator is to have a function that return an object with composite properties.
@@ -71,7 +72,7 @@ export const defaultArgsCombinator = c.compose(defaultCombineArgs,flattenArgsCom
 
 //ArgumentCombinator ::  [a] -> [b]
 //makeCombine :: ArgumentCombinator -> (a...z) => Object
-export const makeObjectCombinator = argsCombinator=> (...args )=> c.divergeThen(c.mergeAll)(...argsCombinator(args))
+export const makeObjectCombinator = argsCombinator=> (...args )=> c.divergeThen(a.mergeAll)(...argsCombinator(args))
 
 export const makeCombineGroup = combinator =>  group => (...args) => c.compose(asProp(group),combinator(...args))
 

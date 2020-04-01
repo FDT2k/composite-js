@@ -1,23 +1,11 @@
-import {pipe,map,curry,flip,curryX} from './core'
+import {pipe,map,curry,flip,curryX, compose} from './core'
 import {defaultTo} from './bool'
-import {reduce} from './array'
-
-
 
 
 export const assign2 = curry((x,y)=> Object.assign({},x,y))
 export const _merge = curry( (a,b) => (assign2(a,b)))
 export const merge = _merge
 
-//makeMerge :: Number -> (Number, ([a]-> b)) -> ([a] -> b)
-export const makeMerge = (arity) =>{
-  return curryX(arity,(...args)=>{
-    return reduce({},(a,b)=> merge(a,b),args)
-  });
-}
-
-// mergeAll :: [{a},{b},{c}]-> {a,b,c,d}
-export const mergeAll = list => reduce({},assign2,list)
 
 
 export const prop = curry((prop,obj) => obj[prop])
@@ -74,4 +62,11 @@ export const spec = curry((obj,arg)=> pipe(
   keys,
   map(x=>as_prop(x,obj[x](arg))),
   mergeAll
+)(obj))
+
+
+//Object -> List
+export const enlist = curry((obj)=> pipe(
+  keys,
+  map(x => as_prop(x,obj[x]))
 )(obj))

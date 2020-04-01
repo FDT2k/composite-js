@@ -5,6 +5,19 @@ import {not,_either} from '../bool'
 
 import {map,identity} from '../core'
 
+import {reduce,head} from './array'
+
+//makeMerge :: Number -> (Number, ([a]-> b)) -> ([a] -> b)
+export const makeMerge = (arity) =>{
+  return curryX(arity,(...args)=>{
+    return reduce({},(a,b)=> merge(a,b),args)
+  });
+}
+
+// mergeAll :: [{a},{b},{c}]-> {a,b,c,d}
+export const mergeAll = list => reduce({},assign2,list)
+
+
 export const delete_list_item = curry((state,action) => filter(item=> item.id !=action.payload,state));
 
 export const add_list_item = curry((state,action)=> [...state,action.payload]);

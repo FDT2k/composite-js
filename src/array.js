@@ -1,8 +1,6 @@
-import {curry,compose,identity,maybe,divergeThen,map} from './core'
-import {merge,as_prop,keys,mergeAll,prop} from './object'
-import {Maybe} from './functor'
+import {curry,compose,divergeThen} from './core'
+import {merge,prop} from './object'
 import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
-import {trace} from './debug'
 import {lcase} from './string'
 
 import {decrement} from './maths'
