@@ -1,0 +1,66 @@
+{
+  "name": "@geekagency/composite-js",
+  "version": "0.8.0",
+  "description": "Kit of composite functions utilities",
+  "main": "Core.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "build:legacy": "rm -rf ./lib; node_modules/@babel/cli/bin/babel.js --out-dir lib ./src && node lib/index.js && cp package.json ./lib",
+    "build": "rm -rf ./dist; rollup -c; cp package.json ./dist/cjs",
+    "build:raw": "rm -rf ./lib; cp -a ./src ./lib && node lib/index.js && cp package.json ./lib",
+    "pub": "cd ./dist;npm publish; cd ..",
+    "doc": "npx jsdoc src/core.js --destination ./docs",
+    "test": "npx jest --coverage && npx jest-coverage-badges",
+    "test:watch": "npx jest --watchAll --coverage "
+  },
+  "author": "Fabien Di Tore",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.5.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.4.5",
+    "babel-eslint": "^10.0.2",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-preset-minify": "^0.5.0",
+    "eslint": "^5.16.0",
+    "jest": "^24.8.0",
+    "jest-coverage-badges": "^1.1.2",
+    "prepack": "^0.2.54",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-includepaths": "^0.2.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-prepack": "^1.1.1"
+  },
+  "jest": {
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "es6"
+    ],
+    "coverageReporters": [
+      "json-summary",
+      "text",
+      "lcov"
+    ]
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FDT2k/composite-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FDT2k/composite-js/issues"
+  },
+  "homepage": "https://github.com/FDT2k/composite-js#readme"
+}
