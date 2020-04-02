@@ -40,5 +40,15 @@ test('propThatMatch',()=>{
 
     );
 
+
+    const [a,b] =ReactUtils.spreadObjectContaining('toolbar',props)
+
+    expect(
+        ReactUtils.forwardPropsRemovingHeader('toolbar',a)
+    ).toEqual(
+        {"className": "", "handle": "sadbs"}
+
+    );
+
   });
 

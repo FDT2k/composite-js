@@ -336,22 +336,13 @@ function () {
   return Maybe;
 }();
 
-var empty = function empty(string) {
-  return string.length == 0;
-}; // BOOL => BOOL
+//export const empty = string=> string.length==0;
+// BOOL => BOOL
+//export const notEmpty = compose(not,empty)
 
 var not = function not(x) {
   return !x;
 };
-var notEmpty = compose(not, empty); // very small either, no way to know if there was an error
-
-/*
-  if(cond is met, return right else return left)
-*/
-
-var _either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -364,41 +355,16 @@ var _typeof$1 = function _typeof$1(value) {
 var is_type = function is_type(val) {
   return compose(isStrictlyEqual(val), _typeof$1);
 };
-var is_type_object = is_type('object');
 var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this
-var _eitherUndefined = _either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var _eitherThrow = curry(function (cond, error) {
-  return _either(cond, _throw(error), identity);
-}); //  String -> a -> Object -> Bool
-
-var is_prop_strictly_equal = curry(function (prop, value, item) {
-  return item[prop] == value;
-});
-var is_prop_not_strictly_equal = curry(function (prop, value, item) {
-  return compose(not, is_prop_strictly_equal(prop, value))(item);
-}); // default a value to something if null || undefined -> cf. Maybe
+var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
 };
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
 
 var assign2 = curry(function (x, y) {
   return Object.assign({}, x, y);
@@ -598,6 +564,31 @@ var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
 });
 
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
+
 var makeMerge = function makeMerge(arity) {
   return curryX(arity, function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -642,7 +633,7 @@ var update_list_by_prop_id = curry(function (list, itemIdValue, updateFn) {
 
 var update_list = curry(function (list, itemPredicate, updateFn) {
   return list.map(function (item) {
-    return _either(itemPredicate, identity, updateFn, item);
+    return either(itemPredicate, identity, updateFn, item);
   });
 });
 var propIsEqual = curry(function (prop, value, item) {
@@ -662,7 +653,7 @@ var getByProp = curry(function (prop, list, val) {
   return filter(propIsEqual(prop, val), list);
 });
 var update = curry(function (cond, val, list, fn) {
-  return map(_either(cond(val), identity, fn))(list);
+  return map(either(cond(val), identity, fn))(list);
 });
 var updateIfPropEqual = curry(function (prop, val, list, fn) {
   return update(propIsEqual(prop), val, list, fn);

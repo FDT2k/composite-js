@@ -38,7 +38,7 @@ const defaultConf = {
 
 export default [
   Object.assign({},defaultConf,{
-    input: 'src/index.js',
+    input: 'src/core.js',
     output: {
       file: 'dist/cjs/Core.js',
       format: 'cjs',
@@ -82,6 +82,26 @@ export default [
     input: 'src/ReactUtils/index.js',
     output: {
       file: 'dist/cjs/ReactUtils.js',
+      format: 'cjs',
+      indent: false,
+      sourcemap: false,
+      exports: 'named',
+    }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/Validators/index.js',
+    output: {
+      file: 'dist/cjs/Validators.js',
+      format: 'cjs',
+      indent: false,
+      sourcemap: false,
+      exports: 'named',
+    }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/ReduxUtils/index.js',
+    output: {
+      file: 'dist/cjs/ReduxUtils.js',
       format: 'cjs',
       indent: false,
       sourcemap: false,

@@ -1,5 +1,5 @@
-import * as c from '../index'
-import * as a from '../List'
+import * as c from 'Core'
+import * as a from 'List'
 
 /*
   my idea of a combinator is to have a function that return an object with composite properties.
@@ -60,7 +60,7 @@ export const asScalarProp = c.curry((key,value) => enhance => enhancedPropWithDe
 export const asScalarPropWithDefaultValue = key=>value=> enhance=> c.compose(enhancedPropWithDefaultEnhancer(key)(enhance),c.defaultTo(key))(value)
 
 // transform an arg of a type into another
-export const transformArgToFunctionIfNeeded = defaultFn => c._either(c.is_type_function,defaultFn,c.identity)
+export const transformArgToFunctionIfNeeded = defaultFn => c.either(c.is_type_function,defaultFn,c.identity)
 
 export const flattenArgsCombinator = c.flatten
 

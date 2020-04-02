@@ -1,5 +1,5 @@
-import {merge,makeMerge,mergeAll,spec} from '../src/object'
-import {spread} from '../src/array'
+import {merge,makeMerge,mergeAll,spec} from 'object'
+import {spread} from 'array'
 
 import {curry} from '../src/core'
 

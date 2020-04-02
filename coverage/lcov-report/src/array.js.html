@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">43.96% </span>
+        <span class="strong">46.15% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>40/91</span>
+        <span class='fraction'>42/91</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -30,9 +30,9 @@
         <span class='fraction'>0/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">3.23% </span>
+        <span class="strong">9.68% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/31</span>
+        <span class='fraction'>3/31</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">59.09% </span>
@@ -192,11 +192,7 @@
 <a name='L144'></a><a href='#L144'>144</a>
 <a name='L145'></a><a href='#L145'>145</a>
 <a name='L146'></a><a href='#L146'>146</a>
-<a name='L147'></a><a href='#L147'>147</a>
-<a name='L148'></a><a href='#L148'>148</a>
-<a name='L149'></a><a href='#L149'>149</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L147'></a><a href='#L147'>147</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,7 +204,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -260,7 +256,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -342,11 +338,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {curry,compose,identity,maybe,divergeThen,map} from './core'
-import {merge,as_prop,keys,mergeAll,prop} from './object'
-import {Maybe} from './functor'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {curry,compose,divergeThen} from './core'
+import {merge,prop} from './object'
 import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
-import {trace} from './debug'
 import {lcase} from './string'
 &nbsp;
 import {decrement} from './maths'
@@ -359,7 +353,7 @@ export const joinList = curry(<span class="fstat-no" title="function not covered
 export const filter = curry((fn,array) =&gt; array.filter(fn))
 &nbsp;
 // a -&gt; Function -&gt; List -&gt; a
-export const reduce = curry(<span class="fstat-no" title="function not covered" >(i</span>nitial_value,reducer,array )=&gt; <span class="cstat-no" title="statement not covered" >array.reduce(reducer,initial_value))</span>
+export const reduce = curry((initial_value,reducer,array )=&gt; array.reduce(reducer,initial_value))
 &nbsp;
 // Function -&gt; List -&gt; Number
 export const findIndex = curry(<span class="fstat-no" title="function not covered" >(f</span>n,array) =&gt;  <span class="cstat-no" title="statement not covered" >array.findIndex(fn))</span>
@@ -408,7 +402,7 @@ export const groupListByKey = <span class="fstat-no" title="function not covered
 export const listLength = <span class="fstat-no" title="function not covered" >ar</span>r=&gt; <span class="cstat-no" title="statement not covered" >arr.length</span>
 &nbsp;
 export const tail = <span class="fstat-no" title="function not covered" >ar</span>r=&gt; <span class="cstat-no" title="statement not covered" >arr.slice(1);</span>
-export const head = <span class="fstat-no" title="function not covered" >ar</span>r=&gt; <span class="cstat-no" title="statement not covered" >arr[0];</span>
+export const head = arr=&gt; arr[0];
 export const listIndex = <span class="fstat-no" title="function not covered" >ar</span>r  =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >in</span>dex =&gt; <span class="cstat-no" title="statement not covered" >arr[index]</span></span>
 export const last = <span class="fstat-no" title="function not covered" >ar</span>r=&gt; <span class="cstat-no" title="statement not covered" >compose(listIndex(arr),decrement,listLength)</span>
 &nbsp;
@@ -496,7 +490,7 @@ export const safe_stack = curry(<span class="fstat-no" title="function not cover
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Mar 24 2020 14:44:46 GMT+0100 (Central European Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Apr 02 2020 13:18:31 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

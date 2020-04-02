@@ -1,8 +1,8 @@
-import * as ObjectUtils from '../src/Object'
+import * as ObjectUtils from 'Object'
 
-import {curry,compose} from '../src/index'
-import {test as _test} from '../src/string'
-import {not} from '../src/bool'
+import {curry,compose} from 'core'
+import {test as _test} from 'string'
+import {not} from 'bool'
 
 
 

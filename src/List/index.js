@@ -1,8 +1,8 @@
 import {curry,compose} from '../core'
 import {filter} from '../array'
 import {assign2} from '../object'
-import {not,_either} from '../bool'
-
+import {not} from '../bool'
+import {either} from 'conditional'
 import {map,identity} from '../core'
 
 import {reduce,head} from './array'
@@ -36,7 +36,7 @@ export const update_object = assign2
 export const update_list_by_prop_id = curry((list,itemIdValue,updateFn)=> update_list(list,item_prop_is_equal('id',itemIdValue),updateFn))
 
 // update_list :: List -> Fn -> Fn -> List
-export const update_list = curry((list,itemPredicate, updateFn)=> list.map(item=>_either(itemPredicate,identity,updateFn,item)))
+export const update_list = curry((list,itemPredicate, updateFn)=> list.map(item=>either(itemPredicate,identity,updateFn,item)))
 
 
 
@@ -54,6 +54,6 @@ export const getByProp = curry((prop,list,val)=> filter(propIsEqual(prop,val),li
 
 
 
-export const update = curry((cond,val,list,fn) => map(_either(cond(val),identity,fn))(list))
+export const update = curry((cond,val,list,fn) => map(either(cond(val),identity,fn))(list))
 
 export const updateIfPropEqual =curry((prop,val,list,fn) => update(propIsEqual(prop),val,list,fn)  )

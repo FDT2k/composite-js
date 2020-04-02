@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55.17% </span>
+        <span class="strong">67.24% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>32/58</span>
+        <span class='fraction'>39/58</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">41.67% </span>
+        <span class="strong">58.33% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>5/12</span>
+        <span class='fraction'>7/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">41.38% </span>
+        <span class="strong">58.62% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>12/29</span>
+        <span class='fraction'>17/29</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">64.1% </span>
+        <span class="strong">71.79% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>25/39</span>
+        <span class='fraction'>28/39</span>
       </div>
     </div>
     <p class="quiet">
@@ -278,13 +278,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">63x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -298,14 +298,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -320,12 +319,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">259x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">259x</span>
+<span class="cline-any cline-yes">91x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">168x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -339,10 +339,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
+<span class="cline-any cline-yes">259x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -469,7 +469,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -518,14 +518,14 @@ export const compose=(...funcs) =&gt;{
  * @return {Function}
  */
 &nbsp;
-export const pipe = <span class="fstat-no" title="function not covered" >(.</span>..funcs) =&gt;{
-<span class="cstat-no" title="statement not covered" >  if(funcs.length ===0){</span>
+export const pipe = (...funcs) =&gt;{
+  <span class="missing-if-branch" title="if path not taken" >I</span>if(funcs.length ===0){
 <span class="cstat-no" title="statement not covered" >    return <span class="fstat-no" title="function not covered" >ar</span>g =&gt; <span class="cstat-no" title="statement not covered" >arg</span></span>
   }
-<span class="cstat-no" title="statement not covered" >  if(funcs.length ===1){</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if(funcs.length ===1){
 <span class="cstat-no" title="statement not covered" >    return funcs[0]</span>
   }
-<span class="cstat-no" title="statement not covered" >  return funcs.reduce(<span class="fstat-no" title="function not covered" >(a</span>, b) =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(.</span>..args) =&gt; <span class="cstat-no" title="statement not covered" >b(a(...args)))</span></span></span>
+  return funcs.reduce((a, b) =&gt; (...args) =&gt; b(a(...args)))
 };
 &nbsp;
 /**
@@ -690,11 +690,11 @@ export const identity = x =&gt; x;
  * @see curry
  *
  */
-export const flip = curry(<span class="fstat-no" title="function not covered" >(f</span>n, a, b) =&gt; <span class="cstat-no" title="statement not covered" >fn(b, a))</span>;
+export const flip = curry((fn, a, b) =&gt; fn(b, a));
 &nbsp;
 // map :: fn f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 // map :: Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-export const map = curry(<span class="fstat-no" title="function not covered" >(f</span>n, f) =&gt; <span class="cstat-no" title="statement not covered" >f.map(fn))</span>;
+export const map = curry((fn, f) =&gt; f.map(fn));
 &nbsp;
 // join :: Monad m =&gt; m (m a) -&gt; m a
 export const join = <span class="fstat-no" title="function not covered" >m </span>=&gt; <span class="cstat-no" title="statement not covered" >m.join();</span>
@@ -715,7 +715,7 @@ export const maybe = curry((value, fn, functor) =&gt; {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Mar 24 2020 14:44:46 GMT+0100 (Central European Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Apr 02 2020 13:18:31 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

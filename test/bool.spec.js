@@ -1,51 +1,68 @@
-import * as c from '../src/index'
-import util from 'util'
+import * as c from 'bool'
 
-test ("Type",()=>{
+test("Type", () => {
   let undef;
-  let nul= null
-  let test_values = [
+  let nul = null
+  let values = [
     1,
     -1,
     0,
     0.3,
-    'string'
-    [0,1,2],
+    'string',
+    [0, 1, 2,'a'],
     {},
-    x=>x,
+    x => x,
     undef,
-    nul
+    nul,
+    false,
+    true,
+    '-0.31'
   ]
 
   let tests = [
-  //  c.is_type_number,
-  //  c.is_type_object,
-    c.is_type_string,
-    c.is_type_function,
-  //  c.is_array
+    c.is_type_number,
+     c.is_type_object,
+     c.is_type_string,
+     c.is_type_function,
+     c.is_array,
+     c.is_type_bool,
+     c.is_numeric,
+     c.is_type_scalar
   ]
 
   let expected = [
-  //  [true,true,true,true,false,false,false,false],
-  //  [false,false,false,false,false,true,true,false],
-  [false,false,false,false,true,false,false,false,false],
-
-    [false,false,false,false,false,false,true,false,false],
-  //  [false,false,false,false,false,true,false,false],//is_array
+    [0,true,false,false,false,false,false,true,true],    //1
+    [1,true,false,false,false,false,false,true,true],    // -1
+    [2,true,false,false,false,false,false,true,true],    // 0
+    [3,true,false,false,false,false,false,true,true],  // 0.3
+    [4,false,false,true,false,false,false,false,true],  // string
+    [5,false,false,false,false,true,false,false,false], // []
+    [6,false,true,false,false,false,false,false,false], // {}
+    [7,false,false,false,true,false,false,false,false], // fn
+    [8,false,false,false,false,false,false,false,false], // undefined
+    [9,false,false,false,false,false,false,false,false],  //null
+    [10,false,false,false,false,false,true,false,true],  //false
+    [11,false,false,false,false,false,true,false,true],  //true
+    [12,false,false,true,false,false,false,false,true],  //true
   ]
 
-  expect(c.is_type_function(x=>x)).toBe(true)
+  expect(c.is_type_function(x => x)).toBe(true)
   expect(c.is_type_function(0)).toBe(false)
-
-  for(let _value = 0;_value < test_values.length; _value++){
-    for(let _test = 0; _test < tests.length; _test++){
-  //    console.log(test_values[_value],tests[_test](test_values[_value]), expected[_test][_value],_test,_value,typeof(test_values[_value]))
-      expect(tests[_test](test_values[_value])).toBe(expected[_test][_value])
+  let result = [];
+  
+  for (let _v = 0; _v < values.length; _v++) {
+    
+    result[_v] = [];
+    result[_v][0]=_v
+    for (let _t = 0; _t < tests.length; _t++) {
+      result[_v][_t+1] = tests[_t](values[_v])
     }
   }
+  expect(result).toEqual(expected)
 
 })
-test ("bool funcs",()=>{
+/*
+test("bool funcs", () => {
   expect(c.empty('')).toBe(true)
   expect(c.empty('asgdasdg')).toBe(false)
 
@@ -57,61 +74,32 @@ test ("bool funcs",()=>{
   expect(c.is_array('prout')).toBe(false)
 
 })
+*/
 
 
-
-test ("_either",()=>{
-  let no = x=>`no`
-  let yes = x=>`yes`
-  let undef
-  let notundef= 'couocu'
-  expect(
-    c._either(c.empty,no,yes)('')
-  ).toBe('yes')
-
-  expect(
-    c._either(c.empty,no,yes)('sdsd')
-  ).toBe('no')
-
-  expect(
-    c._eitherUndefined(no,yes)(undef)
-  ).toBe('yes')
-
-  expect(
-    c._eitherUndefined(no,yes)(notundef)
-  ).toBe('no')
-
-  expect(
-    ()=>{
-      c._eitherThrow(c.empty,'should be empty')('caca')
-    }
-  ).toThrow('should be empty');
-
-
-})
-test ("is boolean",()=>{
+test("is boolean", () => {
 
 
   expect(
     c.is_type_bool(true)
   ).toBe(true)
 
-    expect(
-      c.is_type_bool('fabie')
-    ).toBe(false)
-    expect(
-      c.is_type_bool(234)
-    ).toBe(false)
+  expect(
+    c.is_type_bool('fabie')
+  ).toBe(false)
+  expect(
+    c.is_type_bool(234)
+  ).toBe(false)
 
 
 })
 
 
-test ("is scalar",()=>{
+test("is scalar", () => {
 
 
   expect(
-  c.is_type_scalar(true)
+    c.is_type_scalar(true)
   ).toBe(true)
 
   expect(
@@ -122,7 +110,7 @@ test ("is scalar",()=>{
   ).toBe(true)
 
   expect(
-    c.is_type_scalar(x=>x)
+    c.is_type_scalar(x => x)
   ).toBe(false)
   expect(
     c.is_type_scalar([])
@@ -137,7 +125,7 @@ test ("is scalar",()=>{
 })
 
 
-test ("Numbers",()=>{
+test("Numbers", () => {
   let i = 4512
 
   expect(
@@ -160,11 +148,11 @@ test ("Numbers",()=>{
   ).toBe(true)
 
   expect(
-    c.is_type_number(x=>x)
+    c.is_type_number(x => x)
   ).toBe(false)
 
   expect(
-    c.is_numeric(x=>x)
+    c.is_numeric(x => x)
   ).toBe(false)
 
 
@@ -172,53 +160,23 @@ test ("Numbers",()=>{
 
 })
 
-
-test ("prop equalities",()=>{
-  let o = {id:23}
+/*
+test("prop equalities", () => {
+  let o = { id: 23 }
   expect(
-    c.is_prop_strictly_equal('id',23,o)
+    c.isPropStrictlyEqual('id', 23, o)
   ).toBe(true)
 
-  let byname = c.is_prop_strictly_equal('name');
+  let byname = c.isPropStrictlyEqual('name');
 
   expect(
-    byname('fabien',{name:'fabien'})
+    byname('fabien', { name: 'fabien' })
   ).toBe(true)
 
   expect(
-    byname('george',{name:'fabien'})
+    byname('george', { name: 'fabien' })
   ).toBe(false)
 
 
 })
-
-
-
-test ('trycatcher', (done)=>{
-
-  const on_error = (err)=>{
-    console.error(err)
-  }
-
-  const working_fn = ()=>{
-
-    done()
-
-  }
-  c.tryCatcher(on_error,working_fn,null);
-
-});
-
-test ('trycatcher is catching', (done)=>{
-
-  const failing_fn = ()=>{
-    coucouasdnoiadfsjiadfoij
-  }
-
-  const catch_err = (err)=>{
-    done();
-  }
-  c.tryCatcher(catch_err,failing_fn,null)
-
-
-})
+*/

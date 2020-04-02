@@ -1,5 +1,4 @@
-import * as c from '../src/index'
-import * as C from '../src/Combinator'
+import * as C from 'Combinator'
 const {asFunctionProp:asF,asScalarProp:asS} = C;
 
 

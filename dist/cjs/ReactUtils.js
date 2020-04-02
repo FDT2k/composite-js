@@ -2,6 +2,111 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+}
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
+}
+
 /**
  * Compose several unary function into one function. Execution is done from right to left
  *
@@ -218,6 +323,9 @@ var split = curry(function (sep, str) {
 var repeat = curry(function (times, string) {
   return string.repeat(times);
 });
+var lcfirst = function lcfirst(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+};
 
 var trace = curry(function (tag, value) {
   console.log(tag, value);
@@ -234,111 +342,6 @@ var trace_prop = curry(function (tag, prop, value) {
   console.log(tag, value[prop]);
   return value;
 });
-
-function _typeof(obj) {
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function (obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function (obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-}
-
-function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
-}
 
 var Maybe =
 /*#__PURE__*/
@@ -410,22 +413,13 @@ function () {
   return Maybe;
 }();
 
-var empty = function empty(string) {
-  return string.length == 0;
-}; // BOOL => BOOL
+//export const empty = string=> string.length==0;
+// BOOL => BOOL
+//export const notEmpty = compose(not,empty)
 
 var not = function not(x) {
   return !x;
 };
-var notEmpty = compose(not, empty); // very small either, no way to know if there was an error
-
-/*
-  if(cond is met, return right else return left)
-*/
-
-var _either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -438,41 +432,16 @@ var _typeof$1 = function _typeof$1(value) {
 var is_type = function is_type(val) {
   return compose(isStrictlyEqual(val), _typeof$1);
 };
-var is_type_object = is_type('object');
 var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this
-var _eitherUndefined = _either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var _eitherThrow = curry(function (cond, error) {
-  return _either(cond, _throw(error), identity);
-}); //  String -> a -> Object -> Bool
-
-var is_prop_strictly_equal = curry(function (prop, value, item) {
-  return item[prop] == value;
-});
-var is_prop_not_strictly_equal = curry(function (prop, value, item) {
-  return compose(not, is_prop_strictly_equal(prop, value))(item);
-}); // default a value to something if null || undefined -> cf. Maybe
+var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
 };
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
 
 var assign2 = curry(function (x, y) {
   return Object.assign({}, x, y);
@@ -648,7 +617,18 @@ var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
 });
 
-var key = compose(head, keys); // filter an object and returns key that matches
+// {a:b} -> a
+// {a:b, c:d} -> a
+
+var key = compose(head, keys);
+var objectReduce = reduce({}); //  String -> a -> Object -> Bool
+
+var isPropStrictlyEqual = curry(function (_prop, value, item) {
+  return compose(isStrictlyEqual(value), prop(_prop))(item);
+});
+var isPropStrictlyNotEqual = curry(function (prop, value, item) {
+  return compose(not, isPropStrictlyEqual(prop, value))(item);
+}); // filter an object and returns key that matches
 // regex -> string -> Object -> Bool
 
 var propMatch = curry(function (re, key) {
@@ -665,7 +645,7 @@ var matchReducer = curry(function (match, acc, item) {
 }); // 
 
 var keepMatching = function keepMatching(match) {
-  return reduce({}, matchReducer(match));
+  return objectReduce(matchReducer(match));
 };
 var spreadFilterByKey = function spreadFilterByKey(match) {
   return compose(diverge(keepMatching(match), keepMatching(compose(not, match))), enlist);
@@ -674,9 +654,13 @@ var spreadFilterByKey = function spreadFilterByKey(match) {
 var regex = function regex(str) {
   return new RegExp(str);
 };
+var updateProp = curry(function (prop, obj, value) {
+  return updateObject(obj, _defineProperty({}, prop, value));
+});
 var beginWith = compose(test, regex, concat('^'));
 var contains = compose(test, regex, concat(''));
 var endWith = compose(test, regex, append('$'));
+var equals = compose(test, regex, append('$'), concat('^'));
 var spreadObject = spreadFilterByKey;
 var spreadObjectBeginWith = curry(function (str, obj) {
   return spreadFilterByKey(beginWith(str))(obj);
@@ -687,12 +671,47 @@ var spreadObjectContaining = curry(function (str, obj) {
 var spreadObjectEndingWith = curry(function (str, obj) {
   return spreadFilterByKey(endWith(str))(obj);
 });
+var transformReplace = function transformReplace(re, repl) {
+  return replace(re, repl);
+};
+var transformLowSnake = lcfirst;
+var replaceKeyReducer = function replaceKeyReducer(transform) {
+  return function (acc, item) {
+    acc[transform(key(item))] = item[key(item)];
+    return acc;
+  };
+}; // Fn -> List -> Object
+
+var transformProps = function transformProps(transform) {
+  return objectReduce(replaceKeyReducer(transform));
+}; // Fn ->  Object -> Object
+
+var transformKeys = function transformKeys(transform) {
+  return compose(transformProps(transform), enlist);
+}; // String -> String
+
+var forwardPropsTransformer = function forwardPropsTransformer(str) {
+  return compose(transformLowSnake, transformReplace(str, ''));
+}; // String -> Object ->Object
+
+var forwardPropsRemovingHeader = function forwardPropsRemovingHeader(header, obj) {
+  return transformKeys(forwardPropsTransformer(header))(obj);
+};
 
 exports.beginWith = beginWith;
 exports.contains = contains;
 exports.endWith = endWith;
+exports.equals = equals;
+exports.forwardPropsRemovingHeader = forwardPropsRemovingHeader;
+exports.forwardPropsTransformer = forwardPropsTransformer;
 exports.regex = regex;
+exports.replaceKeyReducer = replaceKeyReducer;
 exports.spreadObject = spreadObject;
 exports.spreadObjectBeginWith = spreadObjectBeginWith;
 exports.spreadObjectContaining = spreadObjectContaining;
 exports.spreadObjectEndingWith = spreadObjectEndingWith;
+exports.transformKeys = transformKeys;
+exports.transformLowSnake = transformLowSnake;
+exports.transformProps = transformProps;
+exports.transformReplace = transformReplace;
+exports.updateProp = updateProp;

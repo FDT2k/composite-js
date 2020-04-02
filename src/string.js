@@ -27,3 +27,8 @@ export const ucase = string => string.toUpperCase();
 export const repeat = curry((times,string) => string.repeat(times));
 
 export const trim = string => string.trim();
+
+
+export const lcfirst = string => string.charAt(0).toLowerCase() + string.slice(1)
+export const ucfirst = string => string.charAt(0).toUpperCase() + string.slice(1)
+

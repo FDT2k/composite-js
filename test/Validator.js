@@ -1,4 +1,4 @@
-import * as c from '../src/validator'
+import * as c from 'Validators'
 
 test("empty string",()=>{
 

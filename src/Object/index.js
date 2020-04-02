@@ -1,12 +1,24 @@
-import {curry,compose,map,identity,diverge} from '../core';
-import {test} from '../string'
+import {curry,compose,map,identity,diverge} from 'core';
+import {test} from 'string'
 import {trace} from '../debug'
-import {reduce,head} from '../array.js'
-import {_either,not} from '../bool'
-import { prop , keys, assign2, enlist} from '../object';
+import {reduce,head} from 'array'
+import {not} from 'bool'
+import { prop , keys, assign2, enlist} from 'object';
 
+import {isStrictlyEqual} from 'bool'
+
+
+// Object -> Scalar
+// {a:b} -> a
+// {a:b, c:d} -> a
 export const key = compose(head,keys)
 
+export const objectReduce = reduce({});
+
+//  String -> a -> Object -> Bool
+export const isPropStrictlyEqual = curry((_prop,value,item)=> compose (isStrictlyEqual(value),prop(_prop)) (item))
+
+export const isPropStrictlyNotEqual = curry((prop,value,item)=> compose(not,isPropStrictlyEqual(prop,value))(item) )
 // filter an object and returns key that matches
 
 // regex -> string -> Object -> Bool
@@ -24,7 +36,9 @@ export const matchReducer = curry((match,acc,item)=> {
 })
 // 
 
-export const keepMatching = match => reduce({},matchReducer(match))
+
+
+export const keepMatching = match => objectReduce(matchReducer(match))
 
 export const filterByKey = match => compose(keepMatching(match), enlist)
 

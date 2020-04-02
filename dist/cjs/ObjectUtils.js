@@ -410,22 +410,13 @@ function () {
   return Maybe;
 }();
 
-var empty = function empty(string) {
-  return string.length == 0;
-}; // BOOL => BOOL
+//export const empty = string=> string.length==0;
+// BOOL => BOOL
+//export const notEmpty = compose(not,empty)
 
 var not = function not(x) {
   return !x;
 };
-var notEmpty = compose(not, empty); // very small either, no way to know if there was an error
-
-/*
-  if(cond is met, return right else return left)
-*/
-
-var _either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -438,41 +429,16 @@ var _typeof$1 = function _typeof$1(value) {
 var is_type = function is_type(val) {
   return compose(isStrictlyEqual(val), _typeof$1);
 };
-var is_type_object = is_type('object');
 var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this
-var _eitherUndefined = _either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var _eitherThrow = curry(function (cond, error) {
-  return _either(cond, _throw(error), identity);
-}); //  String -> a -> Object -> Bool
-
-var is_prop_strictly_equal = curry(function (prop, value, item) {
-  return item[prop] == value;
-});
-var is_prop_not_strictly_equal = curry(function (prop, value, item) {
-  return compose(not, is_prop_strictly_equal(prop, value))(item);
-}); // default a value to something if null || undefined -> cf. Maybe
+var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
 };
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
 
 var assign2 = curry(function (x, y) {
   return Object.assign({}, x, y);
@@ -648,7 +614,18 @@ var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
 });
 
-var key = compose(head, keys); // filter an object and returns key that matches
+// {a:b} -> a
+// {a:b, c:d} -> a
+
+var key = compose(head, keys);
+var objectReduce = reduce({}); //  String -> a -> Object -> Bool
+
+var isPropStrictlyEqual = curry(function (_prop, value, item) {
+  return compose(isStrictlyEqual(value), prop(_prop))(item);
+});
+var isPropStrictlyNotEqual = curry(function (prop, value, item) {
+  return compose(not, isPropStrictlyEqual(prop, value))(item);
+}); // filter an object and returns key that matches
 // regex -> string -> Object -> Bool
 
 var propMatch = curry(function (re, key) {
@@ -665,7 +642,7 @@ var matchReducer = curry(function (match, acc, item) {
 }); // 
 
 var keepMatching = function keepMatching(match) {
-  return reduce({}, matchReducer(match));
+  return objectReduce(matchReducer(match));
 };
 var filterByKey = function filterByKey(match) {
   return compose(keepMatching(match), enlist);
@@ -675,8 +652,11 @@ var spreadFilterByKey = function spreadFilterByKey(match) {
 };
 
 exports.filterByKey = filterByKey;
+exports.isPropStrictlyEqual = isPropStrictlyEqual;
+exports.isPropStrictlyNotEqual = isPropStrictlyNotEqual;
 exports.keepMatching = keepMatching;
 exports.key = key;
 exports.matchReducer = matchReducer;
+exports.objectReduce = objectReduce;
 exports.propMatch = propMatch;
 exports.spreadFilterByKey = spreadFilterByKey;
