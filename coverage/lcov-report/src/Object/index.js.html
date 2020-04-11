@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">88.89% </span>
+        <span class="strong">77.78% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>16/18</span>
+        <span class='fraction'>14/18</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,21 +30,21 @@
         <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">71.43% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/7</span>
+        <span class='fraction'>4/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>11/11</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -95,9 +95,7 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -112,14 +110,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,22 +122,24 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,8 +148,8 @@
 import {test} from 'string'
 import {trace} from '../debug'
 import {reduce,head} from 'array'
-import {_either,not} from 'bool'
-import { prop , keys, assign2, enlist} from 'object';
+import {not} from 'bool'
+import { prop , keys,ensure_object_copy, assign2, enlist} from 'object';
 &nbsp;
 import {isStrictlyEqual} from 'bool'
 &nbsp;
@@ -163,12 +159,12 @@ import {isStrictlyEqual} from 'bool'
 // {a:b, c:d} -&gt; a
 export const key = compose(head,keys)
 &nbsp;
-export const objectReduce = reduce({});
+//export const objectReduce = reduce({});
 &nbsp;
 //  String -&gt; a -&gt; Object -&gt; Bool
-export const isPropStrictlyEqual = curry((_prop,value,item)=&gt; compose (isStrictlyEqual(value),prop(_prop)) (item))
+export const isPropStrictlyEqual = curry(<span class="fstat-no" title="function not covered" >(_</span>prop,value,item)=&gt; <span class="cstat-no" title="statement not covered" >compose (isStrictlyEqual(value),prop(_prop)) (item))</span>
 &nbsp;
-export const isPropStrictlyNotEqual = curry((prop,value,item)=&gt; compose(not,isPropStrictlyEqual(prop,value))(item) )
+export const isPropStrictlyNotEqual = curry(<span class="fstat-no" title="function not covered" >(p</span>rop,value,item)=&gt; <span class="cstat-no" title="statement not covered" >compose(not,isPropStrictlyEqual(prop,value))(item) </span>)
 // filter an object and returns key that matches
 &nbsp;
 // regex -&gt; string -&gt; Object -&gt; Bool
@@ -176,36 +172,34 @@ export const propMatch = curry(<span class="fstat-no" title="function not covere
 &nbsp;
 &nbsp;
 // Object -&gt; Object -&gt; Object 
-export const matchReducer = curry((match,acc,item)=&gt; {
+export const matchReducer = match =&gt; (acc,item)=&gt; {
   //  console.log(head(keys(item)))
 &nbsp;
     if(match(key(item))){
         return assign2(acc,item)
     }
     return acc;
-})
+}
 // 
 &nbsp;
 &nbsp;
 &nbsp;
-export const keepMatching = match =&gt; objectReduce(matchReducer(match))
+export const keepMatching = match =&gt; reduce({},matchReducer(match))
 &nbsp;
-export const filterByKey = match =&gt; compose(keepMatching(match), enlist)
+export const filterByKey = <span class="fstat-no" title="function not covered" >ma</span>tch =&gt; <span class="cstat-no" title="statement not covered" >compose(keepMatching(match), enlist,ensure_object_copy)</span>
 &nbsp;
-export const spreadFilterByKey = <span class="fstat-no" title="function not covered" >ma</span>tch =&gt; <span class="cstat-no" title="statement not covered" >compose( </span>
-  
+export const spreadFilterByKey = match =&gt; compose( 
   diverge(
       keepMatching(match),
       keepMatching(compose(not,match)),
   ),
-  
-  enlist)</pre></td></tr>
+  enlist,ensure_object_copy)</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Apr 02 2020 13:18:31 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Apr 10 2020 12:13:22 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

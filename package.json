@@ -15,7 +15,7 @@
     "pub": "cd ./dist/cjs;yarn publish; cd ..",
     "doc": "npx jsdoc src/core.js --destination ./docs",
     "test": "npx jest --coverage && npx jest-coverage-badges",
-    "test:watch": "npx jest --watchAll --coverage "
+    "test:watch": "npx jest --watchAll "
   },
   "author": "Fabien Di Tore",
   "license": "MIT",

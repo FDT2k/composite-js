@@ -450,6 +450,7 @@ var omit_key = curry(function (_omit, obj) {
   });
   return o;
 });
+var ensure_object_copy = assign2({});
 /*
   String -> String -> Object -> Object
 */

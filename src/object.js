@@ -26,6 +26,7 @@ export const omit_key = curry( (_omit,obj) => {
 
 })
 
+export const ensure_object_copy = assign2({})
 
 /*
   String -> String -> Object -> Object

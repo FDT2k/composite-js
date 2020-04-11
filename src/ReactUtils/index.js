@@ -1,4 +1,5 @@
-import {spreadFilterByKey,key,objectReduce} from 'Object'
+import {spreadFilterByKey,key} from 'Object'
+import {reduce} from 'array'
 import {enlist} from 'object'
 import {replace,concat,append,test} from 'string'
 import {compose,curry} from 'core'
@@ -15,16 +16,18 @@ export const contains = compose(test,regex,concat(''))
 export const endWith = compose(test,regex,append('$'))
 export const equals = compose(test,regex,append('$'),concat('^'))
 
+export const presentIn = array => str => array.indexOf(str) > -1;
 
 export const spreadObject = spreadFilterByKey
 
-export const spreadObjectBeginWith =  curry( (str,obj) => spreadFilterByKey(beginWith(str)) (obj))
-export const spreadObjectContaining =  curry( (str,obj) => spreadFilterByKey(contains(str)) (obj))
-export const spreadObjectEndingWith =  curry( (str,obj) => spreadFilterByKey(endWith(str)) (obj))
+export const spreadObjectBeginWith =   (str,obj) => spreadFilterByKey(beginWith(str)) (obj)
+export const spreadObjectContaining =  (str,obj) => spreadFilterByKey(contains(str)) (obj)
+export const spreadObjectEndingWith =   (str,obj) => spreadFilterByKey(endWith(str)) (obj)
+export const spreadObjectPresentIn =   (array,obj) => spreadFilterByKey(presentIn(array)) (obj)
 
 
 
-export const transformReplace  = (re,repl) =>  replace(re,repl)
+export const transformReplace  = replace
 export const transformLowSnake  =  lcfirst
 
 export const replaceKeyReducer = transform => (acc,item)=>{
@@ -39,7 +42,7 @@ export const replaceKeyReducer = transform => (acc,item)=>{
 
 
 // Fn -> List -> Object
-export const transformProps = transform => objectReduce(replaceKeyReducer(transform))
+export const transformProps = transform => reduce({},replaceKeyReducer(transform))
 
 // Fn ->  Object -> Object
 export const transformKeys = transform => compose(transformProps(transform),enlist);

@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">68% </span>
+        <span class="strong">72.73% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>17/25</span>
+        <span class='fraction'>16/22</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">33.33% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>4/12</span>
+        <span class='fraction'>4/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>13/13</span>
+        <span class='fraction'>12/12</span>
       </div>
     </div>
     <p class="quiet">
@@ -81,14 +81,7 @@
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -96,10 +89,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -122,26 +112,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {curry,compose} from 'core'
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import {curry} from 'core'
 import {filter} from 'array'
 import {assign2} from 'object'
-import {not,_either,isStrictlyNotEqual} from 'bool'
-&nbsp;
+import {not,isStrictlyNotEqual} from 'bool'
+import {either} from 'conditional'
 import {map,identity} from 'core'
-&nbsp;
-import {reduce,head} from 'array'
 import {filterByKey,isPropStrictlyEqual,isPropStrictlyNotEqual} from 'Object'
 &nbsp;
-import {equals} from 'ReactUtils'
-&nbsp;
+export const updateObject = assign2
 &nbsp;
 &nbsp;
 // ListUtils
@@ -160,25 +143,21 @@ export const getFromListByProp = curry(<span class="fstat-no" title="function no
 export const addToListUniqByProp = curry(<span class="fstat-no" title="function not covered" >(p</span>rop,list,item) =&gt; <span class="cstat-no" title="statement not covered" >addToList(delFromListByProp(prop,list,item[prop]),item))</span>
 export const addToListUniq = curry( <span class="fstat-no" title="function not covered" >(l</span>ist,val)=&gt; <span class="cstat-no" title="statement not covered" >add(del(list,val),val))</span>
 &nbsp;
-export const updateList = curry(<span class="fstat-no" title="function not covered" >(c</span>ond,val,list,fn) =&gt; <span class="cstat-no" title="statement not covered" >map(_either(cond(val),identity,fn))(list))</span>
+export const updateList = curry(<span class="fstat-no" title="function not covered" >(c</span>ond,val,list,fn) =&gt; <span class="cstat-no" title="statement not covered" >map(either(cond(val),identity,fn))(list))</span>
 export const updateListIfPropEqual =curry(<span class="fstat-no" title="function not covered" >(p</span>rop,val,list,fn) =&gt; <span class="cstat-no" title="statement not covered" >updateList(isPropStrictlyEqual(prop),val,list,fn) </span> )
-&nbsp;
-&nbsp;
-&nbsp;
-export const updateObjectIfCond = curry(<span class="fstat-no" title="function not covered" >(c</span>ond,val,list,fn) =&gt; <span class="cstat-no" title="statement not covered" >map(_either(cond(val),identity,fn))(list))</span>
-export const updateObjectIfPropEqual =curry(<span class="fstat-no" title="function not covered" >(p</span>rop,val,list,fn) =&gt; <span class="cstat-no" title="statement not covered" >update(isPropStrictlyEqual(prop),val,list,fn) </span> )
 &nbsp;
 &nbsp;
 export const delFromObjectByKey= curry((string,obj) =&gt; filterByKey(isStrictlyNotEqual(string))(obj)) ;
 &nbsp;
-export const updateProp = curry(<span class="fstat-no" title="function not covered" >(p</span>rop,obj,value)=&gt; <span class="cstat-no" title="statement not covered" >updateObject(obj, {[prop]: value}))</span>
-&nbsp;</pre></td></tr>
+&nbsp;
+// String -&gt; Object -&gt; ? -&gt; Object
+export const updateProp = curry(<span class="fstat-no" title="function not covered" >(p</span>rop,obj,value)=&gt; <span class="cstat-no" title="statement not covered" >updateObject(obj, {[prop]: value}))</span></pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Apr 02 2020 13:18:31 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Apr 10 2020 12:13:17 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

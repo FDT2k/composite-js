@@ -29,9 +29,7 @@ export const updateList = curry((cond,val,list,fn) => map(either(cond(val),ident
 export const updateListIfPropEqual =curry((prop,val,list,fn) => updateList(isPropStrictlyEqual(prop),val,list,fn)  )
 
 
-
 export const delFromObjectByKey= curry((string,obj) => filterByKey(isStrictlyNotEqual(string))(obj)) ;
-
 
 
 // String -> Object -> ? -> Object

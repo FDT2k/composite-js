@@ -38,7 +38,7 @@ const defaultConf = {
 
 export default [
   Object.assign({},defaultConf,{
-    input: 'src/core.js',
+    input: 'src/Core/index.js',
     output: {
       file: 'dist/cjs/Core.js',
       format: 'cjs',

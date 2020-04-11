@@ -389,6 +389,7 @@ var omit_key = curry(function (_omit, obj) {
   });
   return o;
 });
+var ensure_object_copy = assign2({});
 /*
   String -> String -> Object -> Object
 */
@@ -608,8 +609,8 @@ var trace_prop = curry(function (tag, prop, value) {
 // {a:b} -> a
 // {a:b, c:d} -> a
 
-var key = compose(head, keys);
-var objectReduce = reduce({}); //  String -> a -> Object -> Bool
+var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator  forever
+//  String -> a -> Object -> Bool
 
 var isPropStrictlyEqual = curry(function (_prop, value, item) {
   return compose(isStrictlyEqual(value), prop(_prop))(item);
@@ -623,20 +624,22 @@ var propMatch = curry(function (re, key) {
   return compose(test(re), prop(key));
 }); // Object -> Object -> Object 
 
-var matchReducer = curry(function (match, acc, item) {
-  //  console.log(head(keys(item)))
-  if (match(key(item))) {
-    return assign2(acc, item);
-  }
+var matchReducer = function matchReducer(match) {
+  return function (acc, item) {
+    //  console.log(head(keys(item)))
+    if (match(key(item))) {
+      return assign2(acc, item);
+    }
 
-  return acc;
-}); // 
+    return acc;
+  };
+}; // 
 
 var keepMatching = function keepMatching(match) {
-  return objectReduce(matchReducer(match));
+  return reduce({}, matchReducer(match));
 };
 var filterByKey = function filterByKey(match) {
-  return compose(keepMatching(match), enlist);
+  return compose(keepMatching(match), trace('x'), enlist, ensure_object_copy);
 };
 
 var updateObject = assign2; // ListUtils

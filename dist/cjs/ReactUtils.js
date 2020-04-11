@@ -466,6 +466,7 @@ var omit_key = curry(function (_omit, obj) {
   });
   return o;
 });
+var ensure_object_copy = assign2({});
 /*
   String -> String -> Object -> Object
 */
@@ -620,8 +621,8 @@ var safe_stack = curry(function (array, item) {
 // {a:b} -> a
 // {a:b, c:d} -> a
 
-var key = compose(head, keys);
-var objectReduce = reduce({}); //  String -> a -> Object -> Bool
+var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator  forever
+//  String -> a -> Object -> Bool
 
 var isPropStrictlyEqual = curry(function (_prop, value, item) {
   return compose(isStrictlyEqual(value), prop(_prop))(item);
@@ -635,21 +636,42 @@ var propMatch = curry(function (re, key) {
   return compose(test(re), prop(key));
 }); // Object -> Object -> Object 
 
-var matchReducer = curry(function (match, acc, item) {
-  //  console.log(head(keys(item)))
-  if (match(key(item))) {
-    return assign2(acc, item);
-  }
+var matchReducer = function matchReducer(match) {
+  return function (acc, item) {
+    //  console.log(head(keys(item)))
+    if (match(key(item))) {
+      return assign2(acc, item);
+    }
 
-  return acc;
-}); // 
+    return acc;
+  };
+}; // 
 
 var keepMatching = function keepMatching(match) {
-  return objectReduce(matchReducer(match));
+  return reduce({}, matchReducer(match));
 };
-var spreadFilterByKey = function spreadFilterByKey(match) {
-  return compose(diverge(keepMatching(match), keepMatching(compose(not, match))), enlist);
+/*
+  perform a match function on every item of an object and returns an array like this: 
+  [matching, notmatching]
+
+  //MatchFunction => Object => List
+*/
+
+var makeSpreadFilterByKey = function makeSpreadFilterByKey(transformMatching) {
+  return function (transformNotMatching) {
+    return function (match) {
+      return compose(diverge(transformMatching(match), transformNotMatching(compose(not, match))), enlist, ensure_object_copy);
+    };
+  };
 };
+/*
+  perform a match function on every item of an object and returns an array like this: 
+  [matching, notmatching]
+
+  //MatchFunction => Object => List
+*/
+
+var spreadFilterByKey = makeSpreadFilterByKey(keepMatching)(keepMatching);
 
 var regex = function regex(str) {
   return new RegExp(str);
@@ -661,19 +683,25 @@ var beginWith = compose(test, regex, concat('^'));
 var contains = compose(test, regex, concat(''));
 var endWith = compose(test, regex, append('$'));
 var equals = compose(test, regex, append('$'), concat('^'));
-var spreadObject = spreadFilterByKey;
-var spreadObjectBeginWith = curry(function (str, obj) {
-  return spreadFilterByKey(beginWith(str))(obj);
-});
-var spreadObjectContaining = curry(function (str, obj) {
-  return spreadFilterByKey(contains(str))(obj);
-});
-var spreadObjectEndingWith = curry(function (str, obj) {
-  return spreadFilterByKey(endWith(str))(obj);
-});
-var transformReplace = function transformReplace(re, repl) {
-  return replace(re, repl);
+var presentIn = function presentIn(array) {
+  return function (str) {
+    return array.indexOf(str) > -1;
+  };
 };
+var spreadObject = spreadFilterByKey;
+var spreadObjectBeginWith = function spreadObjectBeginWith(str, obj) {
+  return spreadFilterByKey(beginWith(str))(obj);
+};
+var spreadObjectContaining = function spreadObjectContaining(str, obj) {
+  return spreadFilterByKey(contains(str))(obj);
+};
+var spreadObjectEndingWith = function spreadObjectEndingWith(str, obj) {
+  return spreadFilterByKey(endWith(str))(obj);
+};
+var spreadObjectPresentIn = function spreadObjectPresentIn(array, obj) {
+  return spreadFilterByKey(presentIn(array))(obj);
+};
+var transformReplace = replace;
 var transformLowSnake = lcfirst;
 var replaceKeyReducer = function replaceKeyReducer(transform) {
   return function (acc, item) {
@@ -683,7 +711,7 @@ var replaceKeyReducer = function replaceKeyReducer(transform) {
 }; // Fn -> List -> Object
 
 var transformProps = function transformProps(transform) {
-  return objectReduce(replaceKeyReducer(transform));
+  return reduce({}, replaceKeyReducer(transform));
 }; // Fn ->  Object -> Object
 
 var transformKeys = function transformKeys(transform) {
@@ -704,12 +732,14 @@ exports.endWith = endWith;
 exports.equals = equals;
 exports.forwardPropsRemovingHeader = forwardPropsRemovingHeader;
 exports.forwardPropsTransformer = forwardPropsTransformer;
+exports.presentIn = presentIn;
 exports.regex = regex;
 exports.replaceKeyReducer = replaceKeyReducer;
 exports.spreadObject = spreadObject;
 exports.spreadObjectBeginWith = spreadObjectBeginWith;
 exports.spreadObjectContaining = spreadObjectContaining;
 exports.spreadObjectEndingWith = spreadObjectEndingWith;
+exports.spreadObjectPresentIn = spreadObjectPresentIn;
 exports.transformKeys = transformKeys;
 exports.transformLowSnake = transformLowSnake;
 exports.transformProps = transformProps;

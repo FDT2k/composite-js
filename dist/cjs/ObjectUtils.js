@@ -463,6 +463,7 @@ var omit_key = curry(function (_omit, obj) {
   });
   return o;
 });
+var ensure_object_copy = assign2({});
 /*
   String -> String -> Object -> Object
 */
@@ -617,8 +618,8 @@ var safe_stack = curry(function (array, item) {
 // {a:b} -> a
 // {a:b, c:d} -> a
 
-var key = compose(head, keys);
-var objectReduce = reduce({}); //  String -> a -> Object -> Bool
+var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator  forever
+//  String -> a -> Object -> Bool
 
 var isPropStrictlyEqual = curry(function (_prop, value, item) {
   return compose(isStrictlyEqual(value), prop(_prop))(item);
@@ -632,31 +633,52 @@ var propMatch = curry(function (re, key) {
   return compose(test(re), prop(key));
 }); // Object -> Object -> Object 
 
-var matchReducer = curry(function (match, acc, item) {
-  //  console.log(head(keys(item)))
-  if (match(key(item))) {
-    return assign2(acc, item);
-  }
+var matchReducer = function matchReducer(match) {
+  return function (acc, item) {
+    //  console.log(head(keys(item)))
+    if (match(key(item))) {
+      return assign2(acc, item);
+    }
 
-  return acc;
-}); // 
+    return acc;
+  };
+}; // 
 
 var keepMatching = function keepMatching(match) {
-  return objectReduce(matchReducer(match));
+  return reduce({}, matchReducer(match));
 };
 var filterByKey = function filterByKey(match) {
-  return compose(keepMatching(match), enlist);
+  return compose(keepMatching(match), trace('x'), enlist, ensure_object_copy);
 };
-var spreadFilterByKey = function spreadFilterByKey(match) {
-  return compose(diverge(keepMatching(match), keepMatching(compose(not, match))), enlist);
+/*
+  perform a match function on every item of an object and returns an array like this: 
+  [matching, notmatching]
+
+  //MatchFunction => Object => List
+*/
+
+var makeSpreadFilterByKey = function makeSpreadFilterByKey(transformMatching) {
+  return function (transformNotMatching) {
+    return function (match) {
+      return compose(diverge(transformMatching(match), transformNotMatching(compose(not, match))), enlist, ensure_object_copy);
+    };
+  };
 };
+/*
+  perform a match function on every item of an object and returns an array like this: 
+  [matching, notmatching]
+
+  //MatchFunction => Object => List
+*/
+
+var spreadFilterByKey = makeSpreadFilterByKey(keepMatching)(keepMatching);
 
 exports.filterByKey = filterByKey;
 exports.isPropStrictlyEqual = isPropStrictlyEqual;
 exports.isPropStrictlyNotEqual = isPropStrictlyNotEqual;
 exports.keepMatching = keepMatching;
 exports.key = key;
+exports.makeSpreadFilterByKey = makeSpreadFilterByKey;
 exports.matchReducer = matchReducer;
-exports.objectReduce = objectReduce;
 exports.propMatch = propMatch;
 exports.spreadFilterByKey = spreadFilterByKey;
