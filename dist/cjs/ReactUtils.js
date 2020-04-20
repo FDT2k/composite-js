@@ -689,18 +689,18 @@ var presentIn = function presentIn(array) {
   };
 };
 var spreadObject = spreadFilterByKey;
-var spreadObjectBeginWith = function spreadObjectBeginWith(str, obj) {
+var spreadObjectBeginWith = curry(function (str, obj) {
   return spreadFilterByKey(beginWith(str))(obj);
-};
-var spreadObjectContaining = function spreadObjectContaining(str, obj) {
+});
+var spreadObjectContaining = curry(function (str, obj) {
   return spreadFilterByKey(contains(str))(obj);
-};
-var spreadObjectEndingWith = function spreadObjectEndingWith(str, obj) {
+});
+var spreadObjectEndingWith = curry(function (str, obj) {
   return spreadFilterByKey(endWith(str))(obj);
-};
-var spreadObjectPresentIn = function spreadObjectPresentIn(array, obj) {
+});
+var spreadObjectPresentIn = curry(function (array, obj) {
   return spreadFilterByKey(presentIn(array))(obj);
-};
+});
 var transformReplace = replace;
 var transformLowSnake = lcfirst;
 var replaceKeyReducer = function replaceKeyReducer(transform) {
@@ -722,9 +722,9 @@ var forwardPropsTransformer = function forwardPropsTransformer(str) {
   return compose(transformLowSnake, transformReplace(str, ''));
 }; // String -> Object ->Object
 
-var forwardPropsRemovingHeader = function forwardPropsRemovingHeader(header, obj) {
+var forwardPropsRemovingHeader = curry(function (header, obj) {
   return transformKeys(forwardPropsTransformer(header))(obj);
-};
+});
 
 exports.beginWith = beginWith;
 exports.contains = contains;

@@ -3,7 +3,7 @@ import * as ReactUtils from '../src/ReactUtils'
 import {identity} from 'core'
 
 
-test('Rectangle',()=>{
+test('propThatMatch',()=>{
     const props = {
         className: '',
         toolbarClassName:'',
