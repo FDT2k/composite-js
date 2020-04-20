@@ -107,5 +107,15 @@ export default [
       sourcemap: false,
       exports: 'named',
     }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/Geometry/index.js',
+    output: {
+      file: 'dist/cjs/Geometry.js',
+      format: 'cjs',
+      indent: false,
+      sourcemap: false,
+      exports: 'named',
+    }
   })
 ];

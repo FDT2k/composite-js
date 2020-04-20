@@ -1,4 +1,4 @@
-import {pipe,map,curry,flip,curryX, compose} from './core'
+import {pipe,map,curry,flip} from './core'
 import {defaultTo} from './bool'
 
 
