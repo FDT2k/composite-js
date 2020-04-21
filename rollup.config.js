@@ -36,15 +36,19 @@ const defaultConf = {
   ],
 }
 
+const defaultFormat = {
+  format: 'cjs',
+  indent: false,
+  sourcemap: false,
+  exports: 'named',
+}
+
 export default [
   Object.assign({},defaultConf,{
     input: 'src/Core/index.js',
     output: {
       file: 'dist/cjs/Core.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   })
   ,
@@ -52,70 +56,49 @@ export default [
     input: 'src/Object/index.js',
     output: {
       file: 'dist/cjs/ObjectUtils.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   }),
   Object.assign({},defaultConf,{
     input: 'src/List/index.js',
     output: {
       file: 'dist/cjs/List.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   }),
   Object.assign({},defaultConf,{
     input: 'src/Combinator/index.js',
     output: {
       file: 'dist/cjs/Combinator.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   }),
   Object.assign({},defaultConf,{
     input: 'src/ReactUtils/index.js',
     output: {
       file: 'dist/cjs/ReactUtils.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   }),
   Object.assign({},defaultConf,{
     input: 'src/Validators/index.js',
     output: {
       file: 'dist/cjs/Validators.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   }),
   Object.assign({},defaultConf,{
     input: 'src/ReduxUtils/index.js',
     output: {
       file: 'dist/cjs/ReduxUtils.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   }),
   Object.assign({},defaultConf,{
     input: 'src/Geometry/index.js',
     output: {
       file: 'dist/cjs/Geometry.js',
-      format: 'cjs',
-      indent: false,
-      sourcemap: false,
-      exports: 'named',
+      ...defaultFormat
     }
   })
 ];
