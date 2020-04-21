@@ -1,6 +1,6 @@
 {
   "name": "@geekagency/composite-js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Kit of composite functions utilities",
   "main": "Core.js",
   "directories": {
@@ -11,7 +11,7 @@
   "scripts": {
     "build:legacy": "rm -rf ./lib; node_modules/@babel/cli/bin/babel.js --out-dir lib ./src && node lib/index.js && cp package.json ./lib",
     "build": "rm -rf ./dist; rollup -c; cp package.json ./dist/cjs",
-    "pub": "cd ./dist/cjs;yarn publish; cd ..; cp dist/cjs/package.json ./",
+    "pub": "cd ./dist/cjs;yarn publish; cp package.json ../../",
     "doc": "npx jsdoc src/core.js --destination ./docs",
     "test": "npx jest --coverage && npx jest-coverage-badges",
     "test:watch": "npx jest --watchAll "
