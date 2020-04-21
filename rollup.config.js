@@ -50,6 +50,20 @@ export default [
       file: 'dist/cjs/Core.js',
       ...defaultFormat
     }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/Minux/index.js',
+    output: {
+      file: 'dist/cjs/Minux.js',
+      ...defaultFormat
+    }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/Monad/index.js',
+    output: {
+      file: 'dist/cjs/Monad.js',
+      ...defaultFormat
+    }
   })
   ,
   Object.assign({},defaultConf,{

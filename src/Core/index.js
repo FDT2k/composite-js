@@ -8,8 +8,6 @@ export * from 'debug'
 
 export * from 'bool'
 
-export * from 'functor';
-
 export * from 'string';
 
 export * from 'array';

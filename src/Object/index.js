@@ -64,3 +64,4 @@ export const makeSpreadFilterByKey =transformMatching=> transformNotMatching=> (
   //MatchFunction => Object => List
 */
 export const spreadFilterByKey = makeSpreadFilterByKey(keepMatching)(keepMatching)
+

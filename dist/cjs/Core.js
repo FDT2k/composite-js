@@ -525,61 +525,6 @@ var distribute = function distribute(z) {
   };
 };
 
-var IO =
-/*#__PURE__*/
-function () {
-  function IO(fn) {
-    _classCallCheck(this, IO);
-
-    this.unsafePerformIO = fn;
-  }
-  /*
-    [util.inspect.custom]() {
-      return 'IO(?)';
-    }*/
-  // ----- Pointed IO
-
-
-  _createClass(IO, [{
-    key: "map",
-    // ----- Functor IO
-    value: function map(fn) {
-      return new IO(compose(fn, this.unsafePerformIO));
-    } // ----- Applicative IO
-
-  }, {
-    key: "ap",
-    value: function ap(f) {
-      return this.chain(function (fn) {
-        return f.map(fn);
-      });
-    } // ----- Monad IO
-
-  }, {
-    key: "chain",
-    value: function chain(fn) {
-      return this.map(fn).join();
-    }
-  }, {
-    key: "join",
-    value: function join() {
-      var _this = this;
-
-      return new IO(function () {
-        return _this.unsafePerformIO().unsafePerformIO();
-      });
-    }
-  }], [{
-    key: "of",
-    value: function of(x) {
-      return new IO(function () {
-        return x;
-      });
-    }
-  }]);
-
-  return IO;
-}();
 var Maybe =
 /*#__PURE__*/
 function () {
@@ -648,69 +593,6 @@ function () {
   }]);
 
   return Maybe;
-}();
-var Task =
-/*#__PURE__*/
-function () {
-  function Task(fork) {
-    _classCallCheck(this, Task);
-
-    this.fork = fork;
-  }
-
-  _createClass(Task, [{
-    key: "map",
-    // ----- Functor (Task a)
-    value: function map(fn) {
-      var _this2 = this;
-
-      return new Task(function (reject, resolve) {
-        return _this2.fork(reject, compose(resolve, fn));
-      });
-    } // ----- Applicative (Task a)
-
-  }, {
-    key: "ap",
-    value: function ap(f) {
-      return this.chain(function (fn) {
-        return f.map(fn);
-      });
-    } // ----- Monad (Task a)
-
-  }, {
-    key: "chain",
-    value: function chain(fn) {
-      var _this3 = this;
-
-      return new Task(function (reject, resolve) {
-        return _this3.fork(reject, function (x) {
-          return fn(x).fork(reject, resolve);
-        });
-      });
-    }
-  }, {
-    key: "join",
-    value: function join() {
-      return this.chain(identity);
-    }
-  }], [{
-    key: "rejected",
-    value: function rejected(x) {
-      return new Task(function (reject, _) {
-        return reject(x);
-      });
-    } // ----- Pointed (Task a)
-
-  }, {
-    key: "of",
-    value: function of(x) {
-      return new Task(function (_, resolve) {
-        return resolve(x);
-      });
-    }
-  }]);
-
-  return Task;
 }();
 
 //export const empty = string=> string.length==0;
@@ -1073,9 +955,6 @@ var tryCatcher = curry(function (catcher, tryer, arg) {
   }
 });
 
-exports.IO = IO;
-exports.Maybe = Maybe;
-exports.Task = Task;
 exports._merge = _merge;
 exports._sortAsc = _sortAsc;
 exports._sortBy = _sortBy;
