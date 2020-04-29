@@ -595,6 +595,29 @@ function () {
   return Maybe;
 }();
 
+var trace = curry(function (tag, value) {
+  console.log(tag, value);
+  return value;
+});
+var trace_keys = curry(function (tag, value) {
+  console.log(tag, Object.keys(value));
+  return value;
+});
+var supertrace = curry(function (prefix, tag, value) {
+  return trace(prefix + ' ' + tag, value);
+});
+var trace_prop = curry(function (tag, prop, value) {
+  console.log(tag, value[prop]);
+  return value;
+});
+/*holds execution if inspector enabled*/
+
+var debug_trace = function debug_trace(x) {
+  debugger;
+  return x;
+};
+var inspect = console.log;
+
 //export const empty = string=> string.length==0;
 // BOOL => BOOL
 //export const notEmpty = compose(not,empty)
@@ -602,6 +625,16 @@ function () {
 var not = function not(x) {
   return !x;
 };
+var _OR_ = curry(function (a, b, x) {
+  return a(x) || b(x);
+});
+var _AND_ = curry(function (a, b, x) {
+  return a(x) && b(x);
+});
+var _NOT_ = curry(function (a, x) {
+  return !a(x);
+}); //export const isStrictlyEqual = curry((value,item)=> value===item)
+
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -621,11 +654,15 @@ var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
+var isNull = function isNull(x) {
+  return x === null;
+};
 var is_array = function is_array(o) {
   return Array.isArray(o);
 }; // a -> Bool
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
+var is_type_bool = is_type('boolean');
+var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
 
 var is_nan = Number.isNaN;
 var is_numeric = function is_numeric(v) {
@@ -693,41 +730,13 @@ var as_prop = curry(function (key, value) {
   }
 
 */
-
-var spec = curry(function (obj, arg) {
-  return pipe(keys, map(function (x) {
-    return as_prop(x, obj[x](arg));
-  }), mergeAll)(obj);
-}); //Object -> List
+//Object -> List
 
 var enlist = curry(function (obj) {
   return pipe(keys, map(function (x) {
     return as_prop(x, obj[x]);
   }))(obj);
 });
-
-var trace = curry(function (tag, value) {
-  console.log(tag, value);
-  return value;
-});
-var trace_keys = curry(function (tag, value) {
-  console.log(tag, Object.keys(value));
-  return value;
-});
-var supertrace = curry(function (prefix, tag, value) {
-  return trace(prefix + ' ' + tag, value);
-});
-var trace_prop = curry(function (tag, prop, value) {
-  console.log(tag, value[prop]);
-  return value;
-});
-/*holds execution if inspector enabled*/
-
-var debug_trace = function debug_trace(x) {
-  debugger;
-  return x;
-};
-var inspect = console.log;
 
 var replace = curry(function (re, rpl, str) {
   return str.replace(re, rpl);
@@ -955,6 +964,9 @@ var tryCatcher = curry(function (catcher, tryer, arg) {
   }
 });
 
+exports._AND_ = _AND_;
+exports._NOT_ = _NOT_;
+exports._OR_ = _OR_;
 exports._merge = _merge;
 exports._sortAsc = _sortAsc;
 exports._sortBy = _sortBy;
@@ -997,6 +1009,8 @@ exports.groupListByKey = groupListByKey;
 exports.head = head;
 exports.identity = identity;
 exports.inspect = inspect;
+exports.isNil = isNil;
+exports.isNull = isNull;
 exports.isStrictlyEqual = isStrictlyEqual;
 exports.isStrictlyNotEqual = isStrictlyNotEqual;
 exports.is_array = is_array;
@@ -1050,7 +1064,6 @@ exports.sortAsKeyNumberFloat = sortAsKeyNumberFloat;
 exports.sortBy = sortBy;
 exports.sortByA = sortByA;
 exports.sortByD = sortByD;
-exports.spec = spec;
 exports.split = split;
 exports.spread = spread;
 exports.supertrace = supertrace;

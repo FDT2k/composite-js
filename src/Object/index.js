@@ -1,12 +1,12 @@
-import {curry,compose,map,identity,diverge} from 'core';
+import {curry,pipe,compose,map,identity,diverge} from 'core';
 import {test} from 'string'
 import {trace} from '../debug'
 import {reduce,head} from 'array'
 import {not} from 'bool'
-import { prop , keys,ensure_object_copy, assign2, enlist} from 'object';
+import { prop , as_prop, keys,ensure_object_copy, assign2, enlist} from 'object';
 
 import {isStrictlyEqual} from 'bool'
-
+import {mergeAll} from 'List'
 
 // Object -> Scalar
 // {a:b} -> a
@@ -65,3 +65,10 @@ export const makeSpreadFilterByKey =transformMatching=> transformNotMatching=> (
 */
 export const spreadFilterByKey = makeSpreadFilterByKey(keepMatching)(keepMatching)
 
+
+
+export const spec = curry((obj,arg)=> pipe(
+  keys,
+  map(x=>as_prop(x,obj[x](arg))),
+  mergeAll
+)(obj))

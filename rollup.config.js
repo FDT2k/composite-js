@@ -20,7 +20,7 @@ let includePathOptions = {
 
 const defaultConf = {
   
-  external: ['is-dom', 'prop-types',
+  external: ['chalk','is-dom', 'prop-types',
   'react','@geekagency/composite-js','@geekagency/gen-classes',
   'formik','react-input-mask','react-icons','react-icons/fa',
   'react-icons/md','react-icons/libs','react-loading','react-draggable','react-icons/lib'],
@@ -48,6 +48,27 @@ export default [
     input: 'src/Core/index.js',
     output: {
       file: 'dist/cjs/Core.js',
+      ...defaultFormat
+    }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/Effect/index.js',
+    output: {
+      file: 'dist/cjs/Effect.js',
+      ...defaultFormat
+    }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/chain.js',
+    output: {
+      file: 'dist/cjs/Chain.js',
+      ...defaultFormat
+    }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/deprecated.js',
+    output: {
+      file: 'dist/cjs/Legacy.js',
       ...defaultFormat
     }
   }),

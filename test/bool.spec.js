@@ -76,7 +76,58 @@ test("bool funcs", () => {
 })
 */
 
+test("Gates", () => {
 
+  const AorB = c._OR_(x=>x=='a' , x=>x=='b')
+  expect(
+    AorB('c')
+  ).toBe(false)
+  expect(
+    AorB('a')
+  ).toBe(true)
+  expect(
+    AorB('b')
+  ).toBe(true
+  )
+
+
+  const AorBorFunction = c._OR_(c.is_type_function,AorB)
+
+  expect(
+    AorBorFunction(x=>x)
+  ).toBe(true)
+
+  expect(
+    AorBorFunction('a')
+  ).toBe(true)
+  expect(
+    AorBorFunction('b')
+  ).toBe(true)
+  expect(
+    AorBorFunction(undefined)
+  ).toBe(false)
+})
+
+test("null , undef && nil", () => {
+
+
+  expect(
+    c.isNil(undefined)
+  ).toBe(true)
+
+  expect(
+    c.isNil(null)
+  ).toBe(true)
+
+  expect(
+    c.isNil('')
+  ).toBe(false)
+  expect(
+    c.isNil(x=>x)
+  ).toBe(false)
+
+
+})
 test("is boolean", () => {
 
 

@@ -59,13 +59,6 @@ export const as_prop = curry((key,value)=> flip(as_object_prop(key),defaultTo({}
 
 */
 
-export const spec = curry((obj,arg)=> pipe(
-  keys,
-  map(x=>as_prop(x,obj[x](arg))),
-  mergeAll
-)(obj))
-
-
 //Object -> List
 export const enlist = curry((obj)=> pipe(
   keys,

@@ -1,14 +1,15 @@
 import * as C from '../src/chain'
 import * as F from '../src/functor'
+import {Task,MakeTask} from 'Monad'
 import {pipe,compose,chain,map} from '../src/core'
 
-const makeTask  = _ => new F.Task ((reject,resolve)=>{ resolve(_) })
-const makeFailTask  = _ => new F.Task ((reject,resolve)=>{ reject(`fail ${_}`) })
+const makeTask  = output => MakeTask ((reject,resolve)=>{ resolve(output) })
+const makeFailTask  = output => MakeTask ((reject,resolve)=>{ reject(`fail ${output}`) })
 
 
 
 test ("1 in chain",(done)=>{
-  let t1 = _=> makeTask('1');
+  let t1 =  makeTask('1');
   const collector = C.make_task_collector()
   let task_set = C.collect_chain(collector)
   const resultFn = task_set(t1)
@@ -28,13 +29,14 @@ test ("1 in chain",(done)=>{
 
 
 
+
 test ("Type",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t3 =  makeTask('3');
+  let t4 =  makeTask('4');
 
 
   const collector = C.make_task_collector()
@@ -59,15 +61,14 @@ test ("Type",(done)=>{
 
 
 
-
 test ("manual chain task",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
-  let t5 = _=> makeTask('5');
+  let t1 = makeTask('1');
+  let t2 = makeTask('2');
+  let t3 = makeTask('3');
+  let t4 = makeTask('4');
+  let t5 = makeTask('5');
 
 
   const collector = C.make_task_collector()
@@ -99,11 +100,11 @@ test ("manual chain task",(done)=>{
 test ("compose a collected chain",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
-  let t5 = _=> makeTask('5');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t3 =  makeTask('3');
+  let t4 =  makeTask('4');
+  let t5 =  makeTask('5');
 
 
   const collector = C.make_task_collector()
@@ -133,12 +134,12 @@ test ("compose a collected chain",(done)=>{
 test ("compose a collected chain2 , several tasks append",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
-  let t5 = _=> makeTask('5');
-  let t6 = _=> makeTask('6');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t3 =  makeTask('3');
+  let t4 =  makeTask('4');
+  let t5 =  makeTask('5');
+  let t6 =  makeTask('6');
 
 
   const collector = C.make_task_collector()
@@ -168,12 +169,12 @@ test ("compose a collected chain2 , several tasks append",(done)=>{
 test ("shorthand",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
-  let t5 = _=> makeTask('5');
-  let t6 = _=> makeFailTask('6');
+  let t1 = makeTask('1');
+  let t2 = makeTask('2');
+  let t3 = makeTask('3');
+  let t4 = makeTask('4');
+  let t5 = makeTask('5');
+  let t6 = makeFailTask('6');
 
   const {extend,run} = C.useTaskChainCollection(t1,t2);
 
@@ -195,12 +196,12 @@ test ("shorthand",(done)=>{
 test ("shorthand extend",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
-  let t5 = _=> makeTask('5');
-  let t6 = _=> makeFailTask('6');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t3 =  makeTask('3');
+  let t4 =  makeTask('4');
+  let t5 =  makeTask('5');
+  let t6 =  makeFailTask('6');
 
   const {extend,run} = C.useTaskChainCollection(t1,t2);
 
@@ -215,12 +216,12 @@ test ("shorthand extend",(done)=>{
 test ("shorthand extend",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
-  let t5 = _=> makeTask('5');
-  let t6 = _=> makeFailTask('6');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t3 =  makeTask('3');
+  let t4 =  makeTask('4');
+  let t5 =  makeTask('5');
+  let t6 =  makeFailTask('6');
 
   const {extend,run} = C.useTaskChainCollection(t1,t2);
 
@@ -241,9 +242,9 @@ test ("shorthand extend",(done)=>{
 test ("failing chain",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t6 = _=> makeFailTask('6');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t6 =  makeFailTask('6');
 
   const {extend,run} = C.useTaskChainCollection(t1,t6,t2);
 
@@ -260,21 +261,78 @@ test ("failing chain",(done)=>{
 test ("COMPOSE TASK TEST",(done)=>{
 
 
-  let t1 = _=> makeTask('1');
-  let t2 = _=> makeTask('2');
-  let t3 = _=> makeTask('3');
-  let t4 = _=> makeTask('4');
+  let t1 =  makeTask('1');
+  let t2 =  makeTask('2');
+  let t3 =  makeTask('3');
+  let t4 =  makeTask('4');
 
   const {extend,run} = C.useTaskChainCollection(t1,t2);
-
-
-
     extend(compose(map(x=>`${x}_${x}`),t3),t4)(console.error,_=>{
       expect(_.length).toBe(4)
       expect(_[2]).toBe('3_3')
       done()
     })
 
+});
 
 
+
+test ("SH2",(done)=>{
+
+
+  let t1 = makeTask('1');
+  let t2 = makeTask('2');
+  let t3 = makeTask('3');
+  let t4 = makeTask('4');
+  let t5 = makeTask('5');
+  let t6 = makeFailTask('6');
+
+  const res = C.ChainableTaskCreator()(t1,t2);
+
+  console.log(res)
+  
+  res.chain(t3,t4).fork(
+    _=> console.error,
+    _=> {
+
+        console.log('hey',_)
+        expect(_.length).toBe(4)
+        done();
+     
+    }
+  )
+
+});
+
+
+test ("SH2 2",(done)=>{
+
+
+  let t1 = makeTask('1');
+  let t2 = makeTask('2');
+  let t3 = makeTask('3');
+  let t4 = makeTask('4');
+  let t5 = makeTask('5');
+  let t6 = makeFailTask('6');
+
+  const res = C.ChainableTaskCreator()(t1,t2);
+
+  console.log(res)
+  
+  res.fork(
+    _=> console.error,
+    _=> {
+
+        console.log('hey',_)
+        expect(_.length).toBe(2)
+        res.chain(t3,t4).fork(
+          _=> console.error,
+          x => {
+            console.log(x)
+            expect(x.length).toBe(6)
+            done();
+          }
+        )
+    }
+  )
 });

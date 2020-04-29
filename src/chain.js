@@ -1,7 +1,7 @@
 import {compose,pipe,curry,chain,map}   from './core'
 import {reduce,safe_push}               from './array';
 import {trace}                          from './debug';
-import {Task}                           from './functor'
+import {Task}                           from './Monad'
 
 /*
   The purpose of this is to collect output of chained tasks
@@ -16,7 +16,7 @@ import {Task}                           from './functor'
 */
 export const make_task_collector = _=> {
   let collector = [];
-  return res => new Task((reject,resolve)=>{
+  return res =>  Task((reject,resolve)=>{
     collector = safe_push(collector,res)
     resolve(collector)
   });
@@ -26,7 +26,7 @@ export const make_task_collector = _=> {
 // identity task is the same as identity but injected in a <Task>
 // when forked, returns the same value
 export const makeIdentityTask = _=> {
-  return new Task((reject,resolve)=>{
+  return  Task((reject,resolve)=>{
     resolve(_)
   })
 }
@@ -82,5 +82,18 @@ export const useTaskChainCollection = (...initial_tasks)=>{
     extend: (...tasks) => (a,b) => pipe(run,chain(make_chain(...tasks)))().fork(a,b),
     run: (a,b)=>run().fork(a,b),
     tasks:initial_tasks
+  }
+}
+
+
+
+
+export const ChainableTaskCreator = (chain_maker,_fork) => (...tasksCreators) => {
+  const  make_chain = chain_maker || useTaskCollector();
+  const fork = typeof _fork ==='undefined' ?  make_chain(...tasksCreators) : pipe(_fork,chain(make_chain(...tasksCreators)))
+
+  return {
+    chain : (...tasks) => ChainableTaskCreator(make_chain,fork)(...tasks),
+    fork  : fork().fork,
   }
 }

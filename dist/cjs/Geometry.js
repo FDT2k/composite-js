@@ -336,6 +336,32 @@ function () {
   return Maybe;
 }();
 
+var trace = curry(function (tag, value) {
+  console.log(tag, value);
+  return value;
+});
+var trace_keys = curry(function (tag, value) {
+  console.log(tag, Object.keys(value));
+  return value;
+});
+var supertrace = curry(function (prefix, tag, value) {
+  return trace(prefix + ' ' + tag, value);
+});
+var trace_prop = curry(function (tag, prop, value) {
+  console.log(tag, value[prop]);
+  return value;
+});
+
+var _OR_ = curry(function (a, b, x) {
+  return a(x) || b(x);
+});
+var _AND_ = curry(function (a, b, x) {
+  return a(x) && b(x);
+});
+var _NOT_ = curry(function (a, x) {
+  return !a(x);
+}); //export const isStrictlyEqual = curry((value,item)=> value===item)
+
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -349,8 +375,12 @@ var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
+var isNull = function isNull(x) {
+  return x === null;
+};
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
+var is_type_bool = is_type('boolean');
+var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
@@ -409,12 +439,7 @@ var as_prop = curry(function (key, value) {
   }
 
 */
-
-var spec = curry(function (obj, arg) {
-  return pipe(keys, map(function (x) {
-    return as_prop(x, obj[x](arg));
-  }), mergeAll)(obj);
-}); //Object -> List
+//Object -> List
 
 var enlist = curry(function (obj) {
   return pipe(keys, map(function (x) {

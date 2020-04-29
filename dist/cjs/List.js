@@ -336,6 +336,22 @@ function () {
   return Maybe;
 }();
 
+var trace = curry(function (tag, value) {
+  console.log(tag, value);
+  return value;
+});
+var trace_keys = curry(function (tag, value) {
+  console.log(tag, Object.keys(value));
+  return value;
+});
+var supertrace = curry(function (prefix, tag, value) {
+  return trace(prefix + ' ' + tag, value);
+});
+var trace_prop = curry(function (tag, prop, value) {
+  console.log(tag, value[prop]);
+  return value;
+});
+
 //export const empty = string=> string.length==0;
 // BOOL => BOOL
 //export const notEmpty = compose(not,empty)
@@ -343,6 +359,16 @@ function () {
 var not = function not(x) {
   return !x;
 };
+var _OR_ = curry(function (a, b, x) {
+  return a(x) || b(x);
+});
+var _AND_ = curry(function (a, b, x) {
+  return a(x) && b(x);
+});
+var _NOT_ = curry(function (a, x) {
+  return !a(x);
+}); //export const isStrictlyEqual = curry((value,item)=> value===item)
+
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -359,8 +385,12 @@ var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
+var isNull = function isNull(x) {
+  return x === null;
+};
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
+var is_type_bool = is_type('boolean');
+var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
@@ -420,12 +450,7 @@ var as_prop = curry(function (key, value) {
   }
 
 */
-
-var spec = curry(function (obj, arg) {
-  return pipe(keys, map(function (x) {
-    return as_prop(x, obj[x](arg));
-  }), mergeAll)(obj);
-}); //Object -> List
+//Object -> List
 
 var enlist = curry(function (obj) {
   return pipe(keys, map(function (x) {
@@ -602,7 +627,7 @@ var makeMerge = function makeMerge(arity) {
   });
 }; // mergeAll :: [{a},{b},{c}]-> {a,b,c,d}
 
-var mergeAll$1 = function mergeAll(list) {
+var mergeAll = function mergeAll(list) {
   return reduce({}, assign2, list);
 };
 var delete_list_item = curry(function (state, action) {
@@ -670,7 +695,7 @@ exports.delete_list_item = delete_list_item;
 exports.getByProp = getByProp;
 exports.item_prop_is_equal = item_prop_is_equal;
 exports.makeMerge = makeMerge;
-exports.mergeAll = mergeAll$1;
+exports.mergeAll = mergeAll;
 exports.propIsEqual = propIsEqual;
 exports.propIsNotEqual = propIsNotEqual;
 exports.update = update;

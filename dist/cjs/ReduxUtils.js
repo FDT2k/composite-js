@@ -336,6 +336,22 @@ function () {
   return Maybe;
 }();
 
+var trace = curry(function (tag, value) {
+  console.log(tag, value);
+  return value;
+});
+var trace_keys = curry(function (tag, value) {
+  console.log(tag, Object.keys(value));
+  return value;
+});
+var supertrace = curry(function (prefix, tag, value) {
+  return trace(prefix + ' ' + tag, value);
+});
+var trace_prop = curry(function (tag, prop, value) {
+  console.log(tag, value[prop]);
+  return value;
+});
+
 //export const empty = string=> string.length==0;
 // BOOL => BOOL
 //export const notEmpty = compose(not,empty)
@@ -343,6 +359,16 @@ function () {
 var not = function not(x) {
   return !x;
 };
+var _OR_ = curry(function (a, b, x) {
+  return a(x) || b(x);
+});
+var _AND_ = curry(function (a, b, x) {
+  return a(x) && b(x);
+});
+var _NOT_ = curry(function (a, x) {
+  return !a(x);
+}); //export const isStrictlyEqual = curry((value,item)=> value===item)
+
 var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
@@ -359,8 +385,12 @@ var is_type_string = is_type('string');
 var is_type_function = is_type('function');
 var is_type_number = is_type('number');
 var is_undefined = is_type('undefined');
+var isNull = function isNull(x) {
+  return x === null;
+};
 
-var is_type_bool = is_type('boolean'); //fucky number test in js can suck on this shit ..!..
+var is_type_bool = is_type('boolean');
+var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
@@ -420,12 +450,7 @@ var as_prop = curry(function (key, value) {
   }
 
 */
-
-var spec = curry(function (obj, arg) {
-  return pipe(keys, map(function (x) {
-    return as_prop(x, obj[x](arg));
-  }), mergeAll)(obj);
-}); //Object -> List
+//Object -> List
 
 var enlist = curry(function (obj) {
   return pipe(keys, map(function (x) {
@@ -590,20 +615,60 @@ var tryCatcher = curry(function (catcher, tryer, arg) {
   }
 });
 
-var trace = curry(function (tag, value) {
-  console.log(tag, value);
-  return value;
+var mergeAll = function mergeAll(list) {
+  return reduce({}, assign2, list);
+};
+var delete_list_item = curry(function (state, action) {
+  return filter(function (item) {
+    return item.id != action.payload;
+  }, state);
 });
-var trace_keys = curry(function (tag, value) {
-  console.log(tag, Object.keys(value));
-  return value;
+var add_list_item = curry(function (state, action) {
+  return [].concat(_toConsumableArray(state), [action.payload]);
 });
-var supertrace = curry(function (prefix, tag, value) {
-  return trace(prefix + ' ' + tag, value);
+var item_prop_is_equal = curry(function (prop, value, item) {
+  return item[prop] == value;
 });
-var trace_prop = curry(function (tag, prop, value) {
-  console.log(tag, value[prop]);
-  return value;
+var add_to_list = curry(function (state, action) {
+  return [].concat(_toConsumableArray(state), [action.payload]);
+}); // del_from_list :: List -> Object-> List
+
+var del_from_list_by_prop_id = curry(function (state, action) {
+  return filter(function (item) {
+    return item.id != action.payload;
+  }, state);
+}); // update_object :: Object->Object->Object
+
+var update_list_by_prop_id = curry(function (list, itemIdValue, updateFn) {
+  return update_list(list, item_prop_is_equal('id', itemIdValue), updateFn);
+}); // update_list :: List -> Fn -> Fn -> List
+
+var update_list = curry(function (list, itemPredicate, updateFn) {
+  return list.map(function (item) {
+    return either(itemPredicate, identity, updateFn, item);
+  });
+});
+var propIsEqual = curry(function (prop, value, item) {
+  return item[prop] === value;
+});
+var propIsNotEqual = curry(function (prop, value, item) {
+  return item[prop] !== value;
+});
+var delByProp = curry(function (prop, list, val) {
+  return filter(propIsNotEqual(prop, val), list);
+});
+var delByPropId = delByProp('id');
+var add$1 = curry(function (list, item) {
+  return [].concat(_toConsumableArray(list), [item]);
+});
+var getByProp = curry(function (prop, list, val) {
+  return filter(propIsEqual(prop, val), list);
+});
+var update = curry(function (cond, val, list, fn) {
+  return map(either(cond(val), identity, fn))(list);
+});
+var updateIfPropEqual = curry(function (prop, val, list, fn) {
+  return update(propIsEqual(prop), val, list, fn);
 });
 
 // {a:b} -> a
@@ -641,6 +706,11 @@ var keepMatching = function keepMatching(match) {
 var filterByKey = function filterByKey(match) {
   return compose(keepMatching(match), trace('x'), enlist, ensure_object_copy);
 };
+var spec = curry(function (obj, arg) {
+  return pipe(keys, map(function (x) {
+    return as_prop(x, obj[x](arg));
+  }), mergeAll)(obj);
+});
 
 var updateObject = assign2; // ListUtils
 

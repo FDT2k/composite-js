@@ -2,6 +2,10 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var chalk = _interopDefault(require('chalk'));
+
 function _typeof(obj) {
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
@@ -251,6 +255,33 @@ var diverge = function diverge() {
     });
   };
 };
+/**
+ * compose a diverge with another function
+ *
+ * @func
+ * @category Function
+ * @sig
+ * @param {Functions} function to compose
+ * @param {...Functions} functions the function to diverge
+ * @return {Function}
+ * @see compose
+ * @see diverge
+ * @example
+ *
+ * let upKey =  key=> compose(asProp(key),uppercase,prop(key))
+ * let lowKey =  key=> compose(asProp(key),lowercase,prop(key))
+ * let merge = divergeThen(mergeAll)
+ * let normalize = merge (upKey('firstname'),lowKey('lastname'))
+ * normalize({firstname:'Bob',lastname:'Doe'})
+ * // {firstname:'BOB',lastname:'doe'}
+ *
+ */
+
+var divergeThen = function divergeThen(z) {
+  return function () {
+    return compose(z, diverge.apply(void 0, arguments));
+  };
+}; // identity :: a -> a
 
 /**
  * Identity function
@@ -298,49 +329,6 @@ var maybe = curry(function (value, fn, functor) {
   }
 
   return fn(functor.$value);
-});
-
-var replace = curry(function (re, rpl, str) {
-  return str.replace(re, rpl);
-}); // test :: RegEx -> String -> Boolean
-
-var test = curry(function (re, str) {
-  return re.test(str);
-}); // match :: Regex -> String -> List
-
-var match = curry(function (re, str) {
-  return str.match(re);
-}); // concat :: String -> String
-
-var concat = curry(function (a, b) {
-  return a.concat(b);
-}); // append :: String -> String
-
-var append = flip(concat); // length :: String -> Number
-var split = curry(function (sep, str) {
-  return str.split(sep);
-});
-var repeat = curry(function (times, string) {
-  return string.repeat(times);
-});
-var lcfirst = function lcfirst(string) {
-  return string.charAt(0).toLowerCase() + string.slice(1);
-};
-
-var trace = curry(function (tag, value) {
-  console.log(tag, value);
-  return value;
-});
-var trace_keys = curry(function (tag, value) {
-  console.log(tag, Object.keys(value));
-  return value;
-});
-var supertrace = curry(function (prefix, tag, value) {
-  return trace(prefix + ' ' + tag, value);
-});
-var trace_prop = curry(function (tag, prop, value) {
-  console.log(tag, value[prop]);
-  return value;
 });
 
 var Maybe =
@@ -412,6 +400,22 @@ function () {
 
   return Maybe;
 }();
+
+var trace = curry(function (tag, value) {
+  console.log(tag, value);
+  return value;
+});
+var trace_keys = curry(function (tag, value) {
+  console.log(tag, Object.keys(value));
+  return value;
+});
+var supertrace = curry(function (prefix, tag, value) {
+  return trace(prefix + ' ' + tag, value);
+});
+var trace_prop = curry(function (tag, prop, value) {
+  console.log(tag, value[prop]);
+  return value;
+});
 
 //export const empty = string=> string.length==0;
 // BOOL => BOOL
@@ -519,11 +523,38 @@ var enlist = curry(function (obj) {
   }))(obj);
 });
 
+var replace = curry(function (re, rpl, str) {
+  return str.replace(re, rpl);
+}); // test :: RegEx -> String -> Boolean
+
+var test = curry(function (re, str) {
+  return re.test(str);
+}); // match :: Regex -> String -> List
+
+var match = curry(function (re, str) {
+  return str.match(re);
+}); // concat :: String -> String
+
+var concat = curry(function (a, b) {
+  return a.concat(b);
+}); // append :: String -> String
+
+var append = flip(concat); // length :: String -> Number
+var split = curry(function (sep, str) {
+  return str.split(sep);
+});
+var repeat = curry(function (times, string) {
+  return string.repeat(times);
+});
+
 var substract = curry(function (a, b) {
   return a - b;
 });
 var decrement = flip(substract)(1);
 
+var flatten = function flatten(a) {
+  return [].concat.apply([], a);
+};
 var joinList = curry(function (sep, array) {
   return array.join(sep);
 }); //Function -> List -> List
@@ -708,135 +739,186 @@ var updateIfPropEqual = curry(function (prop, val, list, fn) {
   return update(propIsEqual(prop), val, list, fn);
 });
 
-// {a:b} -> a
-// {a:b, c:d} -> a
+/*
+  my idea of a combinator is to have a function that return an object with composite properties.
+  Purpose of this, is to make reusable and combinable code blocks
 
-var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator  forever
-//  String -> a -> Object -> Bool
+  Some theory:
 
-var isPropStrictlyEqual = curry(function (_prop, value, item) {
-  return compose(isStrictlyEqual(value), prop(_prop))(item);
+  MakeCombinator: make a combinator with an ArgsCombinator
+
+  Combinator: store arguments by using an ArgsCombinator, return a function that accept an ArgEnhancer and combine them to an object
+    signature: [Arg] -> ArgEnhancer -> Object
+
+  ArgsCombinator: return an array of args
+    signature: [a,...,z] -> [a,...,z]
+    role: sanitize and normalize args.
+
+  ArgEnhancer:
+    signature: ( Arg-> b )
+    role: enhancer to modify an arg value
+
+  Arg:
+    signature: ArgEnhancer -> x
+    role: return a function that accept an ArgEnhancer and apply it to x
+
+  Prop:
+    signature: key -> ArgEnhancer -> Arg -> x
+    role: return a property to compose the final object
+
+  ArgTransformer:
+    signature: a -> b
+    role: transform an Arg of type a into type b
+
+
+*/
+// Scalar x -> a-> Object as {x:a}
+
+var asProp = as_prop; // apply enhancer to the current key
+// Scalar x -> ArgEnhancer -> a  ->  Object as {x:a}
+
+var asEnhancedProp = curry(function (key, enhance) {
+  return compose(asProp(key), enhance);
 });
-var isPropStrictlyNotEqual = curry(function (prop, value, item) {
-  return compose(not, isPropStrictlyEqual(prop, value))(item);
-}); // filter an object and returns key that matches
-// regex -> string -> Object -> Bool
+var enhancedPropWithDefaultEnhancer = function enhancedPropWithDefaultEnhancer(key) {
+  return compose(asEnhancedProp(key), defaultTo(identity));
+}; // enhance is not currified because we want to be able to call with no arg which currying doesn't allow ()
 
-var propMatch = curry(function (re, key) {
-  return compose(test(re), prop(key));
-}); // Object -> Object -> Object 
+var asFunctionProp = curry(function (key, func) {
+  return function (enhance) {
+    return enhancedPropWithDefaultEnhancer(key)(enhance)(func);
+  };
+});
+var asScalarProp = curry(function (key, value) {
+  return function (enhance) {
+    return enhancedPropWithDefaultEnhancer(key)(enhance)(value);
+  };
+}); // if no value, the default is the value of the key
 
-var matchReducer = function matchReducer(match) {
-  return function (acc, item) {
-    //  console.log(head(keys(item)))
-    if (match(key(item))) {
-      return assign2(acc, item);
+var asScalarPropWithDefaultValue = function asScalarPropWithDefaultValue(key) {
+  return function (value) {
+    return function (enhance) {
+      return compose(enhancedPropWithDefaultEnhancer(key)(enhance), defaultTo(key))(value);
+    };
+  };
+}; // transform an arg of a type into another
+
+var transformArgToFunctionIfNeeded = function transformArgToFunctionIfNeeded(defaultFn) {
+  return either(is_type_function, defaultFn, identity);
+};
+var flattenArgsCombinator = flatten;
+var defaultArgTransformer = function defaultArgTransformer(x) {
+  return asScalarPropWithDefaultValue(x)(x);
+};
+var defaultCombineArgs = map(transformArgToFunctionIfNeeded(defaultArgTransformer));
+var defaultArgsCombinator = compose(defaultCombineArgs, flattenArgsCombinator); //ArgumentCombinator ::  [a] -> [b]
+//makeCombine :: ArgumentCombinator -> (a...z) => Object
+
+var makeObjectCombinator = function makeObjectCombinator(argsCombinator) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
 
-    return acc;
+    return divergeThen(mergeAll).apply(void 0, _toConsumableArray(argsCombinator(args)));
   };
-}; // 
-
-var keepMatching = function keepMatching(match) {
-  return reduce({}, matchReducer(match));
 };
-/*
-  perform a match function on every item of an object and returns an array like this: 
-  [matching, notmatching]
+var makeExpander = curry(function (argType, transform, subTypes, type) {
+  return subTypes.map(function (subType) {
+    return argType(transform(type, subType));
+  });
+});
+var combineObject = makeObjectCombinator(defaultArgsCombinator);
 
-  //MatchFunction => Object => List
-*/
-
-var makeSpreadFilterByKey = function makeSpreadFilterByKey(transformMatching) {
-  return function (transformNotMatching) {
-    return function (match) {
-      return compose(diverge(transformMatching(match), transformNotMatching(compose(not, match))), enlist, ensure_object_copy);
+var safePropCall = function safePropCall(x) {
+  return function (z) {
+    return function () {
+      return x[z].apply(x, arguments);
     };
   };
 };
-/*
-  perform a match function on every item of an object and returns an array like this: 
-  [matching, notmatching]
-
-  //MatchFunction => Object => List
-*/
-
-var spreadFilterByKey = makeSpreadFilterByKey(keepMatching)(keepMatching);
-var spec = curry(function (obj, arg) {
-  return pipe(keys, map(function (x) {
-    return as_prop(x, obj[x](arg));
-  }), mergeAll)(obj);
+var match$1 = curry(function (re, str) {
+  return re.test(str);
 });
 
-var regex = function regex(str) {
-  return new RegExp(str);
+var safeConsoleLog = function safeConsoleLog(x) {
+  return console.log(x);
 };
-var updateProp = curry(function (prop, obj, value) {
-  return updateObject(obj, _defineProperty({}, prop, value));
-});
-var beginWith = compose(test, regex, concat('^'));
-var contains = compose(test, regex, concat(''));
-var endWith = compose(test, regex, append('$'));
-var equals = compose(test, regex, append('$'), concat('^'));
-var presentIn = function presentIn(array) {
-  return function (str) {
-    return array.indexOf(str) > -1;
+
+var safeChalk = safePropCall(chalk);
+
+var colorize = function colorize(color) {
+  return safeChalk(color);
+}; //const colorLog = color =>  c.compose(safeConsoleLog,safeChalk(color));
+
+
+var logTask = compose(colorize('bgGreen'), colorize('black'));
+var skipTask = compose(colorize('bgRed'), colorize('yellow'));
+var erroredTask = compose(colorize('bgRed'), colorize('black'));
+var combine = combineObject;
+var callStackColor = compose(colorize('bgBlack'), colorize('grey'));
+var combinedColorizer = combine(asFunctionProp('error', colorize('red')), asFunctionProp('warn', colorize('yellow')), asFunctionProp('log', colorize('green')), asFunctionProp('info', colorize('grey')), asFunctionProp('task', logTask), asFunctionProp('skippedTask', skipTask), asFunctionProp('critical', erroredTask), asFunctionProp('subLog', compose(colorize('bgBlack'), colorize('yellow'))), asFunctionProp('actLog', compose(colorize('bgBlack'), colorize('green'))), asFunctionProp('trace', compose(colorize('yellow'))));
+
+var logEnhancer = function logEnhancer(fn) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return safeConsoleLog(fn.apply(void 0, _toConsumableArray(args.map(function (arg) {
+      var is_error = arg instanceof Error;
+
+      if (!is_error) {
+        switch (_typeof(arg)) {
+          case 'object':
+            return "Object - keys:[".concat(Object.keys(arg), "]");
+
+          default:
+            return arg;
+        }
+      } else {
+        return "\n".concat(arg, " ").concat(callStackColor(arg.stack));
+      }
+    }))));
   };
 };
-var spreadObject = spreadFilterByKey;
-var spreadObjectBeginWith = curry(function (str, obj) {
-  return spreadFilterByKey(beginWith(str))(obj);
-});
-var spreadObjectContaining = curry(function (str, obj) {
-  return spreadFilterByKey(contains(str))(obj);
-});
-var spreadObjectEndingWith = curry(function (str, obj) {
-  return spreadFilterByKey(endWith(str))(obj);
-});
-var spreadObjectPresentIn = curry(function (array, obj) {
-  return spreadFilterByKey(presentIn(array))(obj);
-});
-var transformReplace = replace;
-var transformLowSnake = lcfirst;
-var replaceKeyReducer = function replaceKeyReducer(transform) {
-  return function (acc, item) {
-    acc[transform(key(item))] = item[key(item)];
-    return acc;
+
+var logify = function logify(arg) {
+  var is_error = arg instanceof Error;
+
+  if (!is_error) {
+    switch (_typeof(arg)) {
+      case 'object':
+        return "Object - keys:[".concat(Object.keys(arg), "]");
+
+      default:
+        return arg;
+    }
+  } else {
+    return "\n".concat(arg, " ").concat(callStackColor(arg.stack));
+  }
+};
+
+var processLog = function processLog() {
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  return _toConsumableArray(args.map(logify));
+};
+
+var logEnhancerDetails = function logEnhancerDetails(fn) {
+  return function () {
+    for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      args[_key3] = arguments[_key3];
+    }
+
+    return safeConsoleLog(fn(processLog(args)));
   };
-}; // Fn -> List -> Object
+};
 
-var transformProps = function transformProps(transform) {
-  return reduce({}, replaceKeyReducer(transform));
-}; // Fn ->  Object -> Object
+var logger = combinedColorizer(logEnhancer);
+var superLogger = combinedColorizer(logEnhancerDetails);
 
-var transformKeys = function transformKeys(transform) {
-  return compose(transformProps(transform), enlist);
-}; // String -> String
-
-var forwardPropsTransformer = function forwardPropsTransformer(str) {
-  return compose(transformLowSnake, transformReplace(str, ''));
-}; // String -> Object ->Object
-
-var forwardPropsRemovingHeader = curry(function (header, obj) {
-  return transformKeys(forwardPropsTransformer(header))(obj);
-});
-
-exports.beginWith = beginWith;
-exports.contains = contains;
-exports.endWith = endWith;
-exports.equals = equals;
-exports.forwardPropsRemovingHeader = forwardPropsRemovingHeader;
-exports.forwardPropsTransformer = forwardPropsTransformer;
-exports.presentIn = presentIn;
-exports.regex = regex;
-exports.replaceKeyReducer = replaceKeyReducer;
-exports.spreadObject = spreadObject;
-exports.spreadObjectBeginWith = spreadObjectBeginWith;
-exports.spreadObjectContaining = spreadObjectContaining;
-exports.spreadObjectEndingWith = spreadObjectEndingWith;
-exports.spreadObjectPresentIn = spreadObjectPresentIn;
-exports.transformKeys = transformKeys;
-exports.transformLowSnake = transformLowSnake;
-exports.transformProps = transformProps;
-exports.transformReplace = transformReplace;
-exports.updateProp = updateProp;
+exports.logger = logger;
+exports.superLogger = superLogger;
