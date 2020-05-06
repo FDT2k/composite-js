@@ -811,7 +811,10 @@ var findIndexNotEqual = compose(findIndex, isStrictlyNotEqual); // value => List
 
 var filterNotEqual = compose(filter, isStrictlyNotEqual); // value => List => List
 
-var filterEqual = compose(filter, isStrictlyEqual); // reduce an array of subObjects to a merged object of all subObjects
+var filterEqual = compose(filter, isStrictlyEqual);
+var indexOf = curry(function (v, a) {
+  return a.indexOf(v);
+}); // reduce an array of subObjects to a merged object of all subObjects
 
 var reduceToObject = reduce({}, merge);
 var divergeThenReduce = divergeThen(reduceToObject);
@@ -1008,6 +1011,7 @@ exports.groupByKey = groupByKey;
 exports.groupListByKey = groupListByKey;
 exports.head = head;
 exports.identity = identity;
+exports.indexOf = indexOf;
 exports.inspect = inspect;
 exports.isNil = isNil;
 exports.isNull = isNull;

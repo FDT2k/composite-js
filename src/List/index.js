@@ -1,11 +1,10 @@
 import {curry,compose} from '../core'
-import {filter} from '../array'
+import {filter,reduce,head} from '../array'
 import {assign2} from '../object'
 import {not} from '../bool'
 import {either} from 'conditional'
 import {map,identity} from '../core'
 
-import {reduce,head} from './array'
 
 //makeMerge :: Number -> (Number, ([a]-> b)) -> ([a] -> b)
 export const makeMerge = (arity) =>{

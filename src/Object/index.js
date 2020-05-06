@@ -1,7 +1,7 @@
 import {curry,pipe,compose,map,identity,diverge} from 'core';
 import {test} from 'string'
 import {trace} from '../debug'
-import {reduce,head} from 'array'
+import {reduce,head,indexOf} from 'array'
 import {not} from 'bool'
 import { prop , as_prop, keys,ensure_object_copy, assign2, enlist} from 'object';
 
@@ -13,7 +13,7 @@ import {mergeAll} from 'List'
 // {a:b, c:d} -> a
 export const key = compose(head,keys)
 
-//export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator  forever
+//export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator .... forever !!
 
 //  String -> a -> Object -> Bool
 export const isPropStrictlyEqual = curry((_prop,value,item)=> compose (isStrictlyEqual(value),prop(_prop)) (item))
@@ -24,6 +24,10 @@ export const isPropStrictlyNotEqual = curry((prop,value,item)=> compose(not,isPr
 // regex -> string -> Object -> Bool
 export const propMatch = curry((re,key) => compose(test(re),prop(key)));
 
+
+export const makeHasKey =  k => compose( x=> x!==-1 ,indexOf(k),keys)
+
+export const hasKey = curry((k,o)=> makeHasKey(k)(o) )
 
 // Object -> Object -> Object 
 export const matchReducer = match => (acc,item)=> {

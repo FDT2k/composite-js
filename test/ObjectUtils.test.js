@@ -6,6 +6,19 @@ import {not} from 'bool'
 
 
 
+test('keys',()=>{
+  const o = {
+    a:'b',
+    c:'d',
+  }
+
+  expect(ObjectUtils.key(o)).toBe('a');
+  expect(ObjectUtils.hasKey('a',o) ) .toBe(true);
+  expect(ObjectUtils.hasKey('z',o) ) .toBe(false);
+
+});
+
+
 test('propThatMatch',()=>{
 
   const beginWithToolbar = ObjectUtils.propMatch(/^Toolbar/);

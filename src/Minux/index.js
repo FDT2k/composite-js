@@ -13,9 +13,7 @@ export default curry((reducer, initialState) => {
         return state;
     }
 
-    const thunk = action => {
-        return action(dispatch, getState)
-    }
+    const thunk = action => action(dispatch, getState)
 
     return ({
         dispatch,

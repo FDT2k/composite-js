@@ -543,7 +543,10 @@ var findIndexNotEqual = compose(findIndex, isStrictlyNotEqual); // value => List
 
 var filterNotEqual = compose(filter, isStrictlyNotEqual); // value => List => List
 
-var filterEqual = compose(filter, isStrictlyEqual); // reduce an array of subObjects to a merged object of all subObjects
+var filterEqual = compose(filter, isStrictlyEqual);
+var indexOf = curry(function (v, a) {
+  return a.indexOf(v);
+}); // reduce an array of subObjects to a merged object of all subObjects
 
 var reduceToObject = reduce({}, merge);
 /*Recursively call a Curried FN  with each array item of args
@@ -708,7 +711,7 @@ var updateIfPropEqual = curry(function (prop, val, list, fn) {
 // {a:b} -> a
 // {a:b, c:d} -> a
 
-var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator  forever
+var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator .... forever !!
 //  String -> a -> Object -> Bool
 
 var isPropStrictlyEqual = curry(function (_prop, value, item) {
@@ -721,6 +724,14 @@ var isPropStrictlyNotEqual = curry(function (prop, value, item) {
 
 var propMatch = curry(function (re, key) {
   return compose(test(re), prop(key));
+});
+var makeHasKey = function makeHasKey(k) {
+  return compose(function (x) {
+    return x !== -1;
+  }, indexOf(k), keys);
+};
+var hasKey = curry(function (k, o) {
+  return makeHasKey(k)(o);
 }); // Object -> Object -> Object 
 
 var matchReducer = function matchReducer(match) {
@@ -769,10 +780,12 @@ var spec = curry(function (obj, arg) {
 });
 
 exports.filterByKey = filterByKey;
+exports.hasKey = hasKey;
 exports.isPropStrictlyEqual = isPropStrictlyEqual;
 exports.isPropStrictlyNotEqual = isPropStrictlyNotEqual;
 exports.keepMatching = keepMatching;
 exports.key = key;
+exports.makeHasKey = makeHasKey;
 exports.makeSpreadFilterByKey = makeSpreadFilterByKey;
 exports.matchReducer = matchReducer;
 exports.propMatch = propMatch;

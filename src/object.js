@@ -13,6 +13,8 @@ export const prop = curry((prop,obj) => obj[prop])
 export const keys = o => Object.keys(o)
 
 
+
+
 // String => Object => Object
 export const omit_key = curry( (_omit,obj) => {
   let o = {};

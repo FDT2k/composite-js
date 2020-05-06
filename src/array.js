@@ -28,6 +28,7 @@ export const filterNotEqual = compose(filter,isStrictlyNotEqual)
 // value => List => List
 export const filterEqual = compose(filter,isStrictlyEqual)
 
+export const indexOf = curry((v,a) => a.indexOf(v));
 
 // reduce an array of subObjects to a merged object of all subObjects
 
