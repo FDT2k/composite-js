@@ -1,5 +1,6 @@
-import {curry,flip} from './core'
-
+import {curry,flip,compose,map,identity} from './core'
+import {trace} from 'debug'
+import {either} from 'conditional';
 // replace :: Regex -> String -> String -> String
 export const replace = curry((re, rpl, str) => str.replace(re, rpl));
 
@@ -32,3 +33,5 @@ export const trim = string => string.trim();
 export const lcfirst = string => string.charAt(0).toLowerCase() + string.slice(1)
 export const ucfirst = string => string.charAt(0).toUpperCase() + string.slice(1)
 
+export const isCapitalLetter= char => char.charCodeAt(0) >= 65 && char.charCodeAt(0) <=90
+export const isLowerCaseLetter = char => char.charCodeAt(0) >= 97 && char.charCodeAt(0) <=122

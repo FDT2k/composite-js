@@ -1,7 +1,7 @@
-import {compose,pipe,curry,chain,map}   from './core'
-import {reduce,safe_push}               from './array';
-import {trace}                          from './debug';
-import {Task}                           from './Monad'
+import {compose,pipe,curry,chain,map}   from 'core'
+import {reduce,safe_push}               from 'array';
+import {trace}                          from 'debug';
+import {Task}                           from 'Monad'
 
 /*
   The purpose of this is to collect output of chained tasks

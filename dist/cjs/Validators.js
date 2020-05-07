@@ -286,6 +286,31 @@ var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
 };
 
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
+
 var replace = curry(function (re, rpl, str) {
   return str.replace(re, rpl);
 }); // test :: RegEx -> String -> Boolean
