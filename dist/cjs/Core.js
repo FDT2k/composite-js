@@ -738,31 +738,6 @@ var enlist = curry(function (obj) {
   }))(obj);
 });
 
-/*
-  if(cond is met, return right else return left)
-*/
-
-var either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
-var eitherUndefined = either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var eitherThrow = curry(function (cond, error) {
-  return either(cond, _throw(error), identity);
-});
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
-
 var replace = curry(function (re, rpl, str) {
   return str.replace(re, rpl);
 }); // test :: RegEx -> String -> Boolean
@@ -773,7 +748,10 @@ var test = curry(function (re, str) {
 
 var match = curry(function (re, str) {
   return str.match(re);
-}); // concat :: String -> String
+});
+var regex = function regex(str) {
+  return new RegExp(str);
+}; // concat :: String -> String
 
 var concat = curry(function (a, b) {
   return a.concat(b);
@@ -973,6 +951,31 @@ var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
 });
 
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
+
 exports._AND_ = _AND_;
 exports._NOT_ = _NOT_;
 exports._OR_ = _OR_;
@@ -1060,6 +1063,7 @@ exports.reduce = reduce;
 exports.reduceListByKey = reduceListByKey;
 exports.reduceListByKeys = reduceListByKeys;
 exports.reduceToObject = reduceToObject;
+exports.regex = regex;
 exports.repeat = repeat;
 exports.replace = replace;
 exports.reverse = reverse;

@@ -25,7 +25,7 @@ export const thunk = curry((store,next,action)=>{
 })
 
 export const task = curry((store,next,action)=>{
-    typeof action !== 'undefined' && typeof action.fork ==='function' ? action.fork(next,next) : next(action)
+    typeof action !== 'undefined' &&  typeof action.fork !== 'undefined' && typeof action.fork ==='function' ? action.fork(next,next) : next(action)
 })
 
 export const taskCreator = curry((store,next,action)=>{

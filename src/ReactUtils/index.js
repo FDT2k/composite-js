@@ -1,13 +1,13 @@
 import { spreadFilterByKey, key } from 'Object'
 import { reduce } from 'array'
 import { enlist } from 'object'
-import { replace, concat, append, test } from 'string'
+import { replace, concat, append, test,regex } from 'string'
 import { compose, curry } from 'core'
 import { lcfirst } from '../string'
 
+
 import { trace } from 'debug'
 
-export const regex = str => new RegExp(str)
 
 export const updateProp = curry((prop, obj, value) => updateObject(obj, { [prop]: value }))
 

@@ -300,6 +300,36 @@ var maybe = curry(function (value, fn, functor) {
   return fn(functor.$value);
 });
 
+var replace = curry(function (re, rpl, str) {
+  return str.replace(re, rpl);
+}); // test :: RegEx -> String -> Boolean
+
+var test = curry(function (re, str) {
+  return re.test(str);
+}); // match :: Regex -> String -> List
+
+var match = curry(function (re, str) {
+  return str.match(re);
+});
+var regex = function regex(str) {
+  return new RegExp(str);
+}; // concat :: String -> String
+
+var concat = curry(function (a, b) {
+  return a.concat(b);
+}); // append :: String -> String
+
+var append = flip(concat); // length :: String -> Number
+var split = curry(function (sep, str) {
+  return str.split(sep);
+});
+var repeat = curry(function (times, string) {
+  return string.repeat(times);
+});
+var lcfirst = function lcfirst(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+};
+
 var trace = curry(function (tag, value) {
   console.log(tag, value);
   return value;
@@ -428,58 +458,6 @@ var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on th
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
-};
-
-/*
-  if(cond is met, return right else return left)
-*/
-
-var either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
-var eitherUndefined = either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var eitherThrow = curry(function (cond, error) {
-  return either(cond, _throw(error), identity);
-});
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
-
-var replace = curry(function (re, rpl, str) {
-  return str.replace(re, rpl);
-}); // test :: RegEx -> String -> Boolean
-
-var test = curry(function (re, str) {
-  return re.test(str);
-}); // match :: Regex -> String -> List
-
-var match = curry(function (re, str) {
-  return str.match(re);
-}); // concat :: String -> String
-
-var concat = curry(function (a, b) {
-  return a.concat(b);
-}); // append :: String -> String
-
-var append = flip(concat); // length :: String -> Number
-var split = curry(function (sep, str) {
-  return str.split(sep);
-});
-var repeat = curry(function (times, string) {
-  return string.repeat(times);
-});
-var lcfirst = function lcfirst(string) {
-  return string.charAt(0).toLowerCase() + string.slice(1);
 };
 
 var assign2 = curry(function (x, y) {
@@ -655,6 +633,31 @@ var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
 });
 
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
+
 var mergeAll = function mergeAll(list) {
   return reduce({}, assign2, list);
 };
@@ -779,9 +782,6 @@ var spec = curry(function (obj, arg) {
   }), mergeAll)(obj);
 });
 
-var regex = function regex(str) {
-  return new RegExp(str);
-};
 var updateProp = curry(function (prop, obj, value) {
   return updateObject(obj, _defineProperty({}, prop, value));
 });
@@ -839,7 +839,6 @@ exports.equals = equals;
 exports.forwardPropsRemovingHeader = forwardPropsRemovingHeader;
 exports.forwardPropsTransformer = forwardPropsTransformer;
 exports.presentIn = presentIn;
-exports.regex = regex;
 exports.replaceKeyReducer = replaceKeyReducer;
 exports.spreadObject = spreadObject;
 exports.spreadObjectBeginWith = spreadObjectBeginWith;

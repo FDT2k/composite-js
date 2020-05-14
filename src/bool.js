@@ -1,6 +1,6 @@
-import {curry,compose,maybe,identity} from './core'
-import {Maybe} from './functor'
-import {trace} from 'debug'
+import {curry,compose,maybe,identity} from './core.js'
+import {Maybe} from './functor.js'
+import {trace} from './debug.js'
 
 // STRING => BOOL
 //export const empty = string=> string.length==0;
@@ -44,4 +44,3 @@ export const is_type_scalar = o => is_type_string(o) || is_type_number(o)  || is
 
 // default a value to something if null || undefined -> cf. Maybe
 export const defaultTo = val => compose(maybe(val,identity),Maybe.of)
-

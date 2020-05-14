@@ -229,7 +229,7 @@ var thunk = curry(function (store, next, action) {
   typeof action === 'function' ? action(store) : next(action);
 });
 var task = curry(function (store, next, action) {
-  typeof action !== 'undefined' && typeof action.fork === 'function' ? action.fork(next, next) : next(action);
+  typeof action !== 'undefined' && typeof action.fork !== 'undefined' && typeof action.fork === 'function' ? action.fork(next, next) : next(action);
 });
 var taskCreator = curry(function (store, next, action) {
   typeof action.task !== 'undefined' && typeof action.task === 'function' ? action.task(store).fork(next, next) : next(action);

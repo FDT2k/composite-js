@@ -1,5 +1,5 @@
-import {pipe,map,curry,flip} from './core'
-import {defaultTo} from './bool'
+import {pipe,map,curry,flip} from './core.js'
+import {defaultTo} from './bool.js'
 
 
 export const assign2 = curry((x,y)=> Object.assign({},x,y))

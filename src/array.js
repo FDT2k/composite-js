@@ -1,9 +1,9 @@
-import {curry,compose,divergeThen} from './core'
-import {merge,prop} from './object'
-import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool'
-import {lcase} from './string'
+import {curry,compose,divergeThen} from './core.js'
+import {merge,prop} from './object.js'
+import {defaultTo,isStrictlyEqual,isStrictlyNotEqual} from './bool.js'
+import {lcase} from './string.js'
 
-import {decrement} from './maths'
+import {decrement} from './maths.js'
 // flatten :: [a,[a]...] -> [a,a...]
 export const flatten = a => [].concat.apply([], a);
 

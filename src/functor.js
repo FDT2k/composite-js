@@ -1,4 +1,4 @@
-import {compose,identity} from 'core';
+import {compose,identity} from './core.js';
 export class IO {
   constructor(fn) {
     this.unsafePerformIO = fn;

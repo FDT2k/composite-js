@@ -1,6 +1,4 @@
-import {curry,flip,compose,map,identity} from './core'
-import {trace} from 'debug'
-import {either} from 'conditional';
+import {curry,flip,compose,map,identity} from './core.js'
 // replace :: Regex -> String -> String -> String
 export const replace = curry((re, rpl, str) => str.replace(re, rpl));
 
@@ -9,6 +7,7 @@ export const test = curry((re, str) => re.test(str));
 
 // match :: Regex -> String -> List
 export const match = curry((re, str) => str.match(re));
+export const regex = str => new RegExp(str)
 
 
 // concat :: String -> String
@@ -35,3 +34,4 @@ export const ucfirst = string => string.charAt(0).toUpperCase() + string.slice(1
 
 export const isCapitalLetter= char => char.charCodeAt(0) >= 65 && char.charCodeAt(0) <=90
 export const isLowerCaseLetter = char => char.charCodeAt(0) >= 97 && char.charCodeAt(0) <=122
+

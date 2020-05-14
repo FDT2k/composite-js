@@ -458,31 +458,6 @@ var enlist = curry(function (obj) {
   }))(obj);
 });
 
-/*
-  if(cond is met, return right else return left)
-*/
-
-var either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
-var eitherUndefined = either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var eitherThrow = curry(function (cond, error) {
-  return either(cond, _throw(error), identity);
-});
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
-
 var replace = curry(function (re, rpl, str) {
   return str.replace(re, rpl);
 }); // test :: RegEx -> String -> Boolean
@@ -493,7 +468,7 @@ var test = curry(function (re, str) {
 
 var match = curry(function (re, str) {
   return str.match(re);
-}); // concat :: String -> String
+});
 
 var concat = curry(function (a, b) {
   return a.concat(b);
@@ -616,6 +591,31 @@ var safe_push = curry(function (array, item) {
 });
 var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
+});
+
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
 });
 
 var mergeAll = function mergeAll(list) {

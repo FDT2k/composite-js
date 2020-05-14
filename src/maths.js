@@ -1,4 +1,4 @@
-import {compose,curry,flip} from './core'
+import {compose,curry,flip} from './core.js'
 
 
 export const substract = curry((a,b)=> a-b)
