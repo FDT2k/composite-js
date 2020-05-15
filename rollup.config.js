@@ -135,5 +135,12 @@ export default [
       file: 'dist/cjs/Geometry.js',
       ...defaultFormat
     }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/StringUtils/index.js',
+    output: {
+      file: 'dist/cjs/String.js',
+      ...defaultFormat
+    }
   })
 ];

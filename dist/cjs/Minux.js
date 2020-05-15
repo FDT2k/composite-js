@@ -199,6 +199,11 @@ var maybe = curry(function (value, fn, functor) {
   return fn(functor.$value);
 });
 
+/* Function is adapted from Redux 4 
+
+List => createStore => Reducer => Store
+*/
+
 var applyMiddlewares = curry(function (middlewares, createStore, reducer) {
   var _dispatch = identity;
 
@@ -251,7 +256,7 @@ var createStore = function createStore(reducer, initialState) {
     getState: getState
   };
   dispatch({
-    type: '_'
+    type: '-_-'
   });
   return store;
 };

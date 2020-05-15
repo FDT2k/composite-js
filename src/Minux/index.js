@@ -1,6 +1,9 @@
 import { curry,compose,identity } from 'core'
 
+/* Function is adapted from Redux 4 
 
+List => createStore => Reducer => Store
+*/
 export const applyMiddlewares = curry((middlewares,createStore,reducer,...args)=>{
     let dispatch = identity
 
@@ -49,7 +52,7 @@ export const createStore = (reducer, initialState) => {
         dispatch,
         getState,
     }
-    dispatch({type:'_'});
+    dispatch({type:'-_-'});
     return store;
 }
 
