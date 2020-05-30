@@ -52,3 +52,5 @@ export const forwardPropsTransformer = str => compose(transformLowSnake, transfo
 
 // String -> Object ->Object
 export const forwardPropsRemovingHeader = curry( (header, obj) => transformKeys(forwardPropsTransformer(header))(obj) )
+
+
