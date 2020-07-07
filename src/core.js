@@ -52,12 +52,14 @@ export const pipe = (...funcs) =>{
 
 */
 const callCurry = namedCurryFunction =>  arity => fn => (...args) => {
-
+  
   if (args.length < arity) {
     return namedCurryFunction.bind(null, ...args);
   }
   return fn.call(null, ...args);
 }
+
+
 
 /**
  * Curryify a function. Allow the function to be called with less parameters that it needs and return a function with the
@@ -78,6 +80,42 @@ export const curry = (fn) => {
 }
 
 
+// curry that allow empty args
+export const curryNull = (fn)=>{
+  const arity = fn.length;
+  return (...args)=>{
+    let idx = 0;
+    let prevArgs = [];
+    let curr =  function $curryNull() {
+
+
+
+      if(prevArgs.length === 0 && idx ===0 ){ // never called
+        if(args.length == 0)
+          args = [null]
+        idx += args.length
+        console.log('first call','new idx = ',idx,'remaining', arity - prevArgs.length-args.length)
+
+      }
+
+
+      if(prevArgs.length >0 ){
+        if(args.length==0 && prevArgs.length+1 <= arity){
+          args.push(null)
+        }
+      }
+
+      console.log('call','new idx = ',idx,'remaining', arity - prevArgs.length-args.length, prevArgs)
+      
+      return callCurry($curryNull)(arity)(fn)(...args)
+
+    }
+    let res = curr()
+    prevArgs = [...prevArgs,...args]
+
+    return res;
+  }
+}
 
 // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
 /**

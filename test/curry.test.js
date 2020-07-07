@@ -1,4 +1,4 @@
-const {curry,curryN,curryX,curryNull,supertrace,compose} = require('../src/index')
+import {curry,curryN,curryX,curryNull,supertrace,compose} from 'Core'
 
 
 test('curry', () => {
@@ -11,10 +11,10 @@ test('curry', () => {
   console.log(fn(1)(2))
 
 });
-
+/*
 
 test('curryNull',()=>{
-/*  let fn = curryNull ( (x,y)=>{
+  let fn = curryNull ( (x,y)=>{
 
     console.log('x',x)
     console.log('y',y)
@@ -35,8 +35,8 @@ test('curryNull',()=>{
     console.log('y',y)
     return [a,b,c,d,e,x,y,z,w]
   })
-*/
-/*  expect (
+
+  expect (
     fn()
   ).toBeInstanceOf(Function)
 
@@ -68,13 +68,13 @@ test('curryNull',()=>{
   expect (
     fn2()()()()
   ).toEqual([null,null,null,null])
-  */
-/*  expect (
+  
+  expect (
     fn2()(2)()(4)
   ).toEqual([null,2,null,4])
-*/
-})
 
+})
+*/
 test('curryX',()=>{
   /*
     Generating a X arity curry to be help compose variadics

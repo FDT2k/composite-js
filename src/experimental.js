@@ -1,6 +1,6 @@
 
 // curry that allow empty args
-export const curryNull = (fn)=>{
+/*export const curryNull = (fn)=>{
   const arity = fn.length;
   return (...args)=>{
     let idx = 0;
@@ -32,7 +32,7 @@ export const curryNull = (fn)=>{
     return res;
   }
 }
-
+*/
 export function make_curry(arity){
   return function $curry(...args){
     if (args.length < arity) {
