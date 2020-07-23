@@ -3,15 +3,6 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 /**
- * Compose several unary function into one function. Execution is done from right to left
- *
- * @func
- * @category Function
- * @sig ((y -> z), (x -> y), ..., (o -> p), ((a, b, ..., n) -> o)) -> ((a, b, ..., n) -> z)
- * @param {...Function} ...functions The functions to compose
- * @return {Function}
- */
-/**
 * The core of curry
 *
 * @func
@@ -59,7 +50,7 @@ var curry = function curry(fn) {
   return function $curry() {
     return callCurry($curry)(arity)(fn).apply(void 0, arguments);
   };
-}; // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
+}; // curry that allow empty args
 
 /**
  * Identity function

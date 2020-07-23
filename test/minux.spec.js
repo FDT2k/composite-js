@@ -93,3 +93,92 @@ test('task',()=>{
     
     store.dispatch({task:tc})
 })
+
+test ('subscribe',(done)=>{
+    const reducer = (state={},action)=>{
+        console.log(action)
+        return state;
+    }
+
+    let store = Minux(reducer);
+
+    store.subscribe(_=>{
+        console.log('listener',store.getState())
+        done();
+    })
+
+    store.dispatch({type:'task'})
+
+
+
+
+})
+
+
+test ('subscribe multiple',(done)=>{
+    const reducer = (state={},action)=>{
+        console.log(action)
+        return state;
+    }
+
+    let store = Minux(reducer);
+
+    let done1= false;
+
+    store.subscribe(_=>{
+        console.log('listener1',store.getState())
+        if (done1) {
+            done()
+         }else {
+            done1= true
+         }
+    })
+
+
+    store.subscribe(_=>{
+        console.log('listener2',store.getState())
+        if (done1) {
+            done()
+         }else {
+            done1= true
+         }
+    })
+
+    store.dispatch({type:'task'})
+
+
+
+
+})
+
+
+
+test ('subscribe/unsubscribe',(done)=>{
+    const reducer = (state={},action)=>{
+        console.log(action)
+        return state;
+    }
+
+    let store = Minux(reducer);
+
+    let done1= false;
+
+    const unsub = store.subscribe(_=>{
+        console.log('listener1',store.getState())
+        throw new Error('coucou')
+    })
+
+    unsub();
+
+    store.subscribe(_=>{
+        console.log('listener2',store.getState())
+       done();
+    })
+
+    store.dispatch({type:'task'})
+
+    
+
+
+
+})

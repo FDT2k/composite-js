@@ -216,7 +216,7 @@ var curry = function curry(fn) {
   return function $curry() {
     return callCurry($curry)(arity)(fn).apply(void 0, arguments);
   };
-}; // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
+}; // curry that allow empty args
 /**
  * Returns a function that accept one argument. The argument  will be passed to every function in parameter and given back as an array
  * AKA. Parallelized composition. I'm not even sure this is a thing.
@@ -241,8 +241,8 @@ var curry = function curry(fn) {
  */
 
 var diverge = function diverge() {
-  for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-    args[_key4] = arguments[_key4];
+  for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    args[_key5] = arguments[_key5];
   }
 
   return function (x) {

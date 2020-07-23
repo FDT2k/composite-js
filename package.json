@@ -1,6 +1,6 @@
 {
   "name": "@geekagency/composite-js",
-  "version": "2.0.19",
+  "version": "2.0.21",
   "description": "Kit of composite functions utilities",
   "main": "Core.js",
   "directories": {
@@ -53,9 +53,7 @@
       "lcov"
     ]
   },
-  "dependencies": {
-    "@babel/plugin-proposal-export-default-from": "^7.10.4"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FDT2k/composite-js.git"

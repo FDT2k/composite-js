@@ -2,7 +2,8 @@ import {compose,pipe,curry,chain,map}   from 'core'
 import {reduce,safe_push}               from 'array';
 import {trace}                          from 'debug';
 import {Task}                           from 'Monad'
-
+import {as_prop}                        from 'object'
+import { taskCreator } from './Minux';
 /*
   The purpose of this is to collect output of chained tasks
 
@@ -18,6 +19,17 @@ export const make_task_collector = _=> {
   let collector = [];
   return res =>  Task((reject,resolve)=>{
     collector = safe_push(collector,res)
+    resolve(collector)
+  });
+}
+
+export const make_object_task_collector = _=> {
+  let collector = {};
+  return res =>  Task((reject,resolve)=>{
+    collector = {
+      ...collector,
+      ...res
+    }
     resolve(collector)
   });
 }
@@ -65,6 +77,7 @@ export const collect_chain = (collector)=>(...args)=> pipe(makeIdentityTask,...r
   return a function that chain and accumulate results
 */
 export const useTaskCollector = compose(collect_chain,make_task_collector)
+export const useTaskCollectorAsObject = compose(collect_chain,make_object_task_collector)
 
 
 
@@ -97,3 +110,10 @@ export const ChainableTaskCreator = (chain_maker,_fork) => (...tasksCreators) =>
     fork  : fork().fork,
   }
 }
+
+
+export const TaskChainList = (...tasksCreators)=> ChainableTaskCreator()(...tasksCreators);
+
+export const TaskChainObject = (...tasksCreators)=> ChainableTaskCreator(useTaskCollectorAsObject())(...tasksCreators);
+
+export const namedTask = (key,task)=> pipe(task,map(as_prop(key)))

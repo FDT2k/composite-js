@@ -216,7 +216,7 @@ var curry = function curry(fn) {
   return function $curry() {
     return callCurry($curry)(arity)(fn).apply(void 0, arguments);
   };
-}; // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
+}; // curry that allow empty args
 
 /**
  * Identity function

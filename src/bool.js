@@ -31,6 +31,7 @@ export const isNull    = x => x === null;
 export const is_array         = o => Array.isArray(o);
 // a -> Bool
 export const is_type_bool = is_type('boolean')
+export const is_error = x => x instanceof Error;
 
 
 

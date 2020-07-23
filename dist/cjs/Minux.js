@@ -149,7 +149,7 @@ var curry = function curry(fn) {
   return function $curry() {
     return callCurry($curry)(arity)(fn).apply(void 0, arguments);
   };
-}; // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
+}; // curry that allow empty args
 
 /**
  * Identity function
@@ -231,13 +231,17 @@ var applyMiddlewares = curry(function (middlewares, createStore, reducer) {
   });
 });
 var thunk = curry(function (store, next, action) {
-  typeof action === 'function' ? action(store) : next(action);
+  return typeof action === 'function' ? action(store) : next(action);
 });
 var task = curry(function (store, next, action) {
-  typeof action !== 'undefined' && typeof action.fork !== 'undefined' && typeof action.fork === 'function' ? action.fork(next, next) : next(action);
+  return typeof action !== 'undefined' && typeof action.fork !== 'undefined' && typeof action.fork === 'function' ? action.fork(next, next) : next(action);
 });
 var taskCreator = curry(function (store, next, action) {
-  typeof action.task !== 'undefined' && typeof action.task === 'function' ? action.task(store).fork(next, next) : next(action);
+  return typeof action.task !== 'undefined' && typeof action.task === 'function' ? action.task(store).fork(next, next) : next(action);
+});
+var logger = curry(function (store, next, action) {
+  console.log('[MINUX_LOGGER]:', action);
+  next(action);
 });
 var createStore = function createStore(reducer, initialState) {
   var state = initialState;
@@ -246,25 +250,62 @@ var createStore = function createStore(reducer, initialState) {
     return state;
   };
 
+  var listeners = [];
+
   var dispatch = function dispatch(action) {
     state = reducer(state, action);
-    return state;
+
+    for (var i = 0; i < listeners.length; i++) {
+      listeners[i]();
+    }
+
+    return action;
+  };
+
+  var subscribe = function subscribe(listener) {
+    listeners.push(listener);
+    return function (_) {
+      var index = listeners.indexOf(listener);
+      listeners.splice(index, 1);
+    };
   };
 
   var store = {
     dispatch: dispatch,
-    getState: getState
+    getState: getState,
+    subscribe: subscribe
   };
   dispatch({
     type: '-_-'
   });
   return store;
 };
+var observeStore = function observeStore() {
+  var select = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : identity;
+  var store = arguments.length > 1 ? arguments[1] : undefined;
+  var onChange = arguments.length > 2 ? arguments[2] : undefined;
+  var currentState;
+
+  function handleChange() {
+    var nextState = select(store.getState());
+
+    if (nextState !== currentState) {
+      onChange(currentState, nextState);
+      currentState = nextState;
+    }
+  }
+
+  var unsubscribe = store.subscribe(handleChange);
+  handleChange();
+  return unsubscribe;
+};
 var index = applyMiddlewares([thunk, task, taskCreator], createStore);
 
 exports.applyMiddlewares = applyMiddlewares;
 exports.createStore = createStore;
 exports.default = index;
+exports.logger = logger;
+exports.observeStore = observeStore;
 exports.task = task;
 exports.taskCreator = taskCreator;
 exports.thunk = thunk;

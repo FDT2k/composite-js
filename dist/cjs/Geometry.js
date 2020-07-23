@@ -216,7 +216,7 @@ var curry = function curry(fn) {
   return function $curry() {
     return callCurry($curry)(arity)(fn).apply(void 0, arguments);
   };
-}; // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
+}; // curry that allow empty args
 
 /**
  * Identity function
@@ -456,13 +456,17 @@ var axisContains = curry(function (dimension, offset, length) {
 var X = prop('x');
 var Y = prop('y');
 var Width = prop('width');
-var Height = prop('height');
-var YDimension = function YDimension(rect) {
-  return [Y(rect), Height(rect)];
-};
-var XDimension = function XDimension(rect) {
-  return [X(rect), Width(rect)];
-}; // returns 0 if contained -1 if overlapping on left , 1 if overlapping on right
+var Height = prop('height'); // [x,y,z] => Rect => [x(Rect),y(Rect),z(Rect)]
+
+var makeDimension = curry(function (fns, rect) {
+  return map(function (fn) {
+    return fn(rect);
+  }, fns);
+}); //export const YDimension = (rect) => [Y(rect),Height(rect)]
+//export const XDimension = (rect) => [X(rect),Width(rect)]
+
+var YDimension = makeDimension([Y, Height]);
+var XDimension = makeDimension([X, Width]); // returns 0 if contained -1 if overlapping on left , 1 if overlapping on right
 
 var NormalizedDirection = curry(function (dimension, offset, length) {
   return axisContains(dimension, offset, length) ? 0 : offset + length <= dimension / 2 ? -1 : 1;
@@ -508,6 +512,7 @@ exports.axisContains = axisContains;
 exports.axisIntersects = axisIntersects;
 exports.constrainAxis = constrainAxis;
 exports.constrainInRect = constrainInRect;
+exports.makeDimension = makeDimension;
 exports.rectContainsRect = rectContainsRect;
 exports.rectIntersectRect = rectIntersectRect;
 exports.windowRect = windowRect;

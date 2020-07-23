@@ -6,6 +6,7 @@ import {pipe,compose,chain,map} from '../src/core'
 const makeTask  = output => MakeTask ((reject,resolve)=>{ resolve(output) })
 const makeFailTask  = output => MakeTask ((reject,resolve)=>{ reject(`fail ${output}`) })
 
+const makeTaskPromise  = output => MakeTask ((reject,resolve)=>{ output.then(resolve) })
 
 
 test ("1 in chain",(done)=>{
@@ -333,6 +334,75 @@ test ("SH2 2",(done)=>{
             done();
           }
         )
+    }
+  )
+});
+
+
+test ("Named results",(done)=>{
+
+
+  let t1 = makeTask('1');
+  let t2 = makeTask('2');
+
+  let p1 = makeTaskPromise( new Promise((res,rej)=>{
+    res('3')
+  }) )
+
+  const res = C.ChainableTaskCreator(C.useTaskCollectorAsObject())(C.namedTask('key1',t1),C.namedTask('key2',t2),C.namedTask('key3',p1));
+
+  console.log(res)
+  
+  res.fork(
+    _=> console.error,
+    _=> {
+
+        console.log('hey',_)
+        expect(Object.keys(_).length).toBe(3)
+        done()
+    }
+  )
+});
+
+
+
+test ("Shorthand list & object",(done)=>{
+
+  const {TaskChainList,TaskChainObject,namedTask}  = C;
+
+  let t1 = makeTask('1');
+  let t2 = makeTask('2');
+
+  let p1 = makeTaskPromise( new Promise((res,rej)=>{
+    res('3')
+  }) )
+
+
+  const init = TaskChainList(t1,t2);
+
+  const init2 = TaskChainObject(
+    namedTask('key1',t1),
+    namedTask('key2',t2),
+    namedTask('promise',p1)
+  )
+  
+  init.fork(
+    _=> console.error,
+    _=> {
+
+        console.log('hey',_)
+        expect(_.length).toBe(2)
+
+        init2.fork(
+          _=> console.error,
+          result => {
+          expect(Object.keys(result).length).toBe(3)
+          done()
+
+
+        } )
+
+
     }
   )
 });

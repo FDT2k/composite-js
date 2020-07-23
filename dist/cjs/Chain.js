@@ -216,7 +216,7 @@ var curry = function curry(fn) {
   return function $curry() {
     return callCurry($curry)(arity)(fn).apply(void 0, arguments);
   };
-}; // curryN :: ((a, b, ...),(a, b, ...)) ->(a, b, ...) -> c) -> a -> b -> ... -> c
+}; // curry that allow empty args
 
 /**
  * Identity function
@@ -654,6 +654,89 @@ Task.rejected = function (a) {
   });
 };
 
+/* Function is adapted from Redux 4 
+
+List => createStore => Reducer => Store
+*/
+
+var applyMiddlewares = curry(function (middlewares, createStore, reducer) {
+  var _dispatch = identity;
+
+  for (var _len = arguments.length, args = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+    args[_key - 3] = arguments[_key];
+  }
+
+  var store = createStore.apply(void 0, [reducer].concat(args));
+  var middlewareAPI = {
+    getState: store.getState,
+    dispatch: function dispatch(action) {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      return _dispatch.apply(void 0, [action].concat(args));
+    }
+  };
+  var chain = middlewares.map(function (middleware) {
+    return middleware(middlewareAPI);
+  });
+  _dispatch = compose.apply(void 0, _toConsumableArray(chain))(store.dispatch);
+  return _objectSpread2({}, store, {
+    dispatch: _dispatch
+  });
+});
+var thunk = curry(function (store, next, action) {
+  return typeof action === 'function' ? action(store) : next(action);
+});
+var task = curry(function (store, next, action) {
+  return typeof action !== 'undefined' && typeof action.fork !== 'undefined' && typeof action.fork === 'function' ? action.fork(next, next) : next(action);
+});
+var taskCreator = curry(function (store, next, action) {
+  return typeof action.task !== 'undefined' && typeof action.task === 'function' ? action.task(store).fork(next, next) : next(action);
+});
+var logger = curry(function (store, next, action) {
+  console.log('[MINUX_LOGGER]:', action);
+  next(action);
+});
+var createStore = function createStore(reducer, initialState) {
+  var state = initialState;
+
+  var getState = function getState(_) {
+    return state;
+  };
+
+  var listeners = [];
+
+  var dispatch = function dispatch(action) {
+    state = reducer(state, action);
+
+    for (var i = 0; i < listeners.length; i++) {
+      listeners[i]();
+    }
+
+    return action;
+  };
+
+  var subscribe = function subscribe(listener) {
+    listeners.push(listener);
+    return function (_) {
+      var index = listeners.indexOf(listener);
+      listeners.splice(index, 1);
+    };
+  };
+
+  var store = {
+    dispatch: dispatch,
+    getState: getState,
+    subscribe: subscribe
+  };
+  dispatch({
+    type: '-_-'
+  });
+  return store;
+};
+applyMiddlewares([thunk, task, taskCreator], createStore);
+
 /*
   The purpose of this is to collect output of chained tasks
 
@@ -671,6 +754,15 @@ var make_task_collector = function make_task_collector(_) {
   return function (res) {
     return Task(function (reject, resolve) {
       collector = safe_push(collector, res);
+      resolve(collector);
+    });
+  };
+};
+var make_object_task_collector = function make_object_task_collector(_) {
+  var collector = {};
+  return function (res) {
+    return Task(function (reject, resolve) {
+      collector = _objectSpread2({}, collector, {}, res);
       resolve(collector);
     });
   };
@@ -724,6 +816,7 @@ var collect_chain = function collect_chain(collector) {
 */
 
 var useTaskCollector = compose(collect_chain, make_task_collector);
+var useTaskCollectorAsObject = compose(collect_chain, make_object_task_collector);
 /*
   creates a full task chain helper
 */
@@ -766,11 +859,25 @@ var ChainableTaskCreator = function ChainableTaskCreator(chain_maker, _fork) {
     };
   };
 };
+var TaskChainList = function TaskChainList() {
+  return ChainableTaskCreator().apply(void 0, arguments);
+};
+var TaskChainObject = function TaskChainObject() {
+  return ChainableTaskCreator(useTaskCollectorAsObject()).apply(void 0, arguments);
+};
+var namedTask = function namedTask(key, task) {
+  return pipe(task, map(as_prop(key)));
+};
 
 exports.ChainableTaskCreator = ChainableTaskCreator;
+exports.TaskChainList = TaskChainList;
+exports.TaskChainObject = TaskChainObject;
 exports.collect_chain = collect_chain;
 exports.collect_chain_reducer = collect_chain_reducer;
 exports.makeIdentityTask = makeIdentityTask;
+exports.make_object_task_collector = make_object_task_collector;
 exports.make_task_collector = make_task_collector;
+exports.namedTask = namedTask;
 exports.useTaskChainCollection = useTaskChainCollection;
 exports.useTaskCollector = useTaskCollector;
+exports.useTaskCollectorAsObject = useTaskCollectorAsObject;
