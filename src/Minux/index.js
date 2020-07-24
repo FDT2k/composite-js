@@ -4,7 +4,7 @@ import { curry,compose,identity } from 'core'
 
 List => createStore => Reducer => Store
 */
-export const applyMiddlewares = curry((middlewares,createStore,reducer,...args)=>{
+export const applyMiddlewares = curry((middlewares,createStore)=>(reducer,...args)=>{
     let dispatch = identity
 
     const store = createStore(reducer, ...args)
