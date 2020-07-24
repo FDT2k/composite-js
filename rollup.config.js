@@ -142,5 +142,12 @@ export default [
       file: 'dist/cjs/String.js',
       ...defaultFormat
     }
+  }),
+  Object.assign({},defaultConf,{
+    input: 'src/Configure/index.js',
+    output: {
+      file: 'dist/cjs/Configure.js',
+      ...defaultFormat
+    }
   })
 ];
