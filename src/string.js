@@ -35,3 +35,4 @@ export const ucfirst = string => string.charAt(0).toUpperCase() + string.slice(1
 export const isCapitalLetter= char => char.charCodeAt(0) >= 65 && char.charCodeAt(0) <=90
 export const isLowerCaseLetter = char => char.charCodeAt(0) >= 97 && char.charCodeAt(0) <=122
 
+export * from 'Effect/CLIColorSet'

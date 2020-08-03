@@ -1,9 +1,9 @@
-import {merge,makeMerge,mergeAll,spec} from 'object'
+import {merge,makeMerge,mergeAll,spec,omit_key} from 'object'
 import {spread} from 'array'
 
 import {curry} from '../src/core'
 
-
+/*
 test("makemerge",()=>{
 
   let merge5 = makeMerge(5);
@@ -31,7 +31,19 @@ test("makemerge",()=>{
   expect(res).toEqual(expected)
 
 })
+*/
+test("omit_key",()=>{
+  let mykesy = {
+    a:0,
+    b:1,
+    c:3
+  }
 
+  expect(omit_key('a',mykesy)).toEqual({b:1,c:3})
+
+
+})
+/*
 test("spec",()=>{
 
 
@@ -53,3 +65,4 @@ test("spec",()=>{
 
   
 })
+*/

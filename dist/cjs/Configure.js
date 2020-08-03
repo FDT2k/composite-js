@@ -258,14 +258,6 @@ var map = curry(function (fn, f) {
   return f.map(fn);
 }); // join :: Monad m => m (m a) -> m a
 
-var join = function join(m) {
-  return m.join();
-}; // chain :: Monad m => (a -> m b) -> m a -> m b
-
-var chain = function chain(f) {
-  return compose(join, map(f));
-}; // maybe :: b -> (a -> b) -> Maybe a -> b
-
 var maybe = curry(function (value, fn, functor) {
   if (functor.isNothing) {
     return value;
@@ -396,6 +388,9 @@ var is_undefined = is_type('undefined');
 var isNull = function isNull(x) {
   return x === null;
 };
+var is_array = function is_array(o) {
+  return Array.isArray(o);
+}; // a -> Bool
 
 var is_type_bool = is_type('boolean');
 var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
@@ -602,284 +597,177 @@ var safe_stack = curry(function (array, item) {
 });
 
 /*
-chain(fn) {
-    return new Task((reject, resolve) => this.fork(reject, x => fn(x).fork(reject, resolve)));
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
   }
+});
 
-  join() {
-    return this.chain(identity);
-  }
-*/
-
-var map$1 = function map(fork) {
-  return function (f) {
-    return Task(function (reject, resolve) {
-      return fork(reject, function (a) {
-        return resolve(f(a));
-      });
-    });
-  };
+var mergeAll = function mergeAll(list) {
+  return reduce({}, assign2, list);
 };
+var delete_list_item = curry(function (state, action) {
+  return filter(function (item) {
+    return item.id != action.payload;
+  }, state);
+});
+var add_list_item = curry(function (state, action) {
+  return [].concat(_toConsumableArray(state), [action.payload]);
+});
+var item_prop_is_equal = curry(function (prop, value, item) {
+  return item[prop] == value;
+});
+var add_to_list = curry(function (state, action) {
+  return [].concat(_toConsumableArray(state), [action.payload]);
+}); // del_from_list :: List -> Object-> List
 
-var chain$1 = function chain(fork) {
-  return function (f) {
-    return Task(function (reject, resolve) {
-      return fork(reject, function (a) {
-        return f(a).fork(reject, resolve);
-      });
-    });
-  };
-};
+var del_from_list_by_prop_id = curry(function (state, action) {
+  return filter(function (item) {
+    return item.id != action.payload;
+  }, state);
+}); // update_object :: Object->Object->Object
 
-var Task = function Task(fork) {
-  return {
-    map: map$1(fork),
-    chain: chain$1(fork),
-    join: function join(_) {
-      return chain$1(fork)(identity);
-    },
-    fork: fork
-  };
-};
+var update_list_by_prop_id = curry(function (list, itemIdValue, updateFn) {
+  return update_list(list, item_prop_is_equal('id', itemIdValue), updateFn);
+}); // update_list :: List -> Fn -> Fn -> List
 
-Task.of = function (a) {
-  return Task(function (_, res) {
-    return res(a);
+var update_list = curry(function (list, itemPredicate, updateFn) {
+  return list.map(function (item) {
+    return either(itemPredicate, identity, updateFn, item);
   });
+});
+var propIsEqual = curry(function (prop, value, item) {
+  return item[prop] === value;
+});
+var propIsNotEqual = curry(function (prop, value, item) {
+  return item[prop] !== value;
+});
+var delByProp = curry(function (prop, list, val) {
+  return filter(propIsNotEqual(prop, val), list);
+});
+var delByPropId = delByProp('id');
+var add = curry(function (list, item) {
+  return [].concat(_toConsumableArray(list), [item]);
+});
+var getByProp = curry(function (prop, list, val) {
+  return filter(propIsEqual(prop, val), list);
+});
+var update = curry(function (cond, val, list, fn) {
+  return map(either(cond(val), identity, fn))(list);
+});
+var updateIfPropEqual = curry(function (prop, val, list, fn) {
+  return update(propIsEqual(prop), val, list, fn);
+});
+
+// {a:b} -> a
+// {a:b, c:d} -> a
+
+var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator .... forever !!
+//  String -> a -> Object -> Bool
+
+var isPropStrictlyEqual = curry(function (_prop, value, item) {
+  return compose(isStrictlyEqual(value), prop(_prop))(item);
+});
+var isPropStrictlyNotEqual = curry(function (prop, value, item) {
+  return compose(not, isPropStrictlyEqual(prop, value))(item);
+}); // filter an object and returns key that matches
+// regex -> string -> Object -> Bool
+
+var propMatch = curry(function (re, key) {
+  return compose(test(re), prop(key));
+});
+var makeHasKey = function makeHasKey(k) {
+  return compose(function (x) {
+    return x !== -1;
+  }, indexOf(k), keys);
 };
+var hasKey = curry(function (k, o) {
+  return makeHasKey(k)(o);
+}); // Object -> Object -> Object 
+var spec = curry(function (obj, arg) {
+  return pipe(keys, map(function (x) {
+    return as_prop(x, obj[x](arg));
+  }), mergeAll)(obj);
+});
 
-Task.rejected = function (a) {
-  return Task(function (rej, _) {
-    return rej(a);
-  });
+var servers_from_string = split(',');
+var to_array_if_needed = function to_array_if_needed(fn) {
+  return either(is_array, fn, identity);
+}; // return the prop value or undefined
+
+var prop_value_or_undefined = function prop_value_or_undefined(env_key, env) {
+  return compose(defaultTo, either(is_undefined, prop(env_key), function (x) {
+    return undefined;
+  }))(env);
 };
-
-/* Function is adapted from Redux 4 
-
-List => createStore => Reducer => Store
-*/
-
-var applyMiddlewares = curry(function (middlewares, createStore) {
-  return function (reducer) {
-    var _dispatch = identity;
-
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    var store = createStore.apply(void 0, [reducer].concat(args));
-    var middlewareAPI = {
-      getState: store.getState,
-      dispatch: function dispatch(action) {
-        for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-          args[_key2 - 1] = arguments[_key2];
-        }
-
-        return _dispatch.apply(void 0, [action].concat(args));
-      }
-    };
-    var chain = middlewares.map(function (middleware) {
-      return middleware(middlewareAPI);
-    });
-    _dispatch = compose.apply(void 0, _toConsumableArray(chain))(store.dispatch);
-    return _objectSpread2({}, store, {
-      dispatch: _dispatch
-    });
+var envThenValue = curry(function (defaultKey, defaultValue, ensureValue, env) {
+  return function (value) {
+    return compose(ensureValue, defaultTo(defaultValue), prop_value_or_undefined(defaultKey, env))(value);
   };
 });
-var thunk = curry(function (store, next, action) {
-  return typeof action === 'function' ? action(store) : next(action);
+var field = curry(function (valueConfig, env, key) {
+  return compose(as_prop(key), valueConfig(env));
 });
-var task = curry(function (store, next, action) {
-  return typeof action !== 'undefined' && typeof action.fork !== 'undefined' && typeof action.fork === 'function' ? action.fork(next, next) : next(action);
-});
-var taskCreator = curry(function (store, next, action) {
-  return typeof action.task !== 'undefined' && typeof action.task === 'function' ? action.task(store).fork(next, next) : next(action);
-});
-var logger = curry(function (store, next, action) {
-  console.log('[MINUX_LOGGER]:', action);
-  next(action);
-});
-var createStore = function createStore(reducer, initialState) {
-  var state = initialState;
-
-  var getState = function getState(_) {
-    return state;
-  };
-
-  var listeners = [];
-
-  var dispatch = function dispatch(action) {
-    state = reducer(state, action);
-
-    for (var i = 0; i < listeners.length; i++) {
-      listeners[i]();
-    }
-
-    return action;
-  };
-
-  var subscribe = function subscribe(listener) {
-    listeners.push(listener);
-    return function (_) {
-      var index = listeners.indexOf(listener);
-      listeners.splice(index, 1);
-    };
-  };
-
-  var store = {
-    dispatch: dispatch,
-    getState: getState,
-    subscribe: subscribe
-  };
-  dispatch({
-    type: '-_-'
-  });
-  return store;
-};
-applyMiddlewares([thunk, task, taskCreator], createStore);
-
-/*
-  The purpose of this is to collect output of chained tasks
-
-  TaskCreator =  Function -> Task
-
-*/
-
-/*
-  makeCollector :: Nothing -> Function -> Task
-  return a <TaskCreator> that accumulate its argument in a <List> and resolves it
-*/
-
-var make_task_collector = function make_task_collector(_) {
-  var collector = [];
-  return function (res) {
-    return Task(function (reject, resolve) {
-      collector = safe_push(collector, res);
-      resolve(collector);
-    });
+var reduceCalling = function reduceCalling(settings) {
+  return function (acc, item) {
+    var k = key(item);
+    var fn = item[k](k);
+    var _v = settings[k];
+    return _objectSpread2({}, acc, {}, fn(_v));
   };
 };
-var make_object_task_collector = function make_object_task_collector(_) {
-  var collector = {};
-  return function (res) {
-    return Task(function (reject, resolve) {
-      collector = _objectSpread2({}, collector, {}, res);
-      resolve(collector);
-    });
-  };
-}; // identity task is the same as identity but injected in a <Task>
-// when forked, returns the same value
-
-var makeIdentityTask = function makeIdentityTask(_) {
-  return Task(function (reject, resolve) {
-    resolve(_);
-  });
+var applyValues = function applyValues(settings) {
+  return reduce({}, reduceCalling(settings));
 };
 /*
-  expand a <List> of <Tasks> to add a <TaskCollector> after each one of them
+Object => Object=> Function => Object => Object
 */
 
-var collect_chain_reducer = curry(function (collector, acc, item) {
-  acc.push(chain(item)); //  acc.push(map(trace('x')))
-
-  acc.push(chain(collector));
-  return acc;
-}); // Fn -> [Fn] -> Task
-
-/*
-
-  pipe(
-    identity,
-    t1, -> 1
-    collect, -> [1]
-    t2, -> 2
-    collect, [1,2]
-    t3, -> 3
-    collect, [1,2,3]
-  )
-
-  for a given <List> of <Task>; Chain them and accumulate the results in an array.
-  returns <Task>
-*/
-
-var collect_chain = function collect_chain(collector) {
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return pipe.apply(void 0, [makeIdentityTask].concat(_toConsumableArray(reduce([], collect_chain_reducer(collector), args))));
-  };
+var aaa = function aaa(defaultSettings, settings) {
+  return compose(applyValues(settings), enlist, spec(defaultSettings));
 };
-/*
-  short hand to create a Task collector
-  return a function that chain and accumulate results
-*/
+/**
+ * Create a function that iterates over DefaultSettings
+ */
 
-var useTaskCollector = compose(collect_chain, make_task_collector);
-var useTaskCollectorAsObject = compose(collect_chain, make_object_task_collector);
-/*
-  creates a full task chain helper
-*/
-
-var useTaskChainCollection = function useTaskChainCollection() {
-  for (var _len2 = arguments.length, initial_tasks = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    initial_tasks[_key2] = arguments[_key2];
-  }
-
-  if (initial_tasks.length === 0) throw new Error('you have to provide at least 1 initial TaskCreator (Function that returns a Task)');
-  var make_chain = useTaskCollector();
-
-  var _run = make_chain.apply(void 0, initial_tasks);
-
-  return {
-    extend: function extend() {
-      for (var _len3 = arguments.length, tasks = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        tasks[_key3] = arguments[_key3];
-      }
-
-      return function (a, b) {
-        return pipe(_run, chain(make_chain.apply(void 0, tasks)))().fork(a, b);
-      };
-    },
-    run: function run(a, b) {
-      return _run().fork(a, b);
-    },
-    tasks: initial_tasks
-  };
-};
-var ChainableTaskCreator = function ChainableTaskCreator(chain_maker, _fork) {
-  return function () {
-    var make_chain = chain_maker || useTaskCollector();
-    var fork = typeof _fork === 'undefined' ? make_chain.apply(void 0, arguments) : pipe(_fork, chain(make_chain.apply(void 0, arguments)));
-    return {
-      chain: function chain() {
-        return ChainableTaskCreator(make_chain, fork).apply(void 0, arguments);
-      },
-      fork: fork().fork
+var makeConfig = function makeConfig(defaultSettings) {
+  return function (env) {
+    return function (settings) {
+      return aaa(defaultSettings, settings)(env);
     };
   };
-};
-var TaskChainList = function TaskChainList() {
-  return ChainableTaskCreator().apply(void 0, arguments);
-};
-var TaskChainObject = function TaskChainObject() {
-  return ChainableTaskCreator(useTaskCollectorAsObject()).apply(void 0, arguments);
-};
-var namedTask = function namedTask(key, task) {
-  return pipe(task, map(as_prop(key)));
+}; // ensure that the passed parameter is a function or throw error
+
+var ensureFunction = function ensureFunction(msg) {
+  return eitherThrow(is_type_function, msg);
 };
 
-exports.ChainableTaskCreator = ChainableTaskCreator;
-exports.TaskChainList = TaskChainList;
-exports.TaskChainObject = TaskChainObject;
-exports.collect_chain = collect_chain;
-exports.collect_chain_reducer = collect_chain_reducer;
-exports.makeIdentityTask = makeIdentityTask;
-exports.make_object_task_collector = make_object_task_collector;
-exports.make_task_collector = make_task_collector;
-exports.namedTask = namedTask;
-exports.useTaskChainCollection = useTaskChainCollection;
-exports.useTaskCollector = useTaskCollector;
-exports.useTaskCollectorAsObject = useTaskCollectorAsObject;
+exports.aaa = aaa;
+exports.applyValues = applyValues;
+exports.ensureFunction = ensureFunction;
+exports.envThenValue = envThenValue;
+exports.field = field;
+exports.identity = identity;
+exports.makeConfig = makeConfig;
+exports.prop_value_or_undefined = prop_value_or_undefined;
+exports.reduceCalling = reduceCalling;
+exports.servers_from_string = servers_from_string;
+exports.to_array_if_needed = to_array_if_needed;

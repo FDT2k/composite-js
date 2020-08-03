@@ -776,6 +776,61 @@ var enlist = curry(function (obj) {
   }))(obj);
 });
 
+var colorSet8 = function colorSet8(_) {
+  return {
+    black: "\x1B[30m",
+    red: "\x1B[31m",
+    green: "\x1B[32m",
+    yellow: "\x1B[33m",
+    blue: "\x1B[34m",
+    magenta: "\x1B[35m",
+    cyan: "\x1B[36m",
+    white: "\x1B[37m",
+    reset: "\x1B[0m"
+  };
+};
+var colorSetBackground8 = function colorSetBackground8(_) {
+  return {
+    black: "\x1B[40m",
+    red: "\x1B[41m",
+    green: "\x1B[42m",
+    yellow: "\x1B[43m",
+    blue: "\x1B[44m",
+    magenta: "\x1B[45m",
+    cyan: "\x1B[46m",
+    white: "\x1B[47m",
+    reset: "\x1B[0m"
+  };
+};
+var colorSet16 = function colorSet16(_) {
+  return _objectSpread2({}, colorSet8, {
+    brightBlack: "\x1B[30;1m",
+    brightRed: "\x1B[31;1m",
+    brightGreen: "\x1B[32;1m",
+    brightYellow: "\x1B[33;1m",
+    brightBlue: "\x1B[34;1m",
+    brightMagenta: "\x1B[35;1m",
+    brightCyan: "\x1B[36;1m",
+    brightWhite: "\x1B[37;1m"
+  });
+};
+var colorSetBackground16 = function colorSetBackground16(_) {
+  return _objectSpread2({}, backgroundColorSet8, {
+    brightBlack: "\x1B[40;1m",
+    brightRed: "\x1B[41;1m",
+    brightGreen: "\x1B[42;1m",
+    brightYellow: "\x1B[43;1m",
+    brightBlue: "\x1B[44;1m",
+    brightMagenta: "\x1B[45;1m",
+    brightCyan: "\x1B[46;1m",
+    brightWhite: "\x1B[47;1m"
+  });
+};
+var generateAll256Colors = function generateAll256Colors(_) {
+
+  return j;
+};
+
 var replace = curry(function (re, rpl, str) {
   return str.replace(re, rpl);
 }); // test :: RegEx -> String -> Boolean
@@ -1028,6 +1083,10 @@ exports.as_object_prop = as_object_prop;
 exports.as_prop = as_prop;
 exports.assign2 = assign2;
 exports.chain = chain;
+exports.colorSet16 = colorSet16;
+exports.colorSet8 = colorSet8;
+exports.colorSetBackground16 = colorSetBackground16;
+exports.colorSetBackground8 = colorSetBackground8;
 exports.compose = compose;
 exports.composeA = composeA;
 exports.concat = concat;
@@ -1054,6 +1113,7 @@ exports.findIndexEqual = findIndexEqual;
 exports.findIndexNotEqual = findIndexNotEqual;
 exports.flatten = flatten;
 exports.flip = flip;
+exports.generateAll256Colors = generateAll256Colors;
 exports.groupByKey = groupByKey;
 exports.groupListByKey = groupListByKey;
 exports.head = head;

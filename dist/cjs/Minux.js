@@ -204,31 +204,33 @@ var maybe = curry(function (value, fn, functor) {
 List => createStore => Reducer => Store
 */
 
-var applyMiddlewares = curry(function (middlewares, createStore, reducer) {
-  var _dispatch = identity;
+var applyMiddlewares = curry(function (middlewares, createStore) {
+  return function (reducer) {
+    var _dispatch = identity;
 
-  for (var _len = arguments.length, args = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
-    args[_key - 3] = arguments[_key];
-  }
-
-  var store = createStore.apply(void 0, [reducer].concat(args));
-  var middlewareAPI = {
-    getState: store.getState,
-    dispatch: function dispatch(action) {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
-
-      return _dispatch.apply(void 0, [action].concat(args));
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
     }
+
+    var store = createStore.apply(void 0, [reducer].concat(args));
+    var middlewareAPI = {
+      getState: store.getState,
+      dispatch: function dispatch(action) {
+        for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          args[_key2 - 1] = arguments[_key2];
+        }
+
+        return _dispatch.apply(void 0, [action].concat(args));
+      }
+    };
+    var chain = middlewares.map(function (middleware) {
+      return middleware(middlewareAPI);
+    });
+    _dispatch = compose.apply(void 0, _toConsumableArray(chain))(store.dispatch);
+    return _objectSpread2({}, store, {
+      dispatch: _dispatch
+    });
   };
-  var chain = middlewares.map(function (middleware) {
-    return middleware(middlewareAPI);
-  });
-  _dispatch = compose.apply(void 0, _toConsumableArray(chain))(store.dispatch);
-  return _objectSpread2({}, store, {
-    dispatch: _dispatch
-  });
 });
 var thunk = curry(function (store, next, action) {
   return typeof action === 'function' ? action(store) : next(action);

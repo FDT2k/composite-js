@@ -38,14 +38,20 @@ export const reduceCalling = settings => (acc,item)=> {
 export const applyValues = (settings) => reduce({},reduceCalling(settings))
 
 
+/*
+Object => Object=> Function => Object => Object
+*/
 export const aaa = (defaultSettings,settings)=> compose (applyValues(settings),enlist,spec(defaultSettings))
 
 
-
+/**
+ * Create a function that iterates over DefaultSettings
+ */
 export const makeConfig = defaultSettings=> (env)=> settings => {
     return aaa(defaultSettings,settings)(env)
 }
 
+// ensure that the passed parameter is a function or throw error
 
 export const ensureFunction = msg=> eitherThrow(is_type_function,msg)
 export {identity} from 'Core'

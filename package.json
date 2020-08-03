@@ -1,6 +1,6 @@
 {
   "name": "@geekagency/composite-js",
-  "version": "2.0.21",
+  "version": "2.0.23",
   "description": "Kit of composite functions utilities",
   "main": "Core.js",
   "directories": {
@@ -22,6 +22,7 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.5.0",
+    "@babel/plugin-proposal-export-default-from": "^7.10.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.5",
     "babel-eslint": "^10.0.2",

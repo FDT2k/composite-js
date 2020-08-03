@@ -15,6 +15,7 @@ export const keys = o => Object.keys(o)
 
 
 
+
 // String => Object => Object
 export const omit_key = curry( (_omit,obj) => {
   let o = {};
@@ -27,6 +28,7 @@ export const omit_key = curry( (_omit,obj) => {
 
 
 })
+
 
 export const ensure_object_copy = assign2({})
 

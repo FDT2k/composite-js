@@ -1,5 +1,5 @@
 import { envThenValue,field,makeConfig,ensureFunction } from 'Configure'
-
+import {identity} from 'core';
 let env = {
     PORT: 2222
 }
@@ -100,5 +100,5 @@ test("serviceConfig",()=>{
             callback    : field(envThenValue('callback',identity,ensureFunction("callback must be a function"))),
         }
     )
-    console.log(ServiceConfig(env)({callback:''}))
+    console.log(ServiceConfig(env)({callback:_=>{}}))
 })

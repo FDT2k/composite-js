@@ -12,7 +12,7 @@ export const colorSet8= _=> ({
     white: '\u001b[37m',
     reset: '\u001b[0m'
 })
-export const backgroundColorSet8= _=> ({
+export const colorSetBackground8= _=> ({
     black: '\u001b[40m',
     red: '\u001b[41m',
     green: '\u001b[42m',
@@ -37,7 +37,7 @@ export const colorSet16= _=> ({
 })
 
 
-export const backgroundColorSet16= _=> ({
+export const colorSetBackground16= _=> ({
     ...backgroundColorSet8,
     brightBlack: '\u001b[40;1m',
     brightRed: '\u001b[41;1m',
@@ -49,21 +49,15 @@ export const backgroundColorSet16= _=> ({
     brightWhite: '\u001b[47;1m',
 })
 
-export const colorSet256= _=> ({
-    ...colorSet8,
-    brightBlack: '\u001b[30;1m',
-    brightRed: '\u001b[31;1m',
-    brightGreen: '\u001b[32;1m',
-    brightYellow: '\u001b[33;1m',
-    brightBlue: '\u001b[34;1m',
-    brightMagenta: '\u001b[35;1m',
-    brightCyan: '\u001b[36;1m',
-    brightWhite: '\u001b[37;1m',
-})
 
 
-
-export const colorize = (prefix,str)=> {
-    return `${prefix}${str}`;
+export const generateAll256Colors = _=> {
+    let res = [];
+    for(let i = 0 ; i < 16; i++){
+        for(let j = 0; j < 16; j++){
+            res.push(i*16+j);
+        }
+    }
+    return j;
 }
 

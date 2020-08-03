@@ -11,6 +11,8 @@ import { trace } from 'debug'
 
 export const updateProp = curry((prop, obj, value) => updateObject(obj, { [prop]: value }))
 
+
+
 export const beginWith = compose(test, regex, concat('^'))
 export const contains = compose(test, regex, concat(''))
 export const endWith = compose(test, regex, append('$'))
