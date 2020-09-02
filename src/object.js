@@ -1,5 +1,7 @@
-import {pipe,map,curry,flip} from './core.js'
+import {pipe,map,curry,flip,identity} from './core.js'
 import {defaultTo} from './bool.js'
+
+import {either} from './conditional'
 
 
 export const assign2 = curry((x,y)=> Object.assign({},x,y))
@@ -9,6 +11,7 @@ export const merge = _merge
 
 
 export const prop = curry((prop,obj) => obj[prop])
+
 
 export const keys = o => Object.keys(o)
 
@@ -25,8 +28,33 @@ export const omit_key = curry( (_omit,obj) => {
     }
   })
   return o;
+})
 
 
+
+// String => Object => Object
+export const omit_keys= curry( (_omit,obj) => {
+  let o = {};
+  Object.keys(obj).map(key => {
+    if(_omit.indexOf(key) === -1){
+      o[key] = obj[key]
+    }
+  })
+  return o;
+})
+
+
+export const filter_keys = curry ((fn,obj)=>{
+  let o = {};
+  map(
+    either(
+      fn,
+      identity,
+      k => o[k]=obj[k]
+    ),
+    keys(obj)
+  )
+  return o;
 })
 
 

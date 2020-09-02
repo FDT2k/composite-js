@@ -3,6 +3,8 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -88,23 +90,36 @@ function _objectSpread2(target) {
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
 }
 
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 /**
@@ -116,7 +131,7 @@ function _nonIterableSpread() {
  * @param {...Function} ...functions The functions to compose
  * @return {Function}
  */
-var compose = function compose() {
+var compose$1 = function compose() {
   for (var _len = arguments.length, funcs = new Array(_len), _key = 0; _key < _len; _key++) {
     funcs[_key] = arguments[_key];
   }
@@ -249,7 +264,7 @@ var identity = function identity(x) {
  *
  */
 
-var flip = curry(function (fn, a, b) {
+var flip$1 = curry(function (fn, a, b) {
   return fn(b, a);
 }); // map :: fn f => (a -> b) -> f a -> f b
 // map :: Functor f => (a -> b) -> f a -> f b
@@ -266,9 +281,7 @@ var maybe = curry(function (value, fn, functor) {
   return fn(functor.$value);
 });
 
-var Maybe =
-/*#__PURE__*/
-function () {
+var Maybe = /*#__PURE__*/function () {
   _createClass(Maybe, [{
     key: "isNothing",
     get: function get() {
@@ -373,13 +386,13 @@ var isStrictlyEqual = curry(function (value, item) {
   return value === item;
 });
 var isStrictlyNotEqual = function isStrictlyNotEqual(value) {
-  return compose(not, isStrictlyEqual(value));
+  return compose$1(not, isStrictlyEqual(value));
 };
 var _typeof$1 = function _typeof$1(value) {
   return _typeof(value);
 };
 var is_type = function is_type(val) {
-  return compose(isStrictlyEqual(val), _typeof$1);
+  return compose$1(isStrictlyEqual(val), _typeof$1);
 };
 var is_type_string = is_type('string');
 var is_type_function = is_type('function');
@@ -390,11 +403,36 @@ var isNull = function isNull(x) {
 };
 
 var is_type_bool = is_type('boolean');
-var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
+var isNil = _OR_(isNull, is_undefined);
 
 var defaultTo = function defaultTo(val) {
-  return compose(maybe(val, identity), Maybe.of);
+  return compose$1(maybe(val, identity), Maybe.of);
 };
+
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
 
 var assign2 = curry(function (x, y) {
   return Object.assign({}, x, y);
@@ -418,6 +456,23 @@ var omit_key = curry(function (_omit, obj) {
     }
   });
   return o;
+}); // String => Object => Object
+
+var omit_keys = curry(function (_omit, obj) {
+  var o = {};
+  Object.keys(obj).map(function (key) {
+    if (_omit.indexOf(key) === -1) {
+      o[key] = obj[key];
+    }
+  });
+  return o;
+});
+var filter_keys = curry(function (fn, obj) {
+  var o = {};
+  map(either(fn, identity, function (k) {
+    return o[k] = obj[k];
+  }), keys(obj));
+  return o;
 });
 var ensure_object_copy = assign2({});
 /*
@@ -432,7 +487,7 @@ var as_object_prop = curry(function (key, value, object) {
 }); //  a -> b -> Object
 
 var as_prop = curry(function (key, value) {
-  return flip(as_object_prop(key), defaultTo({}), value);
+  return flip$1(as_object_prop(key), defaultTo({}), value);
 });
 /*
  Spec
@@ -474,7 +529,7 @@ var concat = curry(function (a, b) {
   return a.concat(b);
 }); // append :: String -> String
 
-var append = flip(concat); // length :: String -> Number
+var append = flip$1(concat); // length :: String -> Number
 var split = curry(function (sep, str) {
   return str.split(sep);
 });
@@ -485,7 +540,7 @@ var repeat = curry(function (times, string) {
 var substract = curry(function (a, b) {
   return a - b;
 });
-var decrement = flip(substract)(1);
+var decrement = flip$1(substract)(1);
 
 var joinList = curry(function (sep, array) {
   return array.join(sep);
@@ -503,13 +558,13 @@ var findIndex = curry(function (fn, array) {
   return array.findIndex(fn);
 }); // value => List => Number
 
-var findIndexEqual = compose(findIndex, isStrictlyEqual); // value => List => Number
+var findIndexEqual = compose$1(findIndex, isStrictlyEqual); // value => List => Number
 
-var findIndexNotEqual = compose(findIndex, isStrictlyNotEqual); // value => List => List
+var findIndexNotEqual = compose$1(findIndex, isStrictlyNotEqual); // value => List => List
 
-var filterNotEqual = compose(filter, isStrictlyNotEqual); // value => List => List
+var filterNotEqual = compose$1(filter, isStrictlyNotEqual); // value => List => List
 
-var filterEqual = compose(filter, isStrictlyEqual);
+var filterEqual = compose$1(filter, isStrictlyEqual);
 var indexOf = curry(function (v, a) {
   return a.indexOf(v);
 }); // reduce an array of subObjects to a merged object of all subObjects
@@ -541,7 +596,7 @@ var groupListByKey = function groupListByKey(key) {
 var tail = function tail(arr) {
   return arr.slice(1);
 };
-var head = function head(arr) {
+var head$1 = function head(arr) {
   return arr[0];
 };
 var slice = curry(function (x, a) {
@@ -551,7 +606,7 @@ var range = curry(function (start, length, a) {
   return a.slice(start, length);
 });
 var safeTail = defaultTo([])(tail);
-var safeHead = defaultTo(null)(head); // ReduceListToObject:: ObjectReducer => key => Object => Object
+var safeHead = defaultTo(null)(head$1); // ReduceListToObject:: ObjectReducer => key => Object => Object
 //export const reduceListToObject = objectReducer => key => c.compose(as_prop(key),c.reduce({},objectReducer))
 
 var reduceListByKey = function reduceListByKey(key) {
@@ -560,7 +615,7 @@ var reduceListByKey = function reduceListByKey(key) {
 
 var reduceListByKeys = curry(function (_keys, list) {
   if (_keys.length == 0) return list;
-  var h = head(_keys);
+  var h = head$1(_keys);
   var rest = safeTail(_keys);
   var res = reduceListByKey(h)(list);
 
@@ -591,31 +646,6 @@ var safe_push = curry(function (array, item) {
 });
 var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
-});
-
-/*
-  if(cond is met, return right else return left)
-*/
-
-var either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
-var eitherUndefined = either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var eitherThrow = curry(function (cond, error) {
-  return either(cond, _throw(error), identity);
-});
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
 });
 
 var mergeAll = function mergeAll(list) {
@@ -664,7 +694,7 @@ var delByPropId = delByProp('id');
 var add$1 = curry(function (list, item) {
   return [].concat(_toConsumableArray(list), [item]);
 });
-var getByProp = curry(function (prop, list, val) {
+var getByProp$1 = curry(function (prop, list, val) {
   return filter(propIsEqual(prop, val), list);
 });
 var update = curry(function (cond, val, list, fn) {
@@ -677,22 +707,22 @@ var updateIfPropEqual = curry(function (prop, val, list, fn) {
 // {a:b} -> a
 // {a:b, c:d} -> a
 
-var key = compose(head, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator .... forever !!
+var key = compose$1(head$1, keys); //export const objectReduce = reduce({});  //<--- never do this unless you want to keep the accumulator .... forever !!
 //  String -> a -> Object -> Bool
 
 var isPropStrictlyEqual = curry(function (_prop, value, item) {
-  return compose(isStrictlyEqual(value), prop(_prop))(item);
+  return compose$1(isStrictlyEqual(value), prop(_prop))(item);
 });
 var isPropStrictlyNotEqual = curry(function (prop, value, item) {
-  return compose(not, isPropStrictlyEqual(prop, value))(item);
+  return compose$1(not, isPropStrictlyEqual(prop, value))(item);
 }); // filter an object and returns key that matches
 // regex -> string -> Object -> Bool
 
 var propMatch = curry(function (re, key) {
-  return compose(test(re), prop(key));
+  return compose$1(test(re), prop(key));
 });
 var makeHasKey = function makeHasKey(k) {
-  return compose(function (x) {
+  return compose$1(function (x) {
     return x !== -1;
   }, indexOf(k), keys);
 };
@@ -715,9 +745,9 @@ var keepMatching = function keepMatching(match) {
   return reduce({}, matchReducer(match));
 };
 var filterByKey = function filterByKey(match) {
-  return compose(keepMatching(match), trace('x'), enlist, ensure_object_copy);
+  return compose$1(keepMatching(match), trace('x'), enlist, ensure_object_copy);
 };
-var spec = curry(function (obj, arg) {
+var spec$1 = curry(function (obj, arg) {
   return pipe(keys, map(function (x) {
     return as_prop(x, obj[x](arg));
   }), mergeAll)(obj);
@@ -731,14 +761,16 @@ var delFromList = curry(function (list, val) {
 var delFromListByProp = curry(function (prop, list, val) {
   return filter(isPropStrictlyNotEqual(prop, val), list);
 });
-var delFromListByPropId = delFromListByProp('id');
-var addToList = curry(function (list, item) {
-  return [].concat(_toConsumableArray(list), [item]);
-});
 var getFromListByProp = curry(function (prop, list, val) {
   return filter(isPropStrictlyEqual(prop, val), list);
+});
+var getOneFromListByProp = curry(function (prop, list, val) {
+  return compose(head, getByProp(prop, list))(val);
 }); // String-> List -> ?  -> List
-//add an item into array which must be unique by its prop value
+
+var addToList = curry(function (list, item) {
+  return [].concat(_toConsumableArray(list), [item]);
+}); //add an item into array which must be unique by its prop value
 
 var addToListUniqByProp = curry(function (prop, list, item) {
   return addToList(delFromListByProp(prop, list, item[prop]), item);
@@ -759,15 +791,46 @@ var delFromObjectByKey = curry(function (string, obj) {
 var updateProp = curry(function (prop, obj, value) {
   return updateObject(obj, _defineProperty({}, prop, value));
 });
+var createReducer = function createReducer(initialState, handlers) {
+  return function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var action = arguments.length > 1 ? arguments[1] : undefined;
+
+    if (handlers.hasOwnProperty(action.type)) {
+      return handlers[action.type](state, action);
+    } else {
+      return state;
+    }
+  };
+};
+var createListCRUDByProp = curry(function (key, _list) {
+  var bind = flip(spec);
+  var get = getOneFromListByProp;
+  var list = getFromListByProp;
+  var addUniq = addToListUniqByProp;
+  var update = updateListIfPropEqual;
+  var remove = delFromListByProp;
+  var api = {
+    get: get,
+    list: list,
+    addUniq: addUniq,
+    //add an unique item, remove existing, order is not preserved
+    update: update,
+    remove: remove
+  };
+  return compose(bind(_list), bind(key))(api);
+});
 
 exports.addToList = addToList;
 exports.addToListUniq = addToListUniq;
 exports.addToListUniqByProp = addToListUniqByProp;
+exports.createListCRUDByProp = createListCRUDByProp;
+exports.createReducer = createReducer;
 exports.delFromList = delFromList;
 exports.delFromListByProp = delFromListByProp;
-exports.delFromListByPropId = delFromListByPropId;
 exports.delFromObjectByKey = delFromObjectByKey;
 exports.getFromListByProp = getFromListByProp;
+exports.getOneFromListByProp = getOneFromListByProp;
 exports.updateList = updateList;
 exports.updateListIfPropEqual = updateListIfPropEqual;
 exports.updateObject = updateObject;

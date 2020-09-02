@@ -47,7 +47,7 @@ export const aaa = (defaultSettings,settings)=> compose (applyValues(settings),e
 /**
  * Create a function that iterates over DefaultSettings
  */
-export const makeConfig = defaultSettings=> (env)=> settings => {
+export const makeConfig = defaultSettings=> (env={})=> (settings={}) => {
     return aaa(defaultSettings,settings)(env)
 }
 

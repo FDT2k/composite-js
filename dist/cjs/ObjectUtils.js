@@ -3,6 +3,8 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -88,23 +90,36 @@ function _objectSpread2(target) {
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
 }
 
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 /**
@@ -340,9 +355,7 @@ var trace_prop = curry(function (tag, prop, value) {
   return value;
 });
 
-var Maybe =
-/*#__PURE__*/
-function () {
+var Maybe = /*#__PURE__*/function () {
   _createClass(Maybe, [{
     key: "isNothing",
     get: function get() {
@@ -448,11 +461,36 @@ var isNull = function isNull(x) {
 };
 
 var is_type_bool = is_type('boolean');
-var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
+var isNil = _OR_(isNull, is_undefined);
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
 };
+
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
 
 var assign2 = curry(function (x, y) {
   return Object.assign({}, x, y);
@@ -475,6 +513,23 @@ var omit_key = curry(function (_omit, obj) {
       o[key] = obj[key];
     }
   });
+  return o;
+}); // String => Object => Object
+
+var omit_keys = curry(function (_omit, obj) {
+  var o = {};
+  Object.keys(obj).map(function (key) {
+    if (_omit.indexOf(key) === -1) {
+      o[key] = obj[key];
+    }
+  });
+  return o;
+});
+var filter_keys = curry(function (fn, obj) {
+  var o = {};
+  map(either(fn, identity, function (k) {
+    return o[k] = obj[k];
+  }), keys(obj));
   return o;
 });
 var ensure_object_copy = assign2({});
@@ -625,31 +680,6 @@ var safe_push = curry(function (array, item) {
 });
 var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
-});
-
-/*
-  if(cond is met, return right else return left)
-*/
-
-var either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
-var eitherUndefined = either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var eitherThrow = curry(function (cond, error) {
-  return either(cond, _throw(error), identity);
-});
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
 });
 
 var mergeAll = function mergeAll(list) {

@@ -3,6 +3,8 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -88,23 +90,36 @@ function _objectSpread2(target) {
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
 }
 
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 /**
@@ -560,9 +575,7 @@ var distribute = function distribute(z) {
   };
 };
 
-var Maybe =
-/*#__PURE__*/
-function () {
+var Maybe = /*#__PURE__*/function () {
   _createClass(Maybe, [{
     key: "isNothing",
     get: function get() {
@@ -700,7 +713,8 @@ var is_type_bool = is_type('boolean');
 var is_error = function is_error(x) {
   return x instanceof Error;
 };
-var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
+var isNil = _OR_(isNull, is_undefined);
+var is_nil = isNil; //fucky number test in js can suck on this shit ..!..
 
 var is_nan = Number.isNaN;
 var is_numeric = function is_numeric(v) {
@@ -713,6 +727,31 @@ var is_type_scalar = function is_type_scalar(o) {
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
 };
+
+/*
+  if(cond is met, return right else return left)
+*/
+
+var either = curry(function (cond, left, right, val) {
+  return cond(val) ? right(val) : left(val);
+});
+var eitherUndefined = either(is_undefined);
+var _throw = function _throw(x) {
+  return function (val) {
+    throw new Error(x);
+  };
+}; //interrupt everything
+
+var eitherThrow = curry(function (cond, error) {
+  return either(cond, _throw(error), identity);
+});
+var tryCatcher = curry(function (catcher, tryer, arg) {
+  try {
+    return tryer(arg);
+  } catch (err) {
+    return catcher(arg, err);
+  }
+});
 
 var assign2 = curry(function (x, y) {
   return Object.assign({}, x, y);
@@ -735,6 +774,23 @@ var omit_key = curry(function (_omit, obj) {
       o[key] = obj[key];
     }
   });
+  return o;
+}); // String => Object => Object
+
+var omit_keys = curry(function (_omit, obj) {
+  var o = {};
+  Object.keys(obj).map(function (key) {
+    if (_omit.indexOf(key) === -1) {
+      o[key] = obj[key];
+    }
+  });
+  return o;
+});
+var filter_keys = curry(function (fn, obj) {
+  var o = {};
+  map(either(fn, identity, function (k) {
+    return o[k] = obj[k];
+  }), keys(obj));
   return o;
 });
 var ensure_object_copy = assign2({});
@@ -803,7 +859,7 @@ var colorSetBackground8 = function colorSetBackground8(_) {
   };
 };
 var colorSet16 = function colorSet16(_) {
-  return _objectSpread2({}, colorSet8, {
+  return _objectSpread2(_objectSpread2({}, colorSet8), {}, {
     brightBlack: "\x1B[30;1m",
     brightRed: "\x1B[31;1m",
     brightGreen: "\x1B[32;1m",
@@ -815,7 +871,7 @@ var colorSet16 = function colorSet16(_) {
   });
 };
 var colorSetBackground16 = function colorSetBackground16(_) {
-  return _objectSpread2({}, backgroundColorSet8, {
+  return _objectSpread2(_objectSpread2({}, backgroundColorSet8), {}, {
     brightBlack: "\x1B[40;1m",
     brightRed: "\x1B[41;1m",
     brightGreen: "\x1B[42;1m",
@@ -1044,31 +1100,6 @@ var safe_stack = curry(function (array, item) {
   return [item].concat(_toConsumableArray(array));
 });
 
-/*
-  if(cond is met, return right else return left)
-*/
-
-var either = curry(function (cond, left, right, val) {
-  return cond(val) ? right(val) : left(val);
-});
-var eitherUndefined = either(is_undefined);
-var _throw = function _throw(x) {
-  return function (val) {
-    throw new Error(x);
-  };
-}; //interrupt everything
-
-var eitherThrow = curry(function (cond, error) {
-  return either(cond, _throw(error), identity);
-});
-var tryCatcher = curry(function (catcher, tryer, arg) {
-  try {
-    return tryer(arg);
-  } catch (err) {
-    return catcher(arg, err);
-  }
-});
-
 exports._AND_ = _AND_;
 exports._NOT_ = _NOT_;
 exports._OR_ = _OR_;
@@ -1108,6 +1139,7 @@ exports.ensure_object_copy = ensure_object_copy;
 exports.filter = filter;
 exports.filterEqual = filterEqual;
 exports.filterNotEqual = filterNotEqual;
+exports.filter_keys = filter_keys;
 exports.findIndex = findIndex;
 exports.findIndexEqual = findIndexEqual;
 exports.findIndexNotEqual = findIndexNotEqual;
@@ -1129,6 +1161,7 @@ exports.isStrictlyNotEqual = isStrictlyNotEqual;
 exports.is_array = is_array;
 exports.is_error = is_error;
 exports.is_nan = is_nan;
+exports.is_nil = is_nil;
 exports.is_numeric = is_numeric;
 exports.is_type = is_type;
 exports.is_type_bool = is_type_bool;
@@ -1154,6 +1187,7 @@ exports.maybe = maybe;
 exports.merge = merge;
 exports.not = not;
 exports.omit_key = omit_key;
+exports.omit_keys = omit_keys;
 exports.pipe = pipe;
 exports.pipeA = pipeA;
 exports.prop = prop;

@@ -36,6 +36,7 @@ export const is_error = x => x instanceof Error;
 
 
 export const isNil = _OR_(isNull,is_undefined)
+export const is_nil = isNil
 
 //fucky number test in js can suck on this shit ..!..
 export const is_nan = Number.isNaN

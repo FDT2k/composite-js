@@ -3,6 +3,8 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -166,9 +168,7 @@ var maybe = curry(function (value, fn, functor) {
   return fn(functor.$value);
 });
 
-var Maybe =
-/*#__PURE__*/
-function () {
+var Maybe = /*#__PURE__*/function () {
   _createClass(Maybe, [{
     key: "isNothing",
     get: function get() {
@@ -280,7 +280,7 @@ var isNull = function isNull(x) {
 };
 
 var is_type_bool = is_type('boolean');
-var isNil = _OR_(isNull, is_undefined); //fucky number test in js can suck on this shit ..!..
+var isNil = _OR_(isNull, is_undefined);
 
 var defaultTo = function defaultTo(val) {
   return compose(maybe(val, identity), Maybe.of);
